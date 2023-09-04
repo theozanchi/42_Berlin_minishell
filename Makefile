@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/09/04 12:43:30 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/09/04 12:46:54 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,11 +49,9 @@ ${LIBFT}:
 				else git clone git@github.com:theozanchi/42_Berlin_libft.git ${LIBFT_DIR}; \
 				fi
 				make -C ${LIBFT_DIR}
-				@echo "${YELLOW}Moving ${LIBFT} at the root of the repository${NC}"
-				@mv ${LIBFT_DIR}/${LIBFT} .
 
 ${NAME}:		entry_message ${OBJS}
-				@${CC} ${CFLAGS} ${SRCS} -I${HEAD_DIR} ${MLX42_INCL} ${LIBFT} -o ${NAME}
+				@${CC} ${CFLAGS} ${SRCS} -I${HEAD_DIR} ${LIBFT_DIR}${LIBFT} -o ${NAME}
 				@echo "${YELLOW}\nCompilation complete, ${NAME} executable at the root of the directory${NC}\n"
 
 ${OBJ_DIR}:
