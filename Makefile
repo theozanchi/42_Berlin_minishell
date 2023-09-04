@@ -1,0 +1,92 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
+#    Updated: 2023/09/04 12:43:30 by tzanchi          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#Compiler targets and libraries
+CC			=	cc
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+NAME		=	minishell
+LIBFT		=	libft.a
+
+# Directories
+SRCS_DIR	=	./sources/
+HEAD_DIR	=	./includes/
+LIBFT_DIR	=	./libft/
+OBJ_DIR		=	${SRCS_DIR}.o
+
+# Colours, symbols and utils
+GREEN		=	\033[1;32m
+CYAN		=	\033[1;36m
+YELLOW		=	\033[1;33m
+RED			=	\033[1;31m
+NC			=	\033[0m
+BOLD		=	\033[1m
+TICK		=	✓
+
+SRC			=	
+
+SRCS		=	$(addprefix ${SRCS_DIR}, ${SRC})
+SRC_NR		=	$(words ${SRCS})
+
+OBJS		=	$(addprefix ${OBJ_DIR}/, $(notdir $(SRCS:.c=.o)))
+
+all:			project_logo ${OBJ_DIR}
+				@make -s ${LIBFT}
+				@make -s ${NAME}
+
+${LIBFT}:
+				@echo "${CYAN}\nCOMPILING $$(echo ${LIBFT} | tr '[:lower:]' '[:upper:]')${NC}"
+				@if [ -d ${LIBFT_DIR} ]; \
+				then git -C ${LIBFT_DIR} pull; \
+				else git clone git@github.com:theozanchi/42_Berlin_libft.git ${LIBFT_DIR}; \
+				fi
+				make -C ${LIBFT_DIR}
+				@echo "${YELLOW}Moving ${LIBFT} at the root of the repository${NC}"
+				@mv ${LIBFT_DIR}/${LIBFT} .
+
+${NAME}:		entry_message ${OBJS}
+				@${CC} ${CFLAGS} ${SRCS} -I${HEAD_DIR} ${MLX42_INCL} ${LIBFT} -o ${NAME}
+				@echo "${YELLOW}\nCompilation complete, ${NAME} executable at the root of the directory${NC}\n"
+
+${OBJ_DIR}:
+				@if [ ! -d "${OBJ_DIR}" ]; \
+				then mkdir -p "${OBJ_DIR}"; \
+				fi
+
+$(OBJ_DIR)/%.o:	$(SRCS_DIR)%.c
+				@echo -n "Compiling $(notdir $<)"; \
+				${CC} ${CFLAGS} -I${HEAD_DIR} -c $< -o $@; \
+				echo "${GREEN} ${TICK}${NC}"; 
+
+clean:
+				@make -sC ${LIBFT_DIR} clean >/dev/null 2>&1
+				@if [ ! -d "${OBJ_DIR}" ]; \
+				then \
+					echo "Repo already clean"; \
+				else \
+					echo "Removing all .o files"; \
+					rm -r ${OBJ_DIR}; \
+				fi
+
+fclean:			clean
+				@make -sC ${LIBFT_DIR} fclean >/dev/null 2>&1
+				@echo "Removing ${NAME} and ${LIBFT} files from root"
+				@rm -f ${NAME} ${LIBFT}
+
+re:				fclean all
+
+project_logo:
+				@echo "${RED}   _     _     _     _     _     _     _     _     _  \n  / \   / \   / \   / \   / \   / \   / \   / \   / \ \n ( ${CYAN}m${RED} ) ( ${CYAN}i${RED} ) ( ${CYAN}n${RED} ) ( ${CYAN}i${RED} ) ( ${CYAN}s${RED} ) ( ${CYAN}h${RED} ) ( ${CYAN}e${RED} ) ( ${CYAN}l${RED} ) ( ${CYAN}l${RED} )\n  \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/ \n\n      ${NC}a 42 project by ${BOLD}Alberto Bermudez${NC} and ${BOLD}Théo Zanchi${NC}"
+
+entry_message:
+				@echo "${CYAN}\nCOMPILING $$(echo ${NAME} | tr '[:lower:]' '[:upper:]')\n${NC}${BOLD}Compiling necessary .o files out of ${SRC_NR} .c files in total${NC}"
+
+.PHONY:			all clean fclean re project_logo entry_message
