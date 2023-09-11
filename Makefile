@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/09/05 11:27:18 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/09/11 16:23:14 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,9 @@ NC			=	\033[0m
 BOLD		=	\033[1m
 TICK		=	✓
 
-SRC			=	main.c
+SRC			=	exit.c \
+				init.c \
+				main.c
 
 SRCS		=	$(addprefix ${SRCS_DIR}, ${SRC})
 SRC_NR		=	$(words ${SRCS})
