@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/09/12 17:49:19 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/09/12 22:37:45 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,29 @@
 # define GREEN_BOLD "\033[1;32m"
 
 /*data_structure*/
+typedef struct s_history
+{
+	char				*argv;
+	struct s_history	*previous;
+	struct s_history	*next;
+}	t_history;
+
 typedef struct s_data
 {
-	char	**env;
-	char	*argv;
-	char	*path;
+	char		**env;
+	char		*argv;
+	char		*path;
+	t_history	*history;
 }	t_data;
 
 /*exit.c*/
 void	free_char_array(char **array);
+void	free_list(t_data *data);
 void	free_memory(t_data *data);
 void	exit_minishell(t_data *data, int exit_code);
+
+/*history.c*/
+void	add_command_to_history(t_data *data);
 
 /*init.c*/
 int		init_env(t_data *data, char **env);

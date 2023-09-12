@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/09/12 17:09:09 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/09/12 21:16:09 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ BOLD		=	\033[1m
 TICK		=	✓
 
 SRC			=	exit.c \
+				history.c \
 				init.c \
 				main.c
 
@@ -63,9 +64,12 @@ ${OBJ_DIR}:
 				fi
 
 $(OBJ_DIR)/%.o:	$(SRCS_DIR)%.c
-				@echo -n "Compiling $(notdir $<)"; \
+				@printf "Compiling $(notdir $<)"; \
 				${CC} ${CFLAGS} -I${HEAD_DIR} -c $< -o $@; \
-				echo "${GREEN} ${TICK}${NC}"; 
+				printf "${GREEN}";
+				printf " ${TICK}\n"; 
+				printf "${NC}"; 
+
 
 clean:
 				@make -sC ${LIBFT_DIR} clean >/dev/null 2>&1
