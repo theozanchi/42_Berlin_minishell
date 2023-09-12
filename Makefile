@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/09/11 16:23:14 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/09/12 17:09:09 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ CC			=	cc
 CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
 NAME		=	minishell
 LIBFT		=	libft.a
+READLINE	=	-lreadline
 
 # Directories
 SRCS_DIR	=	./sources/
@@ -53,7 +54,7 @@ ${LIBFT}:
 				make -C ${LIBFT_DIR}
 
 ${NAME}:		entry_message ${OBJS}
-				@${CC} ${CFLAGS} ${SRCS} -I${HEAD_DIR} ${LIBFT_DIR}${LIBFT} -o ${NAME}
+				@${CC} ${CFLAGS} ${SRCS} -I${HEAD_DIR} ${LIBFT_DIR}${LIBFT} ${READLINE} -o ${NAME}
 				@echo "${YELLOW}\nCompilation complete, ${NAME} executable at the root of the directory${NC}\n"
 
 ${OBJ_DIR}:

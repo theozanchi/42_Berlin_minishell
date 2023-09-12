@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/09/12 10:55:02 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/09/12 17:49:19 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "../libft/libft.h"
 # include "messages.h"
+# include <readline/readline.h>
+# include <readline/history.h>
 
 /*formatting*/
 # define GREEN_BOLD "\033[1;32m"
@@ -24,6 +26,7 @@ typedef struct s_data
 {
 	char	**env;
 	char	*argv;
+	char	*path;
 }	t_data;
 
 /*exit.c*/
@@ -32,6 +35,7 @@ void	free_memory(t_data *data);
 void	exit_minishell(t_data *data, int exit_code);
 
 /*init.c*/
+int		init_env(t_data *data, char **env);
 int		init_data(t_data *data, char **env);
 void	launch_minishell(t_data *data);
 

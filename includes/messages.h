@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:36 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/09/11 15:39:54 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/09/12 18:09:20 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 # define MESSAGES_H
 
 /*prompts*/
-# define ENTRY_PROMPT "minishell%% "
+# define ENTRY_PROMPT "\033[1;32mminishell%% \033[0m"
 
 /*errors*/
 # define ERR_ARG_NR "Minishell does not take any argument\n"
+# define ERR_ENV_SETUP "Error occured while initializing environment variable\n"
+# define ERR_PATH_SETUP "Error occured while extracting PATH\n"
+# define NO_PATH "No path found in env variable\n"
 
 #endif
