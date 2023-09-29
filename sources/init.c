@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/09/29 11:57:29 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/09/29 17:50:35 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,6 @@ void	launch_minishell(t_data *data)
 	while (1)
 	{
 		data->argv = readline(ENTRY_PROMPT);
-		add_command_to_history(data);
+		add_history(data->argv);
 	}
 }

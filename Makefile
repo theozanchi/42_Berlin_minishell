@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/09/12 21:16:09 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/09/29 17:50:51 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,6 @@ BOLD		=	\033[1m
 TICK		=	✓
 
 SRC			=	exit.c \
-				history.c \
 				init.c \
 				main.c
 

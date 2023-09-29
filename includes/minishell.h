@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/09/12 22:37:45 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/09/29 17:50:08 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,6 @@ void	free_char_array(char **array);
 void	free_list(t_data *data);
 void	free_memory(t_data *data);
 void	exit_minishell(t_data *data, int exit_code);
-
-/*history.c*/
-void	add_command_to_history(t_data *data);
 
 /*init.c*/
 int		init_env(t_data *data, char **env);
