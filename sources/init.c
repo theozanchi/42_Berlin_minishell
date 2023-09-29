@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/09/12 22:45:56 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/09/29 11:57:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	init_env(t_data *data, char **env)
 		if (!data->env[i])
 		{
 			perror(ERR_ENV_SETUP);
-			return (-1);
+			return (EXIT_FAILURE);
 		}
 		i++;
 	}
 	env[i] = NULL;
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 /*Extracts the PATH variable from the env char array stored in t_data strcuture
@@ -51,14 +51,14 @@ int	init_path(t_data *data)
 			if (!data->path)
 			{
 				perror(ERR_PATH_SETUP);
-				return (-1);
+				return (EXIT_FAILURE);
 			}
-			return (0);
+			return (EXIT_SUCCESS);
 		}
 		i++;
 	}
 	perror(NO_PATH);
-	return (-1);
+	return (EXIT_FAILURE);
 }
 
 /*Initializes the data structure:
@@ -67,11 +67,10 @@ int	init_path(t_data *data)
 • Initializes the history to NULL (t_history)*/
 int	init_data(t_data *data, char **env)
 {
-	if (init_env(data, env) == -1
-		|| init_path(data))
-		return (-1);
+	if (init_env(data, env) || init_path(data))
+		return (EXIT_FAILURE);
 	data->history = NULL;
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 void	launch_minishell(t_data *data)

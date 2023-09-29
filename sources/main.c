@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/09/12 22:54:35 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/09/29 11:55:58 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ int	main(int argc, char **argv, char **env)
 		exit_minishell(&data, EXIT_FAILURE);
 	else
 		launch_minishell(&data);
-	return (0);
+	return (EXIT_SUCCESS);
 }
