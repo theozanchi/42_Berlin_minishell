@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/09/29 17:50:51 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/10/02 17:20:12 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ TICK		=	✓
 
 SRC			=	exit.c \
 				init.c \
+				lexer.c \
 				main.c
 
 SRCS		=	$(addprefix ${SRCS_DIR}, ${SRC})
