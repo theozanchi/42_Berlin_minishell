@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/10/02 17:20:12 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/10/03 09:03:53 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,8 @@ NC			=	\033[0m
 BOLD		=	\033[1m
 TICK		=	✓
 
-SRC			=	exit.c \
+SRC			=	_utils_1.c \
+				exit.c \
 				init.c \
 				lexer.c \
 				main.c

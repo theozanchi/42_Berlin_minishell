@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:49:34 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/02 18:59:51 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/03 11:43:09 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,32 +26,66 @@ t_token	*new_node(char *arg)
 	new->next = NULL;
 }
 
-void	save_non_quoted_arg(t_data *data, char *arg)
+ssize_t	get_arg_length(char **split)
 {
-	if (!data->tokens)
+	ssize_t	length;
+
+	length = 0;
+	while (*split)
 	{
-		data->tokens = new_node(arg);
-		data->tokens->prev = NULL;
+		length += ft_strlen(*split);
+		split++;
+		if (*split && (**split == '\'' || **split == '\"'))
+			break ;
+		else if (*split)
+			length++;
+		else
+		{
+			errno = EINVAL;
+			return (-1);
+		}
 	}
-	else
-		ft_lstaddback(new_node(arg));
+	return (length);
 }
 
-void	lexer(t_data *data)
+int	save_quoted_arg(t_data *data, char ***split)
+{
+	ssize_t	length;
+
+	length = get_arg_length(*split);
+	if (length == -1)
+		return (perror_return_failure())
+	return (EXIT_SUCCESS);
+}
+
+int	lexer(t_data *data)
 {
 	char	*split;
 	char	*ptr;
+	t_token	*new;
 
 	split = ft_split(data->argv, " ");
+	if (!split)
+		return (perror_return_failure("lexer ft_split"));
 	ptr = split;
 	data->tokens = malloc(sizeof(t_token));
+	if (!data->tokens)
+		return (perror_return_failure("data->tokens malloc"));
 	data->tokens = NULL;
 	while (ptr)
 	{
 		if (*ptr == '\'' || *ptr == '\"')
-			save_quoted_arg(data, &ptr);
+		{
+			if (save_quoted_arg(data, &++ptr))
+				return (EXIT_FAILURE);
+		}
 		else
-			save_non_quoted_arg(data, *ptr++);
+		{
+			new = new_node(*ptr++);
+			if (!new)
+				return (EXIT_FAILURE);
+			ft_lstaddback(data, new);
+		}
 	}
 	free(split);
 }

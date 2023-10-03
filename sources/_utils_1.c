@@ -1,31 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   _utils_1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/03 08:51:35 by tzanchi          ###   ########.fr       */
+/*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
+/*   Updated: 2023/10/03 09:32:31 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **env)
+int	perror_return_failure(char *str)
 {
-	t_data	data;
+	perror(str);
+	return (EXIT_FAILURE);
+}
 
-	(void)argv;
-	if (argc != 1)
+void	ft_lstaddback(t_data *data, t_token *new)
+{
+	t_token	*ptr;
+	t_token	*prev;
+
+	if (!data->tokens)
 	{
-		perror(ERR_ARG_NR);
-		exit(EXIT_FAILURE);
+		new->prev = NULL;
+		data->tokens = new;
 	}
-	ft_memset(&data, 0, sizeof(t_data));
-	if (init_data(&data, env))
-		exit_minishell(&data, EXIT_FAILURE);
 	else
-		launch_minishell(&data);
-	return (EXIT_SUCCESS);
+	{
+		ptr = data->tokens;
+		while (ptr->next)
+		{
+			prev = ptr;
+			ptr = ptr->next;
+		}
+		new->prev = prev;
+		ptr->next = new;
+	}
 }
