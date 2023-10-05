@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/02 17:34:02 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/05 12:04:13 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,22 @@ int	init_data(t_data *data, char **env)
 
 void	launch_minishell(t_data *data)
 {
+	t_token	*ptr;
+
 	while (1)
 	{
 		data->argv = readline(ENTRY_PROMPT);
 		add_history(data->argv);
-		// lexer(data);
+		lexer(data);
+		ptr = data->tokens;
+		while (ptr)
+		{
+			printf("%s\n", ptr->raw_command);
+			ptr = ptr->next;
+		}
 		// parser(data);
 		// executer(data);
+		free(data->argv);
+		data->argv = NULL;
 	}
 }
