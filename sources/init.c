@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/05 12:04:13 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/08 11:41:19 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,18 @@ int	init_path(t_data *data)
 
 /*Initializes the data structure:
 • Sets data->env with the environment information (char **)
-• Extract the PATH from env and stores it in data->path (char *)
-• Initializes the history to NULL (t_history)*/
+• Extract the PATH from env and stores it in data->path (char *)*/
 int	init_data(t_data *data, char **env)
 {
 	if (init_env(data, env) || init_path(data))
 		return (EXIT_FAILURE);
-	data->history = NULL;
 	return (EXIT_SUCCESS);
 }
 
+/*Infinite loop that waits for user inputs. After each inpput through readline()
+the input is stored in the rl history and submitted through the lerser, parser
+and executer. Memory allocated for each command is freed after the launch of the
+executer*/
 void	launch_minishell(t_data *data)
 {
 	t_token	*ptr;
@@ -92,5 +94,6 @@ void	launch_minishell(t_data *data)
 		// executer(data);
 		free(data->argv);
 		data->argv = NULL;
+		free_tokens(data);
 	}
 }

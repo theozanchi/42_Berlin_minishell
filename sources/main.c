@@ -6,12 +6,13 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/03 08:51:35 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/08 12:17:53 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*Initializes the data needed for the project and launches the program*/
 int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
@@ -19,7 +20,8 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc != 1)
 	{
-		perror(ERR_ARG_NR);
+		errno = EINVAL;
+		perror("main");
 		exit(EXIT_FAILURE);
 	}
 	ft_memset(&data, 0, sizeof(t_data));
