@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 12:10:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/08 12:37:16 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 typedef struct s_token
 {
 	char			*raw_command;
+	int				quote_status;
 	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
@@ -37,6 +38,13 @@ typedef struct s_data
 	char		*argv;
 	t_token		*tokens;
 }	t_data;
+
+typedef enum e_quote
+{
+	NON_QUOTED,
+	SINGLE_QUOTED,
+	DOUBLE_QUOTED
+}	t_quote;
 
 /*_utils_1.c*/
 int		perror_return_failure(char *str);
