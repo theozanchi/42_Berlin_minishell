@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 11:41:19 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/08 13:00:17 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,21 +77,11 @@ and executer. Memory allocated for each command is freed after the launch of the
 executer*/
 void	launch_minishell(t_data *data)
 {
-	t_token	*ptr;
-
 	while (1)
 	{
 		data->argv = readline(ENTRY_PROMPT);
 		add_history(data->argv);
 		lexer(data);
-		ptr = data->tokens;
-		while (ptr)
-		{
-			printf("%s\n", ptr->raw_command);
-			ptr = ptr->next;
-		}
-		// parser(data);
-		// executer(data);
 		free(data->argv);
 		data->argv = NULL;
 		free_tokens(data);

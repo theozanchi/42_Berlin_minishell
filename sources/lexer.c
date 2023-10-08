@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:49:34 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 12:40:34 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/08 12:58:44 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ char	*save_word(t_data *data, char *str)
 	new = new_node(str, end_ptr);
 	if (!new)
 		return (NULL);
-	new->quote_status = NON_QUOTED;
 	ft_tokenlst_addback(data, new);
 	return (end_ptr);
 }
@@ -98,9 +97,9 @@ char	*save_quote(t_data *data, char *str, char quote_symbol)
 	if (!new)
 		return (NULL);
 	if (quote_symbol == '\'')
-		new->quote_status = SINGLE_QUOTED;
+		new->type = SINGLE_QUOTE;
 	else
-		new->quote_status = DOUBLE_QUOTED;
+		new->type = DOUBLE_QUOTE;
 	ft_tokenlst_addback(data, new);
 	return (end_ptr + 1);
 }
