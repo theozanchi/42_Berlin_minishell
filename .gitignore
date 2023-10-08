@@ -21,6 +21,7 @@
 *.a
 *.la
 *.lo
+libft/*
 
 # Shared objects (inc. Windows DLLs)
 *.dll
