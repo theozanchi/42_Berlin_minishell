@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 12:58:29 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/08 13:02:00 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # define GREEN_BOLD "\033[1;32m"
 
 /*data_structure*/
-
 typedef enum e_token_type
 {
 	ARG,
