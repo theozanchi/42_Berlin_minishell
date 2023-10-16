@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 13:02:00 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/16 20:56:37 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 
 /*formatting*/
 # define GREEN_BOLD "\033[1;32m"
+
+/*program parameters*/
+# define SUPP_SYMBOLS "<|>$"
 
 /*data_structure*/
 typedef enum e_token_type
@@ -49,8 +52,9 @@ typedef enum e_token_type
 
 typedef struct s_token
 {
-	char			*raw_command;
 	t_token_type	type;
+	char			*value;
+	size_t			length;
 	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
@@ -82,12 +86,15 @@ void	launch_minishell(t_data *data);
 
 /*lexer.c*/
 int		check_arg(char *arg);
-t_token	*new_node(char *start_ptr, char *end_ptr);
+t_token	*new_node(char *start, char *end, t_token_type type);
+char	*save_symbol(t_data *data, char *str);
 char	*save_word(t_data *data, char *str);
 char	*save_quote(t_data *data, char *str, char quote_symbol);
 int		lexer(t_data *data);
 
 /*main.c*/
 int		main(int argc, char **argv, char **env);
+
+/*parser.c*/
 
 #endif

@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/10/03 13:13:09 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/10/16 18:56:14 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,11 +32,12 @@ NC			=	\033[0m
 BOLD		=	\033[1m
 TICK		=	✓
 
-SRC			=	_utils_1.c \
+SRC			=	0_utils/utils_1.c \
+				1_lexer/lexer_main.c \
+				2_parser/parser.c \
 				exit.c \
 				init.c \
-				lexer.c \
-				main.c
+				main.c \
 
 SRCS		=	$(addprefix ${SRCS_DIR}, ${SRC})
 SRC_NR		=	$(words ${SRCS})
