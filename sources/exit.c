@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:40 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 11:30:41 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/17 12:52:58 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,6 @@ terminates the process with exit code `exit_code`*/
 void	exit_minishell(t_data *data, int exit_code)
 {
 	free_memory(data);
-	// rl_clear_history();
+	rl_clear_history();
 	exit(exit_code);
 }
