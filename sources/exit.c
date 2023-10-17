@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:40 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 11:38:34 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/17 11:30:41 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ void	free_tokens(t_data *data)
 		data->tokens = data->tokens->next;
 		tmp->prev = NULL;
 		tmp->next = NULL;
-		if (tmp->raw_command)
+		if (tmp->value)
 		{
-			free(tmp->raw_command);
-			tmp->raw_command = NULL;
+			free(tmp->value);
+			tmp->value = NULL;
 		}
 		free(tmp);
 		tmp = NULL;

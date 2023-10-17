@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/16 21:00:07 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/17 12:21:50 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_double_tokens(char *str)
 	else
 	{
 		if ((*str == '<' && *(str + 1) == '<')
-			|| *str == '>' && *(str + 1) == '>')
+			|| (*str == '>' && *(str + 1) == '>'))
 			return (EXIT_SUCCESS);
 		else
 			return (EXIT_FAILURE);
@@ -46,7 +46,7 @@ char	*helper_redirections(char *str, t_token **new)
 	}
 }
 
-char	*helper_dollar_sign(t_data *data, char *str, t_token **new)
+char	*helper_dollar_sign(char *str, t_token **new)
 {
 	char	*ptr;
 
@@ -70,7 +70,7 @@ char	*save_symbol(t_data *data, char *str)
 	t_token	*new;
 	char	*ptr;
 
-	if (check_double_tokens(*str))
+	if (check_double_tokens(str))
 	{
 		ft_printf("token expected, symbol '%c' found", *(str + 1));
 		return (NULL);
@@ -83,7 +83,7 @@ char	*save_symbol(t_data *data, char *str)
 		new = new_node(NULL, NULL, PIPE);
 	}
 	if (*str == '$')
-		ptr = helper_dollar_sign(data, str, &new);
+		ptr = helper_dollar_sign(str, &new);
 	if (!new)
 		return (NULL);
 	ft_tokenlst_addback(data, new);

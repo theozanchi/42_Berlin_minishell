@@ -23,7 +23,8 @@
           "text": "-gdb-set disassembly-flavor intel",
           "ignoreFailures": true
         }
-      ]
+      ],
+      "preLaunchTask": "build"
     },
     {
       "name": "C/C++ Runner: Debug Session",

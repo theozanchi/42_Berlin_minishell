@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/10/16 18:56:14 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/10/17 11:57:27 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ TICK		=	✓
 
 SRC			=	0_utils/utils_1.c \
 				1_lexer/lexer_main.c \
+				1_lexer/save_symbol.c \
 				2_parser/parser.c \
 				exit.c \
 				init.c \
@@ -42,7 +43,7 @@ SRC			=	0_utils/utils_1.c \
 SRCS		=	$(addprefix ${SRCS_DIR}, ${SRC})
 SRC_NR		=	$(words ${SRCS})
 
-OBJS		=	$(addprefix ${OBJ_DIR}/, $(notdir $(SRCS:.c=.o)))
+OBJS		=	$(patsubst ${SRCS_DIR}%, ${OBJ_DIR}/%, $(SRCS:.c=.o))
 
 all:			project_logo ${OBJ_DIR}
 				@make -s ${LIBFT}
@@ -66,10 +67,11 @@ ${OBJ_DIR}:
 				fi
 
 $(OBJ_DIR)/%.o:	$(SRCS_DIR)%.c
+				@mkdir -p $(dir $@)
 				@printf "Compiling $(notdir $<)"; \
 				${CC} ${CFLAGS} -I${HEAD_DIR} -c $< -o $@; \
-				printf "${GREEN}";
-				printf " ${TICK}\n"; 
+				printf "${GREEN}"; \
+				printf " ${TICK}\n"; \
 				printf "${NC}"; 
 
 
