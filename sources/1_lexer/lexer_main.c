@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:49:34 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 12:50:17 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/17 12:54:10 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,10 @@ t_token	*new_node(char *start, char *end, t_token_type type)
 			perror("token value in new_node()");
 			return (NULL);
 		}
-		new->length = ft_strlcpy(new->value, start, end - start + 1);
+		ft_strlcpy(new->value, start, end - start + 1);
 	}
 	else
-	{
 		new->value = NULL;
-		new->length = 0;
-	}
 	new->type = type;
 	new->next = NULL;
 	return (new);

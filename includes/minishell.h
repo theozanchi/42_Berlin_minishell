@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 12:21:31 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/17 12:53:59 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
-	size_t			length;
 	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
