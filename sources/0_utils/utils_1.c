@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/16 18:52:47 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/17 17:00:56 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ the list*/
 void	ft_tokenlst_addback(t_data *data, t_token *new)
 {
 	t_token	*ptr;
-	t_token	*prev;
 
 	if (!data->tokens)
 	{
@@ -43,11 +42,8 @@ void	ft_tokenlst_addback(t_data *data, t_token *new)
 	{
 		ptr = data->tokens;
 		while (ptr->next)
-		{
-			prev = ptr;
 			ptr = ptr->next;
-		}
-		new->prev = prev;
+		new->prev = ptr;
 		ptr->next = new;
 	}
 }

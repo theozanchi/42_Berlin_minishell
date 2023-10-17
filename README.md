@@ -5,7 +5,7 @@
 # Minitalk
 
 This project is about creating our own Shell with basic functions.
-It is a group project done with [Alberto Bermudez](https://github.com/ajbermudezh22).
+It is a group project.
 
 The full subject can be found [here](.media/en.subject.pdf).
 
