@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 12:53:59 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/17 19:00:43 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define GREEN_BOLD "\033[1;32m"
 
 /*program parameters*/
-# define SUPP_SYMBOLS "<|>$"
+# define SUPPORTED_SYMBOLS "<|>$"
 
 /*data_structure*/
 typedef enum e_token_type
@@ -75,15 +75,21 @@ void	ft_tokenlst_addback(t_data *data, t_token *new);
 /* 1_lexer ****************************************************************** */
 /*lexer_main.c*/
 int		check_arg(char *arg);
-t_token	*new_node(char *start, char *end, t_token_type type);
-char	*save_word(t_data *data, char *str);
-char	*save_quote(t_data *data, char *str, char quote_symbol);
 int		lexer(t_data *data);
+
+/*lexer_utils.c*/
+t_token	*new_node(char *start, char *end, t_token_type type);
+
 /*save_symbol.c*/
+int		check_end_of_string(char *str);
 int		check_double_tokens(char *str);
 char	*helper_redirections(char *str, t_token **new);
 char	*helper_dollar_sign(char *str, t_token **new);
 char	*save_symbol(t_data *data, char *str);
+
+/*save_word_save_quote.c*/
+char	*save_word(t_data *data, char *str);
+char	*save_quote(t_data *data, char *str, char quote_symbol);
 
 /* 2_parser ***************************************************************** */
 

@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/10/17 11:57:27 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/10/17 19:10:22 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,9 @@ TICK		=	✓
 
 SRC			=	0_utils/utils_1.c \
 				1_lexer/lexer_main.c \
+				1_lexer/lexer_utils.c \
 				1_lexer/save_symbol.c \
+				1_lexer/save_word_save_quote.c \
 				2_parser/parser.c \
 				exit.c \
 				init.c \
