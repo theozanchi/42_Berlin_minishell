@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 18:55:39 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 19:10:27 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/18 17:51:36 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*save_word(t_data *data, char *str)
 	end = str;
 	while (*end && !ft_isspace(*end) && !ft_strchr(SUPPORTED_SYMBOLS, *end))
 		end++;
-	new = new_node(str, end, ARG);
+	new = new_node(str, end, OPERAND);
 	if (!new)
 		return (NULL);
 	ft_tokenlst_addback(data, new);

@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 19:00:43 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/18 18:01:04 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@
 # define SUPPORTED_SYMBOLS "<|>$"
 
 /*data_structure*/
-typedef enum e_token_type
+typedef enum e_type
 {
-	ARG,
+	OPERAND,
+	SINGLE_QUOTE,
+	DOUBLE_QUOTE,
 	PIPE,
 	INPUT,
 	OUTPUT,
@@ -36,8 +38,6 @@ typedef enum e_token_type
 	HERE_DOC,
 	EXIT_STATUS,
 	ENV_VAR,
-	SINGLE_QUOTE,
-	DOUBLE_QUOTE,
 	BUILTIN_ECHO,
 	BUILTIN_CD,
 	BUILTIN_PWD,
@@ -48,22 +48,31 @@ typedef enum e_token_type
 	CTRL_C,
 	CTRL_D,
 	CTRL_BACKSLASH
-}	t_token_type;
+}	t_type;
 
 typedef struct s_token
 {
-	t_token_type	type;
+	t_type			type;
 	char			*value;
 	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_parser_node
+{
+	t_type					type;
+	char					*value;
+	struct s_parser_node	*left;
+	struct s_parser_node	*right;
+}	t_parser_node;
+
 typedef struct s_data
 {
-	char		**env;
-	char		*path;
-	char		*argv;
-	t_token		*tokens;
+	char			**env;
+	char			*path;
+	char			*argv;
+	t_token			*tokens;
+	t_parser_node	*parsed_command;
 }	t_data;
 
 /* 0_utils ****************************************************************** */
@@ -78,7 +87,7 @@ int		check_arg(char *arg);
 int		lexer(t_data *data);
 
 /*lexer_utils.c*/
-t_token	*new_node(char *start, char *end, t_token_type type);
+t_token	*new_node(char *start, char *end, t_type type);
 
 /*save_symbol.c*/
 int		check_end_of_string(char *str);
