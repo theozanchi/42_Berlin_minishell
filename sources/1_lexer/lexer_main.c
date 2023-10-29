@@ -6,17 +6,19 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:49:34 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 19:11:06 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/29 12:21:45 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Loops through the argument string to assess its validity. If the string is
-invalid, prints an error message and returns EXIT_FAILURE. The following checks
-are performed:
-• the string does not begin by a pipe '|'
-• all quoted arguments (with ' or ") are properly closed*/
+/**
+ * @brief Loops through the argument string to assess its validity (not starting
+ with pipe, all quotes are closed)
+ * 
+ * @param arg User input
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	check_arg(char *arg)
 {
 	while (ft_isspace(*arg))
@@ -39,10 +41,14 @@ int	check_arg(char *arg)
 	return (EXIT_SUCCESS);
 }
 
-/*Loops through the string data->argv to check if it is properly formatted. If
-so it stores in a new t_token lists all the tokens by properly splitting words
-and quoted arguments. Returns EXIT_FAILURE if the argument is invalid or if the
-creation of a node fails*/
+/**
+ * @brief Loops through the string data->argv to check if it is properly
+formatted. If so it stores in a new t_token lists all the tokens by properly
+splitting words and quoted arguments. 
+ * 
+ * @param data Main data structure of type t_data
+ * @return EXIT_SUCESS or EXIT_FAILURE
+ */
 int	lexer(t_data *data)
 {
 	char	*ptr;

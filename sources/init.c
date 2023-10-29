@@ -6,15 +6,20 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 18:30:46 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/29 12:22:52 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Allocates memory inside the t_data structure to store the environment
+/**
+ * @brief Allocates memory inside the t_data structure to store the environment
 information from main() and copies all the information in data->env char array
-Returns -1 in case of failure, 0 in case of success*/
+ * 
+ * @param data Main data structure of type t_data
+ * @param env Array of char* containing environment info
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	init_env(t_data *data, char **env)
 {
 	int	i;
@@ -35,9 +40,13 @@ int	init_env(t_data *data, char **env)
 	return (EXIT_SUCCESS);
 }
 
-/*Extracts the PATH variable from the env char array stored in t_data strcuture
-and stores it in data->path
-Returns -1 in case of failure, 0 in case of success*/
+/**
+ * @brief Extracts the PATH variable from the env char array stored in t_data 
+structure and stores it in data->path
+
+ * @param data Main data structure of type t_data
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	init_path(t_data *data)
 {
 	int	i;
@@ -61,9 +70,13 @@ int	init_path(t_data *data)
 	return (EXIT_FAILURE);
 }
 
-/*Initializes the data structure:
-• Sets data->env with the environment information (char **)
-• Extract the PATH from env and stores it in data->path (char *)*/
+/**
+ * @brief Extracts PATH from env variable and stores it in main data strcuture
+ * 
+ * @param data Main data structure
+ * @param env Env variable array
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	init_data(t_data *data, char **env)
 {
 	if (init_env(data, env) || init_path(data))
@@ -71,10 +84,11 @@ int	init_data(t_data *data, char **env)
 	return (EXIT_SUCCESS);
 }
 
-/*Infinite loop that waits for user inputs. After each inpput through readline()
-the input is stored in the rl history and submitted through the lerser, parser
-and executer. Memory allocated for each command is freed after the launch of the
-executer*/
+/**
+ * @brief Input loop, calls lexer, parser and executor then frees memory
+ * 
+ * @param data Main data structure
+ */
 void	launch_minishell(t_data *data)
 {
 	while (1)

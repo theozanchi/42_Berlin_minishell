@@ -6,14 +6,17 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:40 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 12:52:58 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/29 12:07:30 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Loops through the list of tokens contained at data->tokens to free each
-allocated block of memory and set all the pointers to NULL*/
+/**
+ * @brief Loops through tokens in main data structure to free each node
+ * 
+ * @param data Main data structure
+ */
 void	free_tokens(t_data *data)
 {
 	t_token	*tmp;
@@ -34,7 +37,12 @@ void	free_tokens(t_data *data)
 	}
 }
 
-/*Frees an array of char *, sets every char * to NULL and the array to NULL*/
+/**
+ * @brief Frees an array of char *, sets every char * to NULL and the array to
+NULL
+ * 
+ * @param array Array of char*, env variable
+ */
 void	free_char_array(char **array)
 {
 	int	i;
@@ -52,7 +60,11 @@ void	free_char_array(char **array)
 	array = NULL;
 }
 
-/*Frees all the data contained in `data` and sets every element to NULL*/
+/**
+ * @brief Frees all the data contained in `data` and sets every element to NULL
+ * 
+ * @param data Main data structure of type t_data
+ */
 void	free_memory(t_data *data)
 {
 	if (!data)
@@ -64,8 +76,13 @@ void	free_memory(t_data *data)
 	data->path = NULL;
 }
 
-/*Frees and sets all the memory allocated for the programm to NULL and
-terminates the process with exit code `exit_code`*/
+/**
+ * @brief Frees and sets all the memory allocated for the programm to NULL and
+terminates the process with exit code `exit_code`
+ * 
+ * @param data Main data structure of type t_data
+ * @param exit_code EXIT_SUCCES or EXIT_FAILURE used to exit() the program
+ */
 void	exit_minishell(t_data *data, int exit_code)
 {
 	free_memory(data);

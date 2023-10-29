@@ -6,15 +6,20 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 18:55:37 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/18 18:01:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/29 12:21:07 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Allocates memory for a new t_token node, then allocates enough memory to store
-the raw command contained between the pointers start_ptr and end_ptr and copies
-the raw command into new_raw_command. If a malloc() fails, NULL is returned*/
+/**
+ * @brief Creates and returns a new token from user input
+ * 
+ * @param start Pointer to the beginning of the token
+ * @param end Pointer to the end of the token
+ * @param type type of token to store
+ * @return Pointer to new token
+ */
 t_token	*new_node(char *start, char *end, t_type type)
 {
 	t_token	*new;

@@ -6,13 +6,20 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 12:17:53 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/29 12:22:58 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Initializes the data needed for the project and launches the program*/
+/**
+ * @brief Initializes the data needed for the project and launches the program
+ * 
+ * @param argc Number of arguments, should be 1
+ * @param argv Argument variables, just program name
+ * @param env environment variables
+ * @return EXIT_SUCESS or EXIT_FAILURE
+ */
 int	main(int argc, char **argv, char **env)
 {
 	t_data	data;

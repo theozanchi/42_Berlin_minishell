@@ -6,14 +6,18 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/17 19:09:29 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/29 12:21:34 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Checks if a symbol is at the end of a string. Returns EXIT_FAILURE if needed
-and prints an error message*/
+/**
+ * @brief Checks if a symbol is at the end of a string
+ * 
+ * @param str User input
+ * @return EXIT_SUCCES or EXIT_FAILURE
+ */
 int	check_end_of_string(char *str)
 {
 	if ((*str == '<' || *str == '>') && *str == *(str + 1) && !*(str + 2))
@@ -29,9 +33,13 @@ int	check_end_of_string(char *str)
 	return (EXIT_SUCCESS);
 }
 
-/*Checks for two consecutive SUPPORTED_SYMBOLS. If two consecutive symbols are
-found, only '<<' and '>>' are valid combinations. Returns EXIT_FAILURE in case
-of invalid combination and prints an error message*/
+/**
+ * @brief hecks for two consecutive SUPPORTED_SYMBOLS. If two consecutive
+symbols are found, only '<<' and '>>' are valid combinations
+ * 
+ * @param str User input
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	check_double_tokens(char *str)
 {
 	if (!ft_strchr(SUPPORTED_SYMBOLS, *(str + 1)))
@@ -50,9 +58,14 @@ int	check_double_tokens(char *str)
 	}
 }
 
-/*Allocates a t_token node depending on the symbol: INPUT for '<', HERE_DOC for
-'<<', OUTPUT for '>' and APPEND for '>>'. Returns a pointer to the first
-character after the symbol*/
+/**
+ * @brief Allocates a t_token node depending on the symbol: INPUT for '<',
+HERE_DOC for '<<', OUTPUT for '>' and APPEND for '>>'
+ * 
+ * @param str Pointer to the symbol to save in the user input string
+ * @param new Pointer to the new token to populate
+ * @return Pointer to the first relevant char after the stored
+ */
 char	*helper_redirections(char *str, t_token **new)
 {
 	if (*str == *(str + 1))
@@ -73,10 +86,13 @@ char	*helper_redirections(char *str, t_token **new)
 	}
 }
 
-/*Analyzes the character located after the dollar that begins the string 'str'.
-Allocates a t_token EXIT_STATUS node if the symbol is $? and a node for an
-ENV_VAR if not. Returns a pointer to the first character after the symbol or
-after the environment variable*/
+/**
+ * @brief Analyzes the character located after the dollar that begins the string
+ * 
+ * @param str Pointer to the symbol to save in the user input string
+ * @param new Pointer to the new token to populate
+ * @return Pointer to the first relevant char after the stored symbol or NULL
+ */
 char	*helper_dollar_sign(char *str, t_token **new)
 {
 	char	*ptr;
@@ -96,11 +112,14 @@ char	*helper_dollar_sign(char *str, t_token **new)
 	return (ptr);
 }
 
-/*Creates a new node in the tokens list for the first one or two symbol(s)
-contained in the string 'str'. Returns 'NULL' on error or if the creation of the
-node fails and a pointer to the first character after the symbol on success.
-Supported symbols are listed in the SUPPORTED_SYMBOLS constant in
-minishell.h*/
+/**
+ * @brief Creates a new node in the tokens list for the first one or two
+symbol(s) contained in the string 'str'
+ * 
+ * @param data Main data structure of type t_data
+ * @param str Pointer to the symbol to save in the user input string
+ * @return Pointer to the first relevant char after the stored symbol or NULL
+ */
 char	*save_symbol(t_data *data, char *str)
 {
 	t_token	*new;

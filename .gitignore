@@ -56,3 +56,6 @@ dkms.conf
 
 # Other
 .DS_Store
+
+# Doxygen documentation
+doxygen_doc*

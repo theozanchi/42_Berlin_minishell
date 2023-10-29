@@ -6,15 +6,19 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 18:55:39 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/18 17:51:36 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/29 12:26:05 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Creates a new node to save the first word contained in the string 'str'. If
-new_node() fails, NULL is returned. The function returns a ptr to the end of the
-word (either the first space after it or the NULL terminator)*/
+/**
+ * @brief Creates a new token to save the first word in 'str'
+ * 
+ * @param data Main data structure of type t_data
+ * @param str Pointer to the beginning of the word in user input
+ * @return Pointer to the first relevant char after the stored word or NULL
+ */
 char	*save_word(t_data *data, char *str)
 {
 	char	*end;
@@ -30,10 +34,14 @@ char	*save_word(t_data *data, char *str)
 	return (end);
 }
 
-/*Creates a new node to save the quoted string contained in the string 'str',
-quote_symbol being the symbol used (' or "). If new_node() fails, NULL is
-returned. The function returns a ptr to the end of the quoted string (either the
-first space after it or the NULL terminator)*/
+/**
+ * @brief Creates a new node to save the quoted string in 'str'
+ * 
+ * @param data Main data structure of type t_data
+ * @param str Pointer to the first char after quote_symbol
+ * @param quote_symbol \' or \"
+ * @return Pointer to the first relevant char after the stored word or NULL
+ */
 char	*save_quote(t_data *data, char *str, char quote_symbol)
 {
 	char	*end_ptr;
