@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/18 18:01:04 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 09:41:15 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,6 @@ typedef enum e_type
 	HERE_DOC,
 	EXIT_STATUS,
 	ENV_VAR,
-	BUILTIN_ECHO,
-	BUILTIN_CD,
-	BUILTIN_PWD,
-	BUILTIN_EXPORT,
-	BUILTIN_UNSET,
-	BUILTIN_ENV,
-	BUILTIN_EXIT,
 	CTRL_C,
 	CTRL_D,
 	CTRL_BACKSLASH
