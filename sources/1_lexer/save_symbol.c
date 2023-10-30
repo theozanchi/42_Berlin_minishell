@@ -6,38 +6,59 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 12:01:45 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 12:28:23 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Allocates a t_token node depending on the symbol: INPUT for '<',
-HERE_DOC for '<<', OUTPUT for '>' and APPEND for '>>'
+ * @brief Identifies the redirection symbol at the beginning of str between <,
+<<, > and >>
  * 
- * @param str Pointer to the symbol to save in the user input string
- * @param new Pointer to the new token to populate
- * @return Pointer to the first relevant char after the stored
+ * @param str Pointer to the first char of the redirection symbol
+ * @param type Pointer to the t_type value to populate with type
+ * @return Pointer to the first relevant char after the redirection symbol
  */
-char	*helper_redirections(char *str, t_token **new)
+char	*identify_redirection_type(char *str, t_type *type)
 {
 	if (*str == *(str + 1))
 	{
 		if (*str == '<')
-			*new = new_node(NULL, NULL, HERE_DOC);
+			*type = HERE_DOC;
 		else
-			*new = new_node(NULL, NULL, APPEND);
-		return (str + 2);
+			*type = APPEND;
+		return (str + 3);
 	}
 	else
 	{
 		if (*str == '<')
-			*new = new_node(NULL, NULL, INPUT);
+			*type = INPUT;
 		else
-			*new = new_node(NULL, NULL, OUTPUT);
-		return (str + 1);
+			*type = OUTPUT;
+		return (str + 2);
 	}
+}
+
+/**
+ * @brief Stores a redirection symbol of the word after in a token in the list
+ * 
+ * @param str Pointer to the first char of the redirection symbol
+ * @param new Pointer to the new token to populate
+ * @return Pointer to the first relevant char after the stored redir. or NULL
+ */
+char	*helper_redirections(char *str, t_token **new)
+{
+	t_type	type;
+	char	*start;
+	char	*end;
+
+	start = identify_redirection_type(str, &type);
+	end = start;
+	while (*end && !ft_isspace(*end) && !ft_strchr(SUPPORTED_SYMBOLS, *end))
+		end++;
+	*new = new_node(start, end, type);
+	return (end);
 }
 
 /**
