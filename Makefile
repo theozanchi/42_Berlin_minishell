@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/10/17 19:10:22 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/10/30 09:48:16 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,7 +95,7 @@ fclean:			clean
 re:				fclean all
 
 project_logo:
-				@echo "${RED}   _     _     _     _     _     _     _     _     _  \n  / \   / \   / \   / \   / \   / \   / \   / \   / \ \n ( ${CYAN}m${RED} ) ( ${CYAN}i${RED} ) ( ${CYAN}n${RED} ) ( ${CYAN}i${RED} ) ( ${CYAN}s${RED} ) ( ${CYAN}h${RED} ) ( ${CYAN}e${RED} ) ( ${CYAN}l${RED} ) ( ${CYAN}l${RED} )\n  \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/ \n\n      ${NC}a 42 project by ${BOLD}Alberto Bermudez${NC} and ${BOLD}Théo Zanchi${NC}"
+				@echo "${RED}   _     _     _     _     _     _     _     _     _  \n  / \   / \   / \   / \   / \   / \   / \   / \   / \ \n ( ${CYAN}m${RED} ) ( ${CYAN}i${RED} ) ( ${CYAN}n${RED} ) ( ${CYAN}i${RED} ) ( ${CYAN}s${RED} ) ( ${CYAN}h${RED} ) ( ${CYAN}e${RED} ) ( ${CYAN}l${RED} ) ( ${CYAN}l${RED} )\n  \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/ \n\n          ${NC}a 42 project by ${BOLD}Jakob Schott${NC} and ${BOLD}Théo Zanchi${NC}"
 
 entry_message:
 				@echo "${CYAN}\nCOMPILING $$(echo ${NAME} | tr '[:lower:]' '[:upper:]')\n${NC}${BOLD}Compiling necessary .o files out of ${SRC_NR} .c files in total${NC}"
