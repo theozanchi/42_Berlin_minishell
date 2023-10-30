@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 12:28:23 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 16:11:32 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*helper_dollar_sign(char *str, t_token **new)
 		ptr = str + 1;
 		while (*ptr && !ft_isspace(*ptr) && !ft_strchr(SUPPORTED_SYMBOLS, *ptr))
 			ptr++;
-		*new = new_node(str + 1, ptr, ENV_VAR);
+		*new = new_node(str + 1, ptr, ENV_VARIABLE);
 	}
 	return (ptr);
 }

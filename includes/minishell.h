@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 15:58:58 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 16:11:52 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef enum e_type
 	STDIN,
 	STDOUT,
 	EXIT_STATUS,
+	ENV_VARIABLE,
 }	t_type;
 
 /* lexer ******************************************************************** */
@@ -69,7 +70,7 @@ typedef struct t_output
 {
 	t_type	type;
 	char	*path;
-}	t_input;
+}	t_output;
 
 /* main_data_structure ****************************************************** */
 
