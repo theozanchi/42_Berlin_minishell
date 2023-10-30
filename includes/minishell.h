@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 09:41:15 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 12:11:48 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,12 @@ int		check_arg(char *arg);
 int		lexer(t_data *data);
 
 /*lexer_utils.c*/
+int		check_end_of_string(char *str);
+int		check_double_tokens(char *str);
 t_token	*new_node(char *start, char *end, t_type type);
 
 /*save_symbol.c*/
-int		check_end_of_string(char *str);
-int		check_double_tokens(char *str);
+
 char	*helper_redirections(char *str, t_token **new);
 char	*helper_dollar_sign(char *str, t_token **new);
 char	*save_symbol(t_data *data, char *str);
