@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/10/30 09:48:16 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/10/30 10:04:44 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,7 @@ ${LIBFT}:
 				@echo "${CYAN}\nCOMPILING $$(echo ${LIBFT} | tr '[:lower:]' '[:upper:]')${NC}"
 				@if [ -d ${LIBFT_DIR} ]; \
 				then git -C ${LIBFT_DIR} pull; \
-				else git clone git@github.com:theozanchi/42_Berlin_libft.git ${LIBFT_DIR}; \
+				else git clone https://github.com/theozanchi/42_Berlin_libft.git ${LIBFT_DIR}; \
 				fi
 				make -C ${LIBFT_DIR}
 
