@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 16:32:55 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 16:33:12 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ typedef struct s_data
 	t_token			*tokens;
 	t_commands		*commands;
 	t_input			*input;
-	t_output		output[];
+	t_output		*output;
 }	t_data;
 
 /* 0_utils ****************************************************************** */
