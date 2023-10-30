@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:22:52 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 20:34:51 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,22 +82,4 @@ int	init_data(t_data *data, char **env)
 	if (init_env(data, env) || init_path(data))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
-}
-
-/**
- * @brief Input loop, calls lexer, parser and executor then frees memory
- * 
- * @param data Main data structure
- */
-void	launch_minishell(t_data *data)
-{
-	while (1)
-	{
-		data->argv = readline(ENTRY_PROMPT);
-		add_history(data->argv);
-		lexer(data);
-		free(data->argv);
-		data->argv = NULL;
-		free_tokens(data);
-	}
 }

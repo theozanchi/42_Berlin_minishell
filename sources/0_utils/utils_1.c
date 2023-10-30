@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:22:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 20:08:18 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,30 +36,4 @@ int	ft_printf_exit_code(char *str, int exit_code)
 {
 	ft_printf(str);
 	return (exit_code);
-}
-
-/**
- * @brief Loops through the token list data->tokens and adds a new node at the
-end of the list
- * 
- * @param data Main data structure
- * @param new New token to add at the end of the token list
- */
-void	ft_tokenlst_addback(t_data *data, t_token *new)
-{
-	t_token	*ptr;
-
-	if (!data->tokens)
-	{
-		new->prev = NULL;
-		data->tokens = new;
-	}
-	else
-	{
-		ptr = data->tokens;
-		while (ptr->next)
-			ptr = ptr->next;
-		new->prev = ptr;
-		ptr->next = new;
-	}
 }
