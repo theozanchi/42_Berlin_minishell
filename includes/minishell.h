@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 12:11:48 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 15:58:58 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ typedef enum e_type
 	OUTPUT,
 	APPEND,
 	HERE_DOC,
+	STDIN,
+	STDOUT,
 	EXIT_STATUS,
-	ENV_VAR,
-	CTRL_C,
-	CTRL_D,
-	CTRL_BACKSLASH
 }	t_type;
+
+/* lexer ******************************************************************** */
 
 typedef struct s_token
 {
@@ -51,13 +51,27 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_parser_node
+/* parser ******************************************************************* */
+
+typedef struct s_commands
 {
-	t_type					type;
-	char					*value;
-	struct s_parser_node	*left;
-	struct s_parser_node	*right;
-}	t_parser_node;
+	char	*command;
+	char	**flags;
+}	t_commands;
+
+typedef struct t_input
+{
+	t_type	type;
+	char	*path;
+}	t_input;
+
+typedef struct t_output
+{
+	t_type	type;
+	char	*path;
+}	t_input;
+
+/* main_data_structure ****************************************************** */
 
 typedef struct s_data
 {
@@ -65,7 +79,9 @@ typedef struct s_data
 	char			*path;
 	char			*argv;
 	t_token			*tokens;
-	t_parser_node	*parsed_command;
+	t_commands		*commands;
+	t_input			*input;
+	t_output		*output;
 }	t_data;
 
 /* 0_utils ****************************************************************** */
