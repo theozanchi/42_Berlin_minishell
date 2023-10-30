@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 16:16:00 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 16:32:55 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,24 @@ typedef struct s_token
 
 typedef struct s_commands
 {
-	char	*command;
-	char	*argument;
-	char	**flags;
+	char				*command;
+	char				*argument;
+	char				**flags;
+	struct s_commands	*next;
 }	t_commands;
 
-typedef struct t_input
+typedef struct s_input
 {
-	t_type	type;
-	char	*path;
+	t_type			type;
+	char			*path;
+	struct s_input	*next;
 }	t_input;
 
-typedef struct t_output
+typedef struct s_output
 {
-	t_type	type;
-	char	*path;
+	t_type			type;
+	char			*path;
+	struct s_output	*next;
 }	t_output;
 
 /* main_data_structure ****************************************************** */
@@ -83,7 +86,7 @@ typedef struct s_data
 	t_token			*tokens;
 	t_commands		*commands;
 	t_input			*input;
-	t_output		*output;
+	t_output		output[];
 }	t_data;
 
 /* 0_utils ****************************************************************** */

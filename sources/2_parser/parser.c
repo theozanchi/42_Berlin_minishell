@@ -6,8 +6,10 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/16 20:59:20 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 16:24:45 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*Parser in pseudo code*/
