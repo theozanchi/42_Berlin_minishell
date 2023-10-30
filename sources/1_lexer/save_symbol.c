@@ -6,57 +6,11 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:21:34 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 12:01:45 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Checks if a symbol is at the end of a string
- * 
- * @param str User input
- * @return EXIT_SUCCES or EXIT_FAILURE
- */
-int	check_end_of_string(char *str)
-{
-	if ((*str == '<' || *str == '>') && *str == *(str + 1) && !*(str + 2))
-	{
-		ft_printf("token expected after symbol '%c%c'\n", *str, *str);
-		return (EXIT_FAILURE);
-	}
-	if (!*(str + 1))
-	{
-		ft_printf("token expected after symbol '%c'\n", *str);
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
-/**
- * @brief hecks for two consecutive SUPPORTED_SYMBOLS. If two consecutive
-symbols are found, only '<<' and '>>' are valid combinations
- * 
- * @param str User input
- * @return EXIT_SUCCESS or EXIT_FAILURE
- */
-int	check_double_tokens(char *str)
-{
-	if (!ft_strchr(SUPPORTED_SYMBOLS, *(str + 1)))
-		return (EXIT_SUCCESS);
-	else
-	{
-		if ((*str == '<' && *(str + 1) == '<')
-			|| (*str == '>' && *(str + 1) == '>'))
-			return (EXIT_SUCCESS);
-		else
-		{
-			ft_printf("token expected after symbol '%c', '%c' found\n",
-				*str, *(str + 1));
-			return (EXIT_FAILURE);
-		}
-	}
-}
 
 /**
  * @brief Allocates a t_token node depending on the symbol: INPUT for '<',
