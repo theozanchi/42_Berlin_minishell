@@ -1,17 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_path.c                                        :+:      :+:    :+:   */
+/*   env_extract_path.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:04:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/10/30 16:45:18 by jschott          ###   ########.fr       */
+/*   Updated: 2023/10/31 19:19:08 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "executer.h"
 
+/**
+ * @brief Frees a given array of strings
+ * 
+ * @param arr Array with pointers to strings
+ * @param int index
+ * @return 1 if success. 0 if arr is NULL
+ */
 int	free_str_arr(char **arr)
 {
 	int	i;
@@ -23,31 +30,23 @@ int	free_str_arr(char **arr)
 	return (1);
 }
 
-char	*get_exec_path(char *cmd, char **env)
+/**
+ * @brief Splits all paths returned from env into seperate strings 
+ * 
+ * @param env array of strings that contains the output of the command env
+ * @param path_split array of strings of all paths available in env
+ * @return string of the path to the executable, if it exists and user has 
+ rights to execute it. otherwise NULL.
+ */
+char	**env_extract_paths(char **env)
 {
 	char	**path_split;
 	int		i;
-	char	*path_complete;
-	char	*exec_path;
 
 	path_split = 0;
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
 		i++;
 	path_split = ft_split(ft_strchr(env[i], '/'), ':');
-	i = -1;
-	while (path_split[++i])
-	{
-		path_complete = ft_strjoin(path_split[i], "/");
-		exec_path = ft_strjoin(path_complete, cmd);
-		free (path_complete);
-		if (access(exec_path, X_OK | F_OK) == 0)
-		{
-			free_str_arr (path_split);
-			return (exec_path);
-		}
-		free (exec_path);
-	}
-	free_str_arr (path_split);
-	return (0);
+	return (path_split);
 }
