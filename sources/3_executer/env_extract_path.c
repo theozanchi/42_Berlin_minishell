@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:04:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/10/31 19:19:08 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/01 17:26:22 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	free_str_arr(char **arr)
 char	**env_extract_paths(char **env)
 {
 	char	**path_split;
+	char	**path_split_full;
 	int		i;
 
 	path_split = 0;
@@ -48,5 +49,17 @@ char	**env_extract_paths(char **env)
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
 		i++;
 	path_split = ft_split(ft_strchr(env[i], '/'), ':');
-	return (path_split);
+	i = 0;
+	while (path_split[i])
+		i++;
+	path_split_full = (char **) malloc (i);
+	if (path_split_full)
+	{
+		--i;
+		path_split_full[i] = 0;
+		while (path_split[--i])
+			path_split_full[i] = ft_strjoin(path_split[i], "/");
+	}
+	free_str_arr(path_split);
+	return (path_split_full);
 }

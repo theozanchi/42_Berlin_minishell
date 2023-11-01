@@ -6,63 +6,103 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/10/31 19:26:12 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/01 18:36:43 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executer.h"
 
-int	read_pipe(char *cmd, char *file_out, int *fd_pipe, char **env)
+void	pipe2fd(t_output **out, t_commands *cmd, int *fd_pipe, char **env)
 {
+	int	i;
 	int	fd_out;
 
-	wait (NULL);
-	fd_out = open(file_out, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	// if (fd_out <= 0)
-	//	return (error_mgmt(OUTPUT_ERR, file_out));
-	dup2(fd_out, 1);
-	dup2(fd_pipe[0], 0);
-	close(fd_pipe[1]);
-	exec(cmd, env);
-	close(fd_out);
-	return (1);
+	i = 0;
+	if (fd_pipe)
+	{
+		dup2(fd_pipe[0], 0);
+		close(fd_pipe[1]);
+	}
+	if (!out)
+	{
+		dup2(fd_out, 1);
+		cmd_execute(cmd, env);
+		close (fd_out);
+	}
+	while (out[++i])
+	{
+		fd_out = open(out[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		if (fd_out <= 0)
+			return ; //ERROR MGMT TBD
+		dup2(fd_out, 1);
+		cmd_execute(cmd, env);
+		close (fd_out);
+	}
 }
 
-int	executer(t_output **out_redirect, t_commands *cmds, t_input *in_redirect)
+void	pipe2pipe(int *fd_pipeout, t_commands *cmd, int *fd_pipein, char **env)
 {
-	int	fd_out;
+	if (!fd_pipeout || !fd_pipein)
+		return ; //ERROR MGMT TBD
+	dup2(fd_pipeout[1], 1);
+	close(fd_pipeout[0]);
+	dup2(fd_pipein[0], 0);
+	close(fd_pipein[1]);
+	cmd_execute(cmd, env);
+}
+
+void	fd2pipe(int *fd_pipe, t_commands *cmd, t_input **in, char **env)
+{
+	int	fd_in;
+
+	if (in)
+	{
+		fd_in = open(in[0], O_RDONLY);
+		if (fd_in <= 0)
+			return ;
+		dup2(fd_in, 0);
+	}
+	dup2(fd_pipe[1], 1);
+	cmd_execute(cmd, env);
+	close (fd_in);
+}
+
+int	executer(t_output **out_redirect, t_commands *cmds, t_input **in_redirect, char **env)
+{
 	int	i;
-	int	fd_pipe[2];
+	int	fd_pipe_0[2];
+	int	fd_pipe_1[2];
 	int	pid;
 
 	i = 0;
-/* 
- * create and/or open all given input files 
- */
-	while (in_redirect[i])
-	{
-		fd_in = open(out_redirect[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		if (!out_redirect[++i])
-			break ;
-		close(fd_out);
-	}
-	close(fd_out);
 /* 
  * as many processes as commands 
  */
 	if (cmds->next)
 	{
-		pipe(fd_pipe);
+		pipe(fd_pipe_0);
 			// MISSING ERROR EXIT WHEN PIPING FAILS
 		pid = fork();
 		if (pid == -1)
-			exit(0); // PROPER EXIT TBD
+			return (0); // ERROR MGMT TBD
 		if (pid == 0)
-			// CHILD_PROCESS
+			fd2pipe(pid, cmds, in_redirect, env);
 		if (pid != 0)
 		{
-			wait (NULL);
-			executer(fd_pipe[1], cmds->next, in_redirect);
+			cmds = cmds->next;
+			while (cmds->next)
+			{
+				pipe(fd_pipe_1);
+				pid = fork();
+				if (pid == -1)
+					return (0); // ERROR MGMT TBD
+				if (pid == 0)
+					pipe2pipe(fd_pipe_1, cmds, fd_pipe_0, env);
+				if (pid != 0)
+					wait (NULL)
+					
+
+			}
 		}
 	}
 /* 

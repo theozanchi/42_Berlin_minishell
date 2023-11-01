@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 15:58:58 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/01 18:37:22 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,10 @@ typedef struct s_token
 
 typedef struct s_commands
 {
-	char	*command;
-	char	**flags;
+	char				*command;
+	char				**arguments;
+	char				**flags;
+	struct s_commands	*next;
 }	t_commands;
 
 typedef struct t_input
@@ -69,7 +71,7 @@ typedef struct t_output
 {
 	t_type	type;
 	char	*path;
-}	t_input;
+}	t_output;
 
 /* main_data_structure ****************************************************** */
 
