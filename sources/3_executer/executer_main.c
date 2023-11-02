@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/02 14:29:47 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/02 15:48:41 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	pipe2fd(t_output **out, t_commands *cmd, int *fd_pipe, char **env)
 	int	i;
 	int	fd_out;
 
-	i = 0;
+	i = -1;
 	if (fd_pipe)
 	{
 		dup2(fd_pipe[0], 0);
@@ -88,31 +88,34 @@ int	executer(t_output **out_redirect, t_commands *cmds, t_input **in_redirect, c
 	int		i;
 	int		cmds_num;
 	int		**fd_pipes;
+	int		*lastpipe;
 	pid_t	*pid;
 
 	cmds_num = cmd_count(cmds);
+	lastpipe = 0;
 	i = 0;
-	fd_pipes = (int **) ft_calloc(cmds_num, 2 * sizeof(int));
-	pid = (pid_t *) ft_calloc (cmds_num, sizeof(pid_t));
-	while (cmds->next)
+	fd_pipes = (int **) ft_calloc(cmds_num - 1, 2 * sizeof(int));
+	pid = (pid_t *) ft_calloc (cmds_num - 1, sizeof(pid_t));
+	while (fd_pipes && pid && cmds->next)
 	{
 		pipe(fd_pipes[i]);
 			// ERROR MGMT TBD
-		pid = fork();
+		pid[i] = fork();
 		if (pid == -1)
 			return (0); // ERROR MGMT TBD
-		if (pid == 0 && i > 0)
+		if (pid[i] == 0 && i > 0)
 			pipe2pipe(fd_pipes[i - 1], cmds, fd_pipes[i], env);
-		else if (pid == 0)
-			fd2pipe(pid, cmds, in_redirect, env);
-		if (pid != 0)
+		else if (pid[i] == 0)
+			fd2pipe(pid[i], cmds, in_redirect, env);
+		if (pid[i] != 0)
 			wait (NULL);
 		++i;
 		cmds = cmds->next;
 	}
+	lastpipe = &fd_pipes[i];
 	i = -1;
-	while (out_redirect[++i])
-		pipe2fd (out_redirect[i], cmds, fd_pipes[i], env);
+	while (fd_pipes && pid && out_redirect[++i])
+		pipe2fd (out_redirect[i], cmds, lastpipe, env);
 	free (fd_pipes);
 	free (pid);
 	return (1);
