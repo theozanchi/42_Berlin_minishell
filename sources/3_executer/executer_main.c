@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/02 12:16:17 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/02 14:29:47 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,12 @@ int	executer(t_output **out_redirect, t_commands *cmds, t_input **in_redirect, c
 	int		i;
 	int		cmds_num;
 	int		**fd_pipes;
-	pid_t	pid;
+	pid_t	*pid;
 
 	cmds_num = cmd_count(cmds);
 	i = 0;
-	fd_pipes = ft_calloc(cmds_num, 2 * sizeof(int));
+	fd_pipes = (int **) ft_calloc(cmds_num, 2 * sizeof(int));
+	pid = (pid_t *) ft_calloc (cmds_num, sizeof(pid_t));
 	while (cmds->next)
 	{
 		pipe(fd_pipes[i]);
@@ -113,5 +114,6 @@ int	executer(t_output **out_redirect, t_commands *cmds, t_input **in_redirect, c
 	while (out_redirect[++i])
 		pipe2fd (out_redirect[i], cmds, fd_pipes[i], env);
 	free (fd_pipes);
+	free (pid);
 	return (1);
 }
