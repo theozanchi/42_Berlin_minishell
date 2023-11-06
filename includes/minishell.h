@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/06 11:16:09 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/06 15:53:44 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_commands
 	t_list				*arguments;
 	t_list				*flags;
 	struct s_commands	*next;
+	char				**final;
 }	t_commands;
 
 typedef struct s_input
@@ -94,74 +95,76 @@ typedef struct s_data
 
 /* 0_utils ****************************************************************** */
 /*utils_1.c*/
-int		perror_return_failure(char *str);
-int		ft_printf_exit_code(char *str, int exit_code);
+int			perror_return_failure(char *str);
+int			ft_printf_exit_code(char *str, int exit_code);
+void		ft_lst_addback(t_list *list, t_list *new);
+int			add_new_list_node(t_list *list, char *str);
 
 /* 1_lexer ****************************************************************** */
 /*lexer_main.c*/
-int		check_arg(char *arg);
-int		lexer(t_data *data);
+int			check_arg(char *arg);
+int			lexer(t_data *data);
 
 /*lexer_utils.c*/
-int		check_end_of_string(char *str);
-int		check_double_tokens(char *str);
-t_token	*new_token(char *start, char *end, t_type type);
-void	ft_tokenlst_addback(t_data *data, t_token *new);
+int			check_end_of_string(char *str);
+int			check_double_tokens(char *str);
+t_token		*new_token(char *start, char *end, t_type type);
+void		ft_tokenlst_addback(t_data *data, t_token *new);
 
 /*save_symbol.c*/
-char	*lexer_helper_redirections(char *str, t_token **new);
-char	*lexer_helper_dollar_sign(char *str, t_token **new);
-char	*save_symbol(t_data *data, char *str);
+char		*lexer_helper_redirections(char *str, t_token **new);
+char		*lexer_helper_dollar_sign(char *str, t_token **new);
+char		*save_symbol(t_data *data, char *str);
 
 /*save_word_save_quote.c*/
-char	*save_word(t_data *data, char *str);
-char	*save_quote(t_data *data, char *str, char quote_symbol);
+char		*save_word(t_data *data, char *str);
+char		*save_quote(t_data *data, char *str, char quote_symbol);
 
 /* 2_parser ***************************************************************** */
 /*parser_main.c*/
-int		parser_helper_operands(t_data *data, t_token *token);
-int		parser_helper_redirections(t_data *data, t_token *token);
-int		input_output_lists_init(t_data *data);
-int		parser(t_data *data);
+int			parser_helper_operands(t_data *data, t_token *token);
+int			parser_helper_redirections(t_data *data, t_token *token);
+int			input_output_lists_init(t_data *data);
+int			parser(t_data *data);
 
 /*parser_utils_1.c*/
-void	ft_inputlst_addback(t_data *data, t_input *new);
-int		add_new_input_node(t_data *data, t_token *token);
-void	ft_outputlst_addback(t_data *data, t_output *new);
-int		add_new_output_node(t_data *data, t_token *token);
+void		ft_inputlst_addback(t_data *data, t_input *new);
+int			add_new_input_node(t_data *data, t_token *token);
+void		ft_outputlst_addback(t_data *data, t_output *new);
+int			add_new_output_node(t_data *data, t_token *token);
 
 /*parser_utils_2.c*/
-void	ft_commandlst_addback(t_data *data, t_commands *new);
-int		add_new_command_node(t_data *data);
+void		ft_commandlst_addback(t_data *data, t_commands *new);
+t_commands	*add_new_command_node(t_data *data);
 
 /*populate_command_node.c*/
-int		populate_node_command(t_commands *node, t_token *token);
-int		populate_node_flag(t_commands *node, t_token *token);
-int		populate_node_argument(t_commands *node, t_token *token);
+int			populate_node_command(t_commands *node, t_token *token);
+int			populate_node_flag(t_commands *node, t_token *token);
+int			populate_node_argument(t_commands *node, t_token *token);
 
 /* 4_free ***************         ******************************************* */
 /*free_1.c*/
-void	free_tokens(t_data *data);
-void	free_char_array(char **array);
-void	free_input(t_data *data);
-void	free_output(t_data *data);
-void	free_commands(t_data *data);
+void		free_tokens(t_data *data);
+void		free_char_array(char **array);
+void		free_input(t_data *data);
+void		free_output(t_data *data);
+void		free_commands(t_data *data);
 
 /*free_2.c*/
-void	free_all_memory(t_data *data);
-void	free_memory_between_commands(t_data *data);
-void	free_list(t_list *list);
+void		free_all_memory(t_data *data);
+void		free_memory_between_commands(t_data *data);
+void		free_list(t_list *list);
 
 /* ************************************************************************** */
 
 /*init.c*/
-int		init_env(t_data *data, char **env);
-int		init_path(t_data *data);
-int		init_data(t_data *data, char **env);
+int			init_env(t_data *data, char **env);
+int			init_path(t_data *data);
+int			init_data(t_data *data, char **env);
 
 /*main.c*/
-int		main(int argc, char **argv, char **env);
-void	launch_minishell(t_data *data);
-void	exit_minishell(t_data *data, int exit_code);
+int			main(int argc, char **argv, char **env);
+void		launch_minishell(t_data *data);
+void		exit_minishell(t_data *data, int exit_code);
 
 #endif

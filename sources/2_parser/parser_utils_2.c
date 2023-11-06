@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:28:35 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/31 15:53:28 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/06 15:56:19 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_commandlst_addback(t_data *data, t_commands *new)
 	t_commands	*ptr;
 
 	{
-		ptr = data->input;
+		ptr = data->commands;
 		while (ptr->next)
 			ptr = ptr->next;
 		ptr->next = new;

@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 20:08:18 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/06 11:55:32 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,56 @@ int	ft_printf_exit_code(char *str, int exit_code)
 {
 	ft_printf(str);
 	return (exit_code);
+}
+
+/**
+ * @brief Loops through a t_list list and adds a new node at the end
+ * 
+ * @param list The list to add a new node to
+ * @param new The new node to add
+ */
+void	ft_lst_addback(t_list *list, t_list *new)
+{
+	t_list	*ptr;
+
+	{
+		ptr = list;
+		while (ptr->next)
+			ptr = ptr->next;
+		ptr->next = new;
+	}
+}
+
+/**
+ * @brief Creates and adds a new node at the end of of a list, with str as a
+ * node value
+ * 
+ * @param list The list in which to create the new node
+ * @param str The string that will be the value of the new node
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	add_new_list_node(t_list *list, char *str)
+{
+	t_list	*new;
+
+	if (!list)
+	{
+		list = malloc(sizeof(t_list));
+		if (!list)
+			return (perror_return_failure("malloc for t_list"));
+		list->value = ft_strdup(str);
+		if (!list->value)
+			return (perror_return_failure("ft_strdup in add_new_list_node"));
+	}
+	else
+	{
+		new = malloc(sizeof(t_output));
+		if (!new)
+			return (perror_return_failure("new list node malloc"));
+		new->value = ft_strdup(str);
+		if (!list->value)
+			return (perror_return_failure("ft_strdup in add_new_list_node"));
+		ft_lst_addback(list, new);
+	}
+	return (EXIT_SUCCESS);
 }
