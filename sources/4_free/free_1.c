@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:17:48 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 21:10:45 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/06 11:16:54 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,12 +127,10 @@ void	free_commands(t_data *data)
 			free(tmp->command);
 			tmp->command = NULL;
 		}
-		if (tmp->argument)
-		{
-			free(tmp->argument);
-			tmp->argument = NULL;
-		}
-		free_char_array(tmp->flags);
+		if (tmp->arguments)
+			free_list(tmp->arguments);
+		if (tmp->flags)
+			free_list(tmp->flags);
 		free(tmp);
 		tmp = NULL;
 	}

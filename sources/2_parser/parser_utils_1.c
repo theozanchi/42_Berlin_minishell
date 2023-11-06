@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*   parser_utils_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 17:02:24 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 21:11:45 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/31 11:35:57 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	add_new_input_node(t_data *data, t_token *token)
 			return (perror_return_failure("ft_strdup in new input node"));
 		ft_inputlst_addback(data, new);
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 /**
@@ -115,5 +115,5 @@ int	add_new_output_node(t_data *data, t_token *token)
 			return (perror_return_failure("ft_strdup in new output node"));
 		ft_outputlst_addback(data, new);
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

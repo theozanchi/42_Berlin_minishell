@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 21:12:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/31 15:55:52 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,26 @@
 
 int	parser_helper_operands(t_data *data, t_token *token)
 {
+	static t_commands	*ptr = NULL;
+
+	if (!token->prev
+		|| (token->prev->type >= PIPE && token->prev->type <= HERE_DOC))
+	{
+		ptr = add_new_command_node(data);
+		if (populate_node_command(ptr, token))
+			return (EXIT_FAILURE);
+	}
+	else if (token->value[0] == '-')
+	{
+		if (populate_node_flag(ptr, token))
+			return (EXIT_FAILURE);
+	}
+	else
+	{
+		if (populate_node_argument(ptr, token))
+			return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }
 
 /**

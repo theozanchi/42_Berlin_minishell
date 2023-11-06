@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 21:03:24 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/06 11:16:09 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,12 @@ typedef enum e_type
 	ENV_VARIABLE,
 }	t_type;
 
+typedef struct s_list
+{
+	char			*value;
+	struct s_list	*next;
+}	t_list;
+
 /* lexer ******************************************************************** */
 typedef struct s_token
 {
@@ -55,8 +61,8 @@ typedef struct s_token
 typedef struct s_commands
 {
 	char				*command;
-	char				*argument;
-	char				**flags;
+	t_list				*arguments;
+	t_list				*flags;
 	struct s_commands	*next;
 }	t_commands;
 
@@ -118,11 +124,20 @@ int		parser_helper_redirections(t_data *data, t_token *token);
 int		input_output_lists_init(t_data *data);
 int		parser(t_data *data);
 
-/*parser_utils.c*/
+/*parser_utils_1.c*/
 void	ft_inputlst_addback(t_data *data, t_input *new);
 int		add_new_input_node(t_data *data, t_token *token);
 void	ft_outputlst_addback(t_data *data, t_output *new);
 int		add_new_output_node(t_data *data, t_token *token);
+
+/*parser_utils_2.c*/
+void	ft_commandlst_addback(t_data *data, t_commands *new);
+int		add_new_command_node(t_data *data);
+
+/*populate_command_node.c*/
+int		populate_node_command(t_commands *node, t_token *token);
+int		populate_node_flag(t_commands *node, t_token *token);
+int		populate_node_argument(t_commands *node, t_token *token);
 
 /* 4_free ***************         ******************************************* */
 /*free_1.c*/
@@ -135,6 +150,7 @@ void	free_commands(t_data *data);
 /*free_2.c*/
 void	free_all_memory(t_data *data);
 void	free_memory_between_commands(t_data *data);
+void	free_list(t_list *list);
 
 /* ************************************************************************** */
 
