@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 15:54:14 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/07 18:04:01 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,9 @@ char		*save_word(t_data *data, char *str);
 char		*save_quote(t_data *data, char *str, char quote_symbol);
 
 /* 2_parser ***************************************************************** */
+/*concatenate_successive_commands.c*/
+int			concatenate_successive_commands(t_data *data);
+
 /*parser_main.c*/
 int			parser_helper_operands(t_data *data, t_token *token);
 int			parser_helper_redirections(t_data *data, t_token *token);
@@ -136,6 +139,7 @@ int			add_new_output_node(t_data *data, t_token *token);
 /*parser_utils_2.c*/
 void		ft_commandlst_addback(t_data *data, t_commands *new);
 t_commands	*add_new_command_node(t_data *data);
+size_t		get_number_of_command_elements(t_commands *node);
 
 /*populate_command_node.c*/
 int			populate_node_command(t_commands *node, t_token *token);

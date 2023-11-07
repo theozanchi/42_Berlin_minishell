@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:17:48 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/06 11:16:54 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/07 18:05:08 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ void	free_commands(t_data *data)
 			free_list(tmp->arguments);
 		if (tmp->flags)
 			free_list(tmp->flags);
+		free_char_array(tmp->final);
 		free(tmp);
 		tmp = NULL;
 	}

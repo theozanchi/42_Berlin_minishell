@@ -6,12 +6,22 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/31 15:55:52 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/07 18:10:26 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief If a token is an operand, it is analyzed and stored properly depending
+ * on whether it is a command, a flag or an argument. If the token before an
+ * operand is an operator, then a new command node is created and added at the
+ * end of the commands list thanks to a static variable
+ * 
+ * @param data The main data structure
+ * @param token The current token being parsed
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	parser_helper_operands(t_data *data, t_token *token)
 {
 	static t_commands	*ptr = NULL;
@@ -110,5 +120,7 @@ int	parser(t_data *data)
 			parser_helper_redirections(data, ptr);
 		ptr = ptr->next;
 	}
+	if (concatenate_successive_commands(data))
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
