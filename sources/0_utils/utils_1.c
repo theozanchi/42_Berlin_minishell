@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/06 11:55:32 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/07 15:54:43 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,28 +64,20 @@ void	ft_lst_addback(t_list *list, t_list *new)
  * @param str The string that will be the value of the new node
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	add_new_list_node(t_list *list, char *str)
+int	add_new_list_node(t_list **list, char *str)
 {
 	t_list	*new;
 
-	if (!list)
-	{
-		list = malloc(sizeof(t_list));
-		if (!list)
-			return (perror_return_failure("malloc for t_list"));
-		list->value = ft_strdup(str);
-		if (!list->value)
-			return (perror_return_failure("ft_strdup in add_new_list_node"));
-	}
+	new = malloc(sizeof(t_output));
+	if (!new)
+		return (perror_return_failure("new list node malloc"));
+	ft_memset(new, 0, sizeof(t_list));
+	new->value = ft_strdup(str);
+	if (!new->value)
+		return (perror_return_failure("ft_strdup in add_new_list_node"));
+	if (!*list)
+		*list = new;
 	else
-	{
-		new = malloc(sizeof(t_output));
-		if (!new)
-			return (perror_return_failure("new list node malloc"));
-		new->value = ft_strdup(str);
-		if (!list->value)
-			return (perror_return_failure("ft_strdup in add_new_list_node"));
-		ft_lst_addback(list, new);
-	}
+		ft_lst_addback(*list, new);
 	return (EXIT_SUCCESS);
 }

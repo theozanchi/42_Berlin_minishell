@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/06 15:53:44 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/07 15:54:14 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ typedef struct s_data
 int			perror_return_failure(char *str);
 int			ft_printf_exit_code(char *str, int exit_code);
 void		ft_lst_addback(t_list *list, t_list *new);
-int			add_new_list_node(t_list *list, char *str);
+int			add_new_list_node(t_list **list, char *str);
 
 /* 1_lexer ****************************************************************** */
 /*lexer_main.c*/

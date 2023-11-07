@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 17:02:24 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/31 11:35:57 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/06 16:53:17 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	add_new_input_node(t_data *data, t_token *token)
 		new = malloc(sizeof(t_input));
 		if (!new)
 			return (perror_return_failure("new input node malloc"));
+		ft_memset(new, 0, sizeof(t_input));
 		new->type = token->type;
 		new->path = ft_strdup(token->value);
 		if (!new->path)
@@ -109,6 +110,7 @@ int	add_new_output_node(t_data *data, t_token *token)
 		new = malloc(sizeof(t_output));
 		if (!new)
 			return (perror_return_failure("new output node malloc"));
+		ft_memset(new, 0, sizeof(t_output));
 		new->type = token->type;
 		new->path = ft_strdup(token->value);
 		if (!new->path)
