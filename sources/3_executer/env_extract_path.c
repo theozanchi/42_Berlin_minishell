@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:04:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/01 17:26:22 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/07 14:57:12 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param int index
  * @return 1 if success. 0 if arr is NULL
  */
-int	free_str_arr(char **arr)
+/* int	free_str_arr(char **arr)
 {
 	int	i;
 
@@ -29,7 +29,7 @@ int	free_str_arr(char **arr)
 	free(arr);
 	return (1);
 }
-
+ */
 /**
  * @brief Splits all paths returned from env into seperate strings 
  * 
@@ -44,6 +44,8 @@ char	**env_extract_paths(char **env)
 	char	**path_split_full;
 	int		i;
 
+printf("HELLO extract path\n\n");
+
 	path_split = 0;
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
@@ -55,8 +57,8 @@ char	**env_extract_paths(char **env)
 	path_split_full = (char **) malloc (i);
 	if (path_split_full)
 	{
-		--i;
 		path_split_full[i] = 0;
+		--i;
 		while (path_split[--i])
 			path_split_full[i] = ft_strjoin(path_split[i], "/");
 	}

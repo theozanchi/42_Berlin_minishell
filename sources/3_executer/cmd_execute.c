@@ -6,11 +6,10 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/01 17:51:25 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/07 17:29:55 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "executer.h"
 
 /**
@@ -41,8 +40,9 @@ int	cmd_execute(t_commands *cmd, char **env)
 	{
 		paths = env_extract_paths(env);
 // check if command is included in builtin
-		exec_path = ft_strjoin(BUILTIN_PATH, cmd->command);
+//		exec_path = ft_strjoin(BUILTIN_PATH, cmd->command);
 // check if command is included in env
+		exec_path = ft_strjoin(paths[0], cmd->command);
 		while (access(exec_path, X_OK | F_OK) != 0 && paths[++i])
 		{
 			free (exec_path);
