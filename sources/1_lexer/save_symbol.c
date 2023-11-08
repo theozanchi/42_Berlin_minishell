@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 17:44:44 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 11:58:55 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*identify_redirection_type(char *str, t_type *type)
 			*type = HERE_DOC;
 		else
 			*type = APPEND;
-		return (str + 3);
+		return (str + 2);
 	}
 	else
 	{
@@ -36,7 +36,7 @@ char	*identify_redirection_type(char *str, t_type *type)
 			*type = INPUT;
 		else
 			*type = OUTPUT;
-		return (str + 2);
+		return (str + 1);
 	}
 }
 
@@ -54,6 +54,8 @@ char	*lexer_helper_redirections(char *str, t_token **new)
 	char	*end;
 
 	start = identify_redirection_type(str, &type);
+	while (ft_isspace(*start))
+		start++;
 	end = start;
 	while (*end && !ft_isspace(*end) && !ft_strchr(SUPPORTED_SYMBOLS, *end))
 		end++;
