@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 18:10:26 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 18:49:14 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,52 +47,52 @@ int	parser_helper_operands(t_data *data, t_token *token)
 }
 
 /**
- * @brief Creates a node in the input or output lists in the main data structure
+ * @brief Opens a file for input or output redirection. If a previous file had
+ * been opened, it is first closed
  * 
- * @param data Main data structure
- * @param token The token containing the redirection and path of it (for <, >
- * and >>) or the delimiter for a heredoc
+ * @param redirection The input or output structure to modify 
+ * @param token The current token
+ * @param oflag The flags for opneing the file
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	open_redirection_fd(t_io *redirection, t_token *token, int oflag)
+{
+	if (redirection->type != STDIN && redirection->type != STDOUT)
+		close(redirection->fd);
+	redirection->type = token->type;
+	redirection->value = ft_strdup(token->value);
+	if (!redirection->value)
+		return (perror_return_failure("ft_strdup for redirection value"));
+	redirection->fd = open(token->value, oflag, 0644);
+	if (redirection->fd < 0)
+		return (perror_return_failure(redirection->value));
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * @brief Modifies the input and output values in the main data structure
+ * 
+ * @param data The main data structure
+ * @param token The current token
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
 int	parser_helper_redirections(t_data *data, t_token *token)
 {
 	if (token->type == INPUT || token->type == HERE_DOC)
 	{
-		if (add_new_input_node(data, token))
+		if (open_redirection_fd(&data->input, token, O_RDONLY))
+			return (EXIT_FAILURE);
+	}
+	else if (token->type == OUTPUT)
+	{
+		if (open_redirection_fd(&data->output, token, O_WRONLY | O_CREAT))
 			return (EXIT_FAILURE);
 	}
 	else
 	{
-		if (add_new_output_node(data, token))
+		if (open_redirection_fd(&data->output, token,
+				O_WRONLY | O_APPEND | O_CREAT))
 			return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
-/**
- * @brief Initializes data->input with the standard input and data->output with
- * the standard output
- * 
- * @param data Main data structure
- * @return EXIT_SUCCESS or EXIT_FAILURE
- */
-int	input_output_lists_init(t_data *data)
-{
-	{
-		data->input = malloc(sizeof(t_input));
-		if (!data->input)
-			return (EXIT_FAILURE);
-		data->input->type = STDIN;
-		data->input->path = NULL;
-		data->input->next = NULL;
-	}
-	{
-		data->output = malloc(sizeof(t_output));
-		if (!data->output)
-			return (EXIT_FAILURE);
-		data->output->type = STDOUT;
-		data->output->path = NULL;
-		data->output->next = NULL;
 	}
 	return (EXIT_SUCCESS);
 }
@@ -109,8 +109,6 @@ int	parser(t_data *data)
 {
 	t_token	*ptr;
 
-	if (input_output_lists_init(data))
-		return (EXIT_FAILURE);
 	ptr = data->tokens;
 	while (ptr)
 	{

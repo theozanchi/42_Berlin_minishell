@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 18:03:55 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 13:09:08 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	add_new_list_node(t_list **list, char *str)
 {
 	t_list	*new;
 
-	new = malloc(sizeof(t_output));
+	new = malloc(sizeof(t_list));
 	if (!new)
 		return (perror_return_failure("new list node malloc"));
 	ft_memset(new, 0, sizeof(t_list));

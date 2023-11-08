@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:17:48 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 18:05:08 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 13:02:36 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,54 +58,6 @@ void	free_char_array(char **array)
 	}
 	free(array);
 	array = NULL;
-}
-
-/**
- * @brief Frees the list of inputs and sets all pointers to NULL
- * 
- * @param data Main data structure
- */
-void	free_input(t_data *data)
-{
-	t_input	*tmp;
-
-	while (data->input != NULL)
-	{
-		tmp = data->input;
-		data->input = data->input->next;
-		tmp->next = NULL;
-		if (tmp->path)
-		{
-			free(tmp->path);
-			tmp->path = NULL;
-		}
-		free(tmp);
-		tmp = NULL;
-	}
-}
-
-/**
- * @brief Frees the list of outputs and sets all pointers to NULL
- * 
- * @param data Main data structure
- */
-void	free_output(t_data *data)
-{
-	t_output	*tmp;
-
-	while (data->output != NULL)
-	{
-		tmp = data->output;
-		data->output = data->output->next;
-		tmp->next = NULL;
-		if (tmp->path)
-		{
-			free(tmp->path);
-			tmp->path = NULL;
-		}
-		free(tmp);
-		tmp = NULL;
-	}
 }
 
 /**

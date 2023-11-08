@@ -1,17 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   populate_command_node.c                            :+:      :+:    :+:   */
+/*   populate_node.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:43:17 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 15:53:08 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 18:51:20 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Adds the token value to the current command node in the command field
+ * 
+ * @param node The current node
+ * @param token The current token
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	populate_node_command(t_commands *node, t_token *token)
 {
 	if (!node)
@@ -22,6 +29,13 @@ int	populate_node_command(t_commands *node, t_token *token)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Add the token value to the current command node in the flags field
+ * 
+ * @param node The current node
+ * @param token The current token
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	populate_node_flag(t_commands *node, t_token *token)
 {
 	if (!node)
@@ -31,6 +45,13 @@ int	populate_node_flag(t_commands *node, t_token *token)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Add the token value to the current command node in the arguments field
+ * 
+ * @param node The current node
+ * @param token The current token
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	populate_node_argument(t_commands *node, t_token *token)
 {
 	if (!node)

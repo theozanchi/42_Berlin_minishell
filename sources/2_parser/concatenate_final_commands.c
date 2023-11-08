@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   concatenate_successive_commands.c                  :+:      :+:    :+:   */
+/*   concatenate_final_commands.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 16:31:29 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 18:08:31 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 18:46:15 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param command_ptr The current command that is being concatenated
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	add_command_to_final(size_t *i, t_commands *command_ptr)
+int	add_command_to_final(size_t *i, t_commands *command_ptr)
 {
 	command_ptr->final[*i] = ft_strdup(command_ptr->command);
 	if (!command_ptr->final[*i])
@@ -35,7 +35,7 @@ static int	add_command_to_final(size_t *i, t_commands *command_ptr)
  * @param command_ptr The current command that is being concatenated
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	add_arguments_to_final(size_t *i, t_commands *command_ptr)
+int	add_arguments_to_final(size_t *i, t_commands *command_ptr)
 {
 	t_list	*argument;
 
@@ -58,7 +58,7 @@ static int	add_arguments_to_final(size_t *i, t_commands *command_ptr)
  * @param command_ptr The current command that is being concatenated
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	add_flags_to_final(size_t *i, t_commands *command_ptr)
+int	add_flags_to_final(size_t *i, t_commands *command_ptr)
 {
 	t_list	*flag;
 

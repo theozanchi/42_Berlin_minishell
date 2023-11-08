@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 18:04:01 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 18:46:43 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/errno.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 /*formatting*/
 # define GREEN_BOLD "\033[1;32m"
@@ -67,30 +69,23 @@ typedef struct s_commands
 	char				**final;
 }	t_commands;
 
-typedef struct s_input
+typedef struct s_io
 {
 	t_type			type;
-	char			*path;
-	struct s_input	*next;
-}	t_input;
-
-typedef struct s_output
-{
-	t_type			type;
-	char			*path;
-	struct s_output	*next;
-}	t_output;
+	char			*value;
+	int				fd;
+}	t_io;
 
 /* main_data_structure ****************************************************** */
 typedef struct s_data
 {
-	char			**env;
-	char			*path;
-	char			*argv;
-	t_token			*tokens;
-	t_commands		*commands;
-	t_input			*input;
-	t_output		*output;
+	char		**env;
+	char		*path;
+	char		*argv;
+	t_token		*tokens;
+	t_commands	*commands;
+	t_io		input;
+	t_io		output;
 }	t_data;
 
 /* 0_utils ****************************************************************** */
@@ -121,27 +116,24 @@ char		*save_word(t_data *data, char *str);
 char		*save_quote(t_data *data, char *str, char quote_symbol);
 
 /* 2_parser ***************************************************************** */
-/*concatenate_successive_commands.c*/
+/*concatenate_final_commands.c*/
+int			add_command_to_final(size_t *i, t_commands *command_ptr);
+int			add_arguments_to_final(size_t *i, t_commands *command_ptr);
+int			add_flags_to_final(size_t *i, t_commands *command_ptr);
 int			concatenate_successive_commands(t_data *data);
 
 /*parser_main.c*/
 int			parser_helper_operands(t_data *data, t_token *token);
+int			open_redirection_fd(t_io *redirection, t_token *token, int oflag);
 int			parser_helper_redirections(t_data *data, t_token *token);
-int			input_output_lists_init(t_data *data);
 int			parser(t_data *data);
 
-/*parser_utils_1.c*/
-void		ft_inputlst_addback(t_data *data, t_input *new);
-int			add_new_input_node(t_data *data, t_token *token);
-void		ft_outputlst_addback(t_data *data, t_output *new);
-int			add_new_output_node(t_data *data, t_token *token);
-
-/*parser_utils_2.c*/
+/*parser_utils.c*/
 void		ft_commandlst_addback(t_data *data, t_commands *new);
 t_commands	*add_new_command_node(t_data *data);
 size_t		get_number_of_command_elements(t_commands *node);
 
-/*populate_command_node.c*/
+/*populate_node.c*/
 int			populate_node_command(t_commands *node, t_token *token);
 int			populate_node_flag(t_commands *node, t_token *token);
 int			populate_node_argument(t_commands *node, t_token *token);
@@ -150,20 +142,20 @@ int			populate_node_argument(t_commands *node, t_token *token);
 /*free_1.c*/
 void		free_tokens(t_data *data);
 void		free_char_array(char **array);
-void		free_input(t_data *data);
-void		free_output(t_data *data);
 void		free_commands(t_data *data);
 
 /*free_2.c*/
 void		free_all_memory(t_data *data);
 void		free_memory_between_commands(t_data *data);
 void		free_list(t_list *list);
+void		free_and_reset_io(t_data *data);
 
 /* ************************************************************************** */
 
 /*init.c*/
 int			init_env(t_data *data, char **env);
 int			init_path(t_data *data);
+void		init_io(t_data *data);
 int			init_data(t_data *data, char **env);
 
 /*main.c*/
