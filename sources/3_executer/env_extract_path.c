@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:04:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/07 14:57:12 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/09 15:58:20 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ char	**env_extract_paths(char **env)
 	int		i;
 
 printf("HELLO extract path\n\n");
-
 	path_split = 0;
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
@@ -59,9 +58,10 @@ printf("HELLO extract path\n\n");
 	{
 		path_split_full[i] = 0;
 		--i;
-		while (path_split[--i])
+		while (--i >= 0)
 			path_split_full[i] = ft_strjoin(path_split[i], "/");
 	}
+printf("CIAO extract path\n\n");
 	free_str_arr(path_split);
 	return (path_split_full);
 }
