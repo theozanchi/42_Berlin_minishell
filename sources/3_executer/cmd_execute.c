@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/09 16:26:57 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/10 17:43:25 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	cmd_execute(t_commands *cmd, char **env)
 	char	**paths;
 	int		i;
 
-printf("HELLO EXEC\n%s\n\n", cmd->command);
+// printf("HELLO EXEC\n%s\n\n", cmd->command);
 	if (!cmd || !cmd->command)
 		return (-1);
 	i = 0;
@@ -45,21 +45,19 @@ printf("HELLO EXEC\n%s\n\n", cmd->command);
 // check if command is included in env
 
 		exec_path = ft_strjoin(paths[0], cmd->command);
-	printf("hey\n");
+	// printf("hey\n");
 		while (access(exec_path, X_OK | F_OK) != 0 && paths[++i])
 		{
-printf("hey, %i\n", i);
 			free (exec_path);
-			printf("joining:\n%s\n%s\n", paths[i], cmd->command);
+			// printf("joining:\n%s\n%s\n", paths[i], cmd->command);
 			exec_path = ft_strjoin(paths[i], cmd->command);
 		}
 		free (paths);
 	}
-	printf("executing:\n%s %s\n", exec_path, cmd->flags[1]);
+	// printf("executing:\n%s %s\n", exec_path, cmd->flags[1]);
 	execve(exec_path, cmd->flags, env);
-	printf("DONE");
 	if (i >= 0)
 		free (exec_path);
-printf("DONE");
+// printf("DONE");
 	return (1);
 }
