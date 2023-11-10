@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/10 18:40:14 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/10 18:46:09 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	pipe2fd(t_output **out, t_commands *cmd, int *fd_pipe, char **env)
 	if (!out[0]->path)
 	{
 		dup2(1, 1);
+		// close(fd_pipe[1]);
 		cmd_execute(cmd, env);
 		exit (0);
 	}
@@ -38,7 +39,7 @@ void	pipe2fd(t_output **out, t_commands *cmd, int *fd_pipe, char **env)
 		if (fd_out <= 0)
 			return ; //ERROR MGMT TBD
 		dup2(fd_out, 1);
-		close(fd_pipe[1]);
+		// close(fd_pipe[1]);
 		cmd_execute(cmd, env);
 		close (fd_pipe[0]);
 		close (fd_out);
@@ -53,13 +54,16 @@ void	pipe2pipe(int *fd_pipeout, t_commands *cmd, int *fd_pipein, char **env)
 	if (!fd_pipeout || !fd_pipein)
 		return ; //ERROR MGMT TBD
 	printf("pipe found:\nin:  %i %i\nout: %i %i\n", fd_pipein[0], fd_pipein[1], fd_pipeout[0], fd_pipeout[1]);
-	close(fd_pipein[1]);
-	close(fd_pipeout[0]);
+	// close(fd_pipein[1]);
+	// close(fd_pipeout[0]);
+
 	dup2(fd_pipein[0], 0);
 	dup2(fd_pipeout[1], 1);
+	
 	cmd_execute(cmd, env);
-	close(fd_pipein[0]);
-	close(fd_pipeout[1]);
+
+	// close(fd_pipein[0]);
+	// close(fd_pipeout[1]);
 	exit (0);
 }
 
@@ -77,10 +81,10 @@ void	fd2pipe(int *fd_pipe, t_commands *cmd, t_input **in, char **env)
 		dup2(fd_in, 0);
 	}
 	printf("pipe found:\nout: %i %i\n", fd_pipe[0], fd_pipe[1]);
-	close(fd_pipe[0]);
 	dup2(fd_pipe[1], 1);
+	close(fd_pipe[0]);
 	cmd_execute(cmd, env);
-	close(fd_pipe[1]);
+	// close(fd_pipe[1]);
 	close (fd_in);
 	exit (0);
 }
@@ -100,6 +104,16 @@ int	cmd_count(t_commands **cmds)
 	return (i);
 }
 
+void printf_pipes(int *pipes)
+{
+	int	i = -1;
+
+	printf("pipe fds:\n");
+	while (pipes[++i] != '\0')
+		printf("%i ", pipes[i]);
+	printf("\n");
+}
+
 int	executer(t_output **out_redirect, t_commands *cmds, \
 				t_input **in_redirect, char **env)
 {
@@ -113,31 +127,25 @@ int	executer(t_output **out_redirect, t_commands *cmds, \
 	cmds_num = cmd_count(&cmds);
 	lastpipe = 0;
 	i = 0;
-	fd_pipes = (int *) ft_calloc(cmds_num - 1, 2 * sizeof(int));
+	fd_pipes = (int *) ft_calloc(cmds_num, 2 * sizeof(int));
+	fd_pipes[cmds_num] = '\0';
 	pid = (pid_t *) ft_calloc (cmds_num - 1, sizeof(pid_t));
-printf("pipes created: ");
-	while (i < 2 * (cmds_num - 1))
+	while (fd_pipes && pid && i < cmds_num - 1)
 	{
-		if (pipe(&fd_pipes[i]) < -1)
+		printf_pipes(&fd_pipes[i*2]);
+		if (pipe(&fd_pipes[i * 2]) < -1)
 			printf("ERROR\n"); // ERROR MGMT TBD
-		printf("%i %i ", fd_pipes[i], fd_pipes[i + 1]);
-		i += 2;
-	}
-printf("\n");
-	i = 0;
-	while (fd_pipes && pid && i < 2 * (cmds_num - 1))
-	{
 		pid[i] = fork();
 		if (pid[i] == -1)
 			return (0); // ERROR MGMT TBD
 		if (pid[i] == 0 && i > 0)
-			pipe2pipe(&fd_pipes[i], cmds, &fd_pipes[i - 2], env);
+			pipe2pipe(&fd_pipes[i * 2], cmds, &fd_pipes[(i * 2) - 2], env);
 		else if (pid[i] == 0)
-			fd2pipe(&fd_pipes[i], cmds, in_redirect, env);
+			fd2pipe(&fd_pipes[i * 2], cmds, in_redirect, env);
 		if (pid[i] != 0)
 		{
 			wait (NULL);
-			i += 2;
+			++i;
 			cmds = cmds->next;
 		}
 	}
