@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 15:54:22 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 15:56:06 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 18:04:38 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*get_exp_var(char *str, size_t var_exp_len, char **env)
 	return (NULL);
 }
 
-char	*concatenate_expanded_string(char *str, size_t *i, t_data *data)
+char	*concatenate_expanded_string(char **str, size_t *i, t_data *data)
 {
 	size_t	exp_len;
 	char	*s1;
@@ -45,13 +45,13 @@ char	*concatenate_expanded_string(char *str, size_t *i, t_data *data)
 	char	*s3;
 	char	*expanded_string;
 
-	exp_len = get_variable_expansion_length(&str[*i]);
-	s1 = ft_substr(str, 0, *i);
-	s3 = ft_substr(str, *i + exp_len + 1, ft_strlen(str) - *i - exp_len);
-	if (str[*i + 1] == '?')
+	exp_len = get_variable_expansion_length(&(*str)[*i]);
+	s1 = ft_substr(*str, 0, *i);
+	s3 = ft_substr(*str, *i + exp_len + 1, ft_strlen(*str) - *i - exp_len);
+	if ((*str)[*i + 1] == '?')
 		s2 = ft_itoa(data->wstatus);
 	else
-		s2 = ft_strdup(get_exp_var(&str[*i], exp_len, data->env));
+		s2 = ft_strdup(get_exp_var(&(*str)[*i], exp_len, data->env));
 	expanded_string = ft_concat(3, s1, s2, s3);
 	*i += ft_strlen(s2);
 	free(s1);
@@ -64,19 +64,19 @@ char	*concatenate_expanded_string(char *str, size_t *i, t_data *data)
 
 }
 
-int	expand_variables(char *str, t_data *data)
+int	expand_variables(char **str, t_data *data)
 {
 	size_t	i;
 	char	*tmp;
 
 	i = 0;
-	while (str[i])
+	while ((*str)[i])
 	{
-		if (str[i] == '$')
+		if ((*str)[i] == '$')
 		{
 			tmp = concatenate_expanded_string(str, &i, data);
-			free(str);
-			str = tmp;
+			free(*str);
+			*str = tmp;
 		}
 		else
 			i++;
@@ -93,19 +93,19 @@ int	expander(t_data *data)
 	while (cmd_ptr)
 	{
 		if (cmd_ptr->command_type != SGL_QUOTE)
-			expand_variables(cmd_ptr->command, data);
+			expand_variables(&cmd_ptr->command, data);
 		lst_ptr = cmd_ptr->arguments;
 		while (lst_ptr)
 		{
 			if (lst_ptr->type != SGL_QUOTE)
-				expand_variables(lst_ptr->value, data);
+				expand_variables(&lst_ptr->value, data);
 			lst_ptr = lst_ptr->next;
 		}
 		lst_ptr = cmd_ptr->flags;
 		while (lst_ptr)
 		{
 			if (lst_ptr->type != SGL_QUOTE)
-				expand_variables(lst_ptr->value, data);
+				expand_variables(&lst_ptr->value, data);
 			lst_ptr = lst_ptr->next;
 		}
 		cmd_ptr = cmd_ptr->next;
