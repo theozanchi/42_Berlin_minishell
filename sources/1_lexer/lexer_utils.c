@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 18:55:37 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 12:01:50 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/10/30 20:08:34 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param type type of token to store
  * @return Pointer to new token
  */
-t_token	*new_node(char *start, char *end, t_type type)
+t_token	*new_token(char *start, char *end, t_type type)
 {
 	t_token	*new;
 
@@ -90,5 +90,31 @@ int	check_double_tokens(char *str)
 				*str, *(str + 1));
 			return (EXIT_FAILURE);
 		}
+	}
+}
+
+/**
+ * @brief Loops through the token list data->tokens and adds a new node at the
+end of the list
+ * 
+ * @param data Main data structure
+ * @param new New token to add at the end of the token list
+ */
+void	ft_tokenlst_addback(t_data *data, t_token *new)
+{
+	t_token	*ptr;
+
+	if (!data->tokens)
+	{
+		new->prev = NULL;
+		data->tokens = new;
+	}
+	else
+	{
+		ptr = data->tokens;
+		while (ptr->next)
+			ptr = ptr->next;
+		new->prev = ptr;
+		ptr->next = new;
 	}
 }

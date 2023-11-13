@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   free_1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/11 16:22:40 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:07:30 by tzanchi          ###   ########.fr       */
+/*   Created: 2023/10/30 20:17:48 by tzanchi           #+#    #+#             */
+/*   Updated: 2023/11/08 13:02:36 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,31 +61,30 @@ void	free_char_array(char **array)
 }
 
 /**
- * @brief Frees all the data contained in `data` and sets every element to NULL
+ * @brief Frees the list of commands and sets all pointers to NULL
  * 
- * @param data Main data structure of type t_data
+ * @param data Main data structure
  */
-void	free_memory(t_data *data)
+void	free_commands(t_data *data)
 {
-	if (!data)
-		return ;
-	free_char_array(data->env);
-	free(data->argv);
-	data->argv = NULL;
-	free(data->path);
-	data->path = NULL;
-}
+	t_commands	*tmp;
 
-/**
- * @brief Frees and sets all the memory allocated for the programm to NULL and
-terminates the process with exit code `exit_code`
- * 
- * @param data Main data structure of type t_data
- * @param exit_code EXIT_SUCCES or EXIT_FAILURE used to exit() the program
- */
-void	exit_minishell(t_data *data, int exit_code)
-{
-	free_memory(data);
-	rl_clear_history();
-	exit(exit_code);
+	while (data->commands != NULL)
+	{
+		tmp = data->commands;
+		data->commands = data->commands->next;
+		tmp->next = NULL;
+		if (tmp->command)
+		{
+			free(tmp->command);
+			tmp->command = NULL;
+		}
+		if (tmp->arguments)
+			free_list(tmp->arguments);
+		if (tmp->flags)
+			free_list(tmp->flags);
+		free_char_array(tmp->final);
+		free(tmp);
+		tmp = NULL;
+	}
 }

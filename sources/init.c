@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:22:52 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 18:52:36 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,28 @@ int	init_path(t_data *data)
 }
 
 /**
- * @brief Extracts PATH from env variable and stores it in main data strcuture
+ * @brief Initializes data->input with the standard input and data->output with
+ * the standard output
+ * 
+ * @param data Main data structure
+ */
+void	init_io(t_data *data)
+{
+	{
+		data->input.type = STDIN;
+		data->input.value = NULL;
+		data->input.fd = 0;
+	}
+	{
+		data->output.type = STDOUT;
+		data->output.value = NULL;
+		data->output.fd = 1;
+	}
+}
+
+/**
+ * @brief Extracts PATH from env variable and stores it in main data structure.
+ * Sets the input and output values to standard
  * 
  * @param data Main data structure
  * @param env Env variable array
@@ -81,23 +102,6 @@ int	init_data(t_data *data, char **env)
 {
 	if (init_env(data, env) || init_path(data))
 		return (EXIT_FAILURE);
+	init_io(data);
 	return (EXIT_SUCCESS);
-}
-
-/**
- * @brief Input loop, calls lexer, parser and executor then frees memory
- * 
- * @param data Main data structure
- */
-void	launch_minishell(t_data *data)
-{
-	while (1)
-	{
-		data->argv = readline(ENTRY_PROMPT);
-		add_history(data->argv);
-		lexer(data);
-		free(data->argv);
-		data->argv = NULL;
-		free_tokens(data);
-	}
 }

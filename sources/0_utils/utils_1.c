@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:22:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/08 13:09:08 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,27 +39,45 @@ int	ft_printf_exit_code(char *str, int exit_code)
 }
 
 /**
- * @brief Loops through the token list data->tokens and adds a new node at the
-end of the list
+ * @brief Loops through a t_list list and adds a new node at the end
  * 
- * @param data Main data structure
- * @param new New token to add at the end of the token list
+ * @param list The list to add a new node to
+ * @param new The new node to add
  */
-void	ft_tokenlst_addback(t_data *data, t_token *new)
+void	ft_lst_addback(t_list *list, t_list *new)
 {
-	t_token	*ptr;
+	t_list	*ptr;
 
-	if (!data->tokens)
 	{
-		new->prev = NULL;
-		data->tokens = new;
-	}
-	else
-	{
-		ptr = data->tokens;
+		ptr = list;
 		while (ptr->next)
 			ptr = ptr->next;
-		new->prev = ptr;
 		ptr->next = new;
 	}
+}
+
+/**
+ * @brief Creates and adds a new node at the end of of a list, with str as a
+ * node value
+ * 
+ * @param list The list in which to create the new node
+ * @param str The string that will be the value of the new node
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	add_new_list_node(t_list **list, char *str)
+{
+	t_list	*new;
+
+	new = malloc(sizeof(t_list));
+	if (!new)
+		return (perror_return_failure("new list node malloc"));
+	ft_memset(new, 0, sizeof(t_list));
+	new->value = ft_strdup(str);
+	if (!new->value)
+		return (perror_return_failure("ft_strdup in add_new_list_node"));
+	if (!*list)
+		*list = new;
+	else
+		ft_lst_addback(*list, new);
+	return (EXIT_SUCCESS);
 }

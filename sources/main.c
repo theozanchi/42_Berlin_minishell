@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:22:58 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/07 18:03:39 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,35 @@ int	main(int argc, char **argv, char **env)
 	else
 		launch_minishell(&data);
 	return (EXIT_SUCCESS);
+}
+
+/**
+ * @brief Input loop, calls lexer, parser and executor then frees memory
+ * 
+ * @param data Main data structure
+ */
+void	launch_minishell(t_data *data)
+{
+	while (1)
+	{
+		data->argv = readline(ENTRY_PROMPT);
+		add_history(data->argv);
+		lexer(data);
+		parser(data);
+		free_memory_between_commands(data);
+	}
+}
+
+/**
+ * @brief Frees and sets all the memory allocated for the programm to NULL and
+terminates the process with exit code `exit_code`
+ * 
+ * @param data Main data structure of type t_data
+ * @param exit_code EXIT_SUCCES or EXIT_FAILURE used to exit() the program
+ */
+void	exit_minishell(t_data *data, int exit_code)
+{
+	free_all_memory(data);
+	rl_clear_history();
+	exit(exit_code);
 }
