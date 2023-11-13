@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 19:47:30 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 20:58:00 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@
 /*data_structure*/
 typedef enum e_type
 {
-	NO_QUOTE,
-	SGL_QUOTE,
-	DBL_QUOTE,
+	OPERAND,
 	PIPE,
 	INPUT,
 	OUTPUT,
@@ -42,10 +40,17 @@ typedef enum e_type
 	STDOUT,
 }	t_type;
 
+typedef enum e_quote
+{
+	NONE,
+	SGL,
+	DBL
+}	t_quote;
+
 typedef struct s_list
 {
 	char			*value;
-	t_type			type;
+	t_quote			quote;
 	struct s_list	*next;
 }	t_list;
 
@@ -53,6 +58,7 @@ typedef struct s_list
 typedef struct s_token
 {
 	t_type			type;
+	t_quote			quote;
 	char			*value;
 	struct s_token	*prev;
 	struct s_token	*next;
@@ -62,7 +68,7 @@ typedef struct s_token
 typedef struct s_commands
 {
 	char				*command;
-	t_type				command_type;
+	t_quote				cmd_quote;
 	t_list				*arguments;
 	t_list				*flags;
 	struct s_commands	*next;
@@ -72,6 +78,7 @@ typedef struct s_commands
 typedef struct s_io
 {
 	t_type			type;
+	t_quote			quote;
 	char			*value;
 	int				fd;
 }	t_io;
@@ -104,7 +111,7 @@ int			lexer(t_data *data);
 /*lexer_utils.c*/
 int			check_end_of_string(char *str);
 int			check_double_tokens(char *str);
-t_token		*new_token(char *start, char *end, t_type type);
+t_token		*new_token(char *start, char *end, t_type type, t_quote quote);
 void		ft_tokenlst_addback(t_data *data, t_token *new);
 
 /*save_symbol.c*/
@@ -124,7 +131,8 @@ int			concatenate_successive_commands(t_data *data);
 
 /*parser_main.c*/
 int			parser_helper_operands(t_data *data, t_token *token);
-int			open_redirection_fd(t_io *redirection, t_token *token, int oflag);
+int			open_redirection_fd(t_data *data, t_io *redir, t_token *token, \
+								int oflag);
 int			parser_helper_redirections(t_data *data, t_token *token);
 int			parser(t_data *data);
 
@@ -143,6 +151,7 @@ int			populate_node_argument(t_commands *node, t_token *token);
 int			expand_string(char **str, t_data *data);
 int			expand_command(t_commands *node, t_data *data);
 int			expand_list_of_str(t_list *list, t_data *data);
+int			expand_io(t_data *data);
 int			expander(t_data *data);
 
 /*expander_utils.c*/

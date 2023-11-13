@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 18:28:41 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 20:52:00 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,29 @@ char	*identify_redirection_type(char *str, t_type *type)
 char	*lexer_helper_redirections(char *str, t_token **new)
 {
 	t_type	type;
+	t_quote	quote;
 	char	*start;
 	char	*end;
 
 	start = identify_redirection_type(str, &type);
 	while (ft_isspace(*start))
 		start++;
+	quote = NONE;
+	if (*start == '\'' || *start == '\"')
+	{
+		if (*start == '\'')
+			quote = SGL;
+		else
+			quote = DBL;
+		start++;
+	}
 	end = start;
-	while (*end && !ft_isspace(*end) && !ft_strchr(SUPPORTED_SYMBOLS, *end))
+	while (*end && !ft_isspace(*end) && !ft_strchr(SUPPORTED_SYMBOLS, *end)
+		&& !((quote == SGL && *end == '\'') || (quote == DBL && *end == '\"')))
 		end++;
-	*new = new_token(start, end, type);
+	*new = new_token(start, end, type, quote);
+	if (quote)
+		end++;
 	return (end);
 }
 
@@ -83,7 +96,7 @@ char	*save_symbol(t_data *data, char *str)
 	if (*str == '|')
 	{
 		ptr = str + 1;
-		new = new_token(NULL, NULL, PIPE);
+		new = new_token(NULL, NULL, PIPE, NONE);
 	}
 	if (!new)
 		return (NULL);

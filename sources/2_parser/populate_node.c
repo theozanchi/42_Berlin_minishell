@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:43:17 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 18:45:56 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 20:25:08 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	populate_node_command(t_commands *node, t_token *token)
 	node->command = ft_strdup(token->value);
 	if (!node->command)
 		return (EXIT_FAILURE);
-	node->command_type = token->type;
+	node->cmd_quote = token->quote;
 	return (EXIT_SUCCESS);
 }
 

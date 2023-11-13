@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 15:54:22 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 19:44:24 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 20:52:36 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	expand_string(char **str, t_data *data)
  */
 int	expand_command(t_commands *node, t_data *data)
 {
-	if (node->command_type != SGL_QUOTE)
+	if (node->cmd_quote != SGL)
 	{
 		if (expand_string(&node->command, data))
 			return (EXIT_FAILURE);
@@ -69,7 +69,7 @@ int	expand_list_of_str(t_list *list, t_data *data)
 {
 	while (list)
 	{
-		if (list->type != SGL_QUOTE)
+		if (list->quote != SGL)
 		{
 			if (expand_string(&list->value, data))
 				return (EXIT_FAILURE);

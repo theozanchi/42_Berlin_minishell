@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 18:46:24 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 20:28:48 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	add_new_list_node(t_list **list, t_token *token)
 	new->value = ft_strdup(token->value);
 	if (!new->value)
 		return (perror_return_failure("ft_strdup in add_new_list_node"));
-	new->type = token->type;
+	new->quote = token->quote;
 	if (!*list)
 		*list = new;
 	else

@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 18:38:03 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 21:00:36 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,20 @@ int	parser_helper_operands(t_data *data, t_token *token)
  * @param oflag The flags for opneing the file
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	open_redirection_fd(t_io *redirection, t_token *token, int oflag)
+int	open_redirection_fd(t_data *data, t_io *redir, t_token *token, int oflag)
 {
-	if (redirection->type != STDIN && redirection->type != STDOUT)
-		close(redirection->fd);
-	redirection->type = token->type;
-	redirection->value = ft_strdup(token->value);
-	if (!redirection->value)
+	if (redir->type != STDIN && redir->type != STDOUT)
+		close(redir->fd);
+	redir->type = token->type;
+	redir->quote = token->quote;
+	redir->value = ft_strdup(token->value);
+	if (!redir->value)
 		return (perror_return_failure("ft_strdup for redirection value"));
-	redirection->fd = open(token->value, oflag, 0644);
-	if (redirection->fd < 0)
-		return (perror_return_failure(redirection->value));
+	if (redir->quote != SGL)
+		expand_string(&redir->value, data);
+	redir->fd = open(redir->value, oflag, 0644);
+	if (redir->fd < 0)
+		return (perror_return_failure(redir->value));
 	return (EXIT_SUCCESS);
 }
 
@@ -80,17 +83,17 @@ int	parser_helper_redirections(t_data *data, t_token *token)
 {
 	if (token->type == INPUT || token->type == HERE_DOC)
 	{
-		if (open_redirection_fd(&data->input, token, O_RDONLY))
+		if (open_redirection_fd(data, &data->input, token, O_RDONLY))
 			return (EXIT_FAILURE);
 	}
 	else if (token->type == OUTPUT)
 	{
-		if (open_redirection_fd(&data->output, token, O_WRONLY | O_CREAT))
+		if (open_redirection_fd(data, &data->output, token, O_WRONLY | O_CREAT))
 			return (EXIT_FAILURE);
 	}
 	else
 	{
-		if (open_redirection_fd(&data->output, token,
+		if (open_redirection_fd(data, &data->output, token,
 				O_WRONLY | O_APPEND | O_CREAT))
 			return (EXIT_FAILURE);
 	}
@@ -112,9 +115,9 @@ int	parser(t_data *data)
 	ptr = data->tokens;
 	while (ptr)
 	{
-		if (ptr->type <= DBL_QUOTE)
+		if (ptr->type == OPERAND)
 			parser_helper_operands(data, ptr);
-		else if (ptr->type >= INPUT && ptr->type <= HERE_DOC)
+		else if (ptr->type != PIPE)
 			parser_helper_redirections(data, ptr);
 		ptr = ptr->next;
 	}
