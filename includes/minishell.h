@@ -6,11 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/11/01 18:37:22 by jschott          ###   ########.fr       */
-=======
-/*   Updated: 2023/11/08 18:46:43 by tzanchi          ###   ########.fr       */
->>>>>>> 5661cb775f1d61c9b52180f9776fe40a674d0337
+/*   Updated: 2023/11/13 16:09:06 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,36 +63,18 @@ typedef struct s_token
 typedef struct s_commands
 {
 	char				*command;
-<<<<<<< HEAD
-	char				**arguments;
-	char				**flags;
-	struct s_commands	*next;
-=======
 	t_list				*arguments;
 	t_list				*flags;
 	struct s_commands	*next;
 	char				**final;
->>>>>>> 5661cb775f1d61c9b52180f9776fe40a674d0337
 }	t_commands;
 
 typedef struct s_io
 {
-<<<<<<< HEAD
-	t_type	type;
-	char	*path;
-}	t_input;
-
-typedef struct t_output
-{
-	t_type	type;
-	char	*path;
-}	t_output;
-=======
 	t_type			type;
 	char			*value;
 	int				fd;
 }	t_io;
->>>>>>> 5661cb775f1d61c9b52180f9776fe40a674d0337
 
 /* main_data_structure ****************************************************** */
 typedef struct s_data
