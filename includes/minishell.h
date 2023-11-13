@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 17:56:48 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 18:30:54 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 /*data_structure*/
 typedef enum e_type
 {
-	OPERAND,
+	NO_QUOTE,
 	SGL_QUOTE,
 	DBL_QUOTE,
 	PIPE,
@@ -40,8 +40,6 @@ typedef enum e_type
 	HERE_DOC,
 	STDIN,
 	STDOUT,
-	EXIT_CODE,
-	ENV_VARIABLE,
 }	t_type;
 
 typedef struct s_list
@@ -111,7 +109,6 @@ void		ft_tokenlst_addback(t_data *data, t_token *new);
 
 /*save_symbol.c*/
 char		*lexer_helper_redirections(char *str, t_token **new);
-char		*lexer_helper_dollar_sign(char *str, t_token **new);
 char		*save_symbol(t_data *data, char *str);
 
 /*save_word_save_quote.c*/

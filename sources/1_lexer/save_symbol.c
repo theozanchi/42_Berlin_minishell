@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 15:31:15 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 18:28:41 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,32 +64,6 @@ char	*lexer_helper_redirections(char *str, t_token **new)
 }
 
 /**
- * @brief Analyzes the character located after the dollar that begins the string
- * 
- * @param str Pointer to the symbol to save in the user input string
- * @param new Pointer to the new token to populate
- * @return Pointer to the first relevant char after the stored symbol or NULL
- */
-char	*lexer_helper_dollar_sign(char *str, t_token **new)
-{
-	char	*ptr;
-
-	if (*(str + 1) == '?')
-	{
-		ptr = str + 2;
-		*new = new_token(NULL, NULL, EXIT_CODE);
-	}
-	else
-	{
-		ptr = str + 1;
-		while (*ptr && !ft_isspace(*ptr) && !ft_strchr(SUPPORTED_SYMBOLS, *ptr))
-			ptr++;
-		*new = new_token(str + 1, ptr, ENV_VARIABLE);
-	}
-	return (ptr);
-}
-
-/**
  * @brief Creates a new node in the tokens list for the first one or two
 symbol(s) contained in the string 'str'
  * 
@@ -111,8 +85,6 @@ char	*save_symbol(t_data *data, char *str)
 		ptr = str + 1;
 		new = new_token(NULL, NULL, PIPE);
 	}
-	// if (*str == '$')
-	// 	ptr = lexer_helper_dollar_sign(str, &new);
 	if (!new)
 		return (NULL);
 	ft_tokenlst_addback(data, new);

@@ -6,23 +6,23 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 15:23:03 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 18:31:15 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief If a token is an operand, it is analyzed and stored properly depending
+ * @brief If a token is an NO_QUOTE, it is analyzed and stored properly depending
  * on whether it is a command, a flag or an argument. If the token before an
- * operand is an operator, then a new command node is created and added at the
+ * NO_QUOTE is an operator, then a new command node is created and added at the
  * end of the commands list thanks to a static variable
  * 
  * @param data The main data structure
  * @param token The current token being parsed
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	parser_helper_operands(t_data *data, t_token *token)
+int	parser_helper_NO_QUOTEs(t_data *data, t_token *token)
 {
 	static t_commands	*ptr = NULL;
 
@@ -112,8 +112,8 @@ int	parser(t_data *data)
 	ptr = data->tokens;
 	while (ptr)
 	{
-		if (ptr->type <= DBL_QUOTE || ptr->type >= EXIT_CODE)
-			parser_helper_operands(data, ptr);
+		if (ptr->type <= DBL_QUOTE)
+			parser_helper_NO_QUOTEs(data, ptr);
 		else if (ptr->type >= INPUT && ptr->type <= HERE_DOC)
 			parser_helper_redirections(data, ptr);
 		ptr = ptr->next;
