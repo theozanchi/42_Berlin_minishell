@@ -6,68 +6,20 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 15:54:22 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 18:58:24 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 19:44:24 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-ssize_t	get_variable_expansion_length(char *str)
-{
-	ssize_t	length;
-
-	if (*(str + 1) == '?')
-		return (1);
-	length = -1;
-	while (*str && !ft_isspace(*str))
-	{
-		length++;
-		str++;
-	}
-	return (length);
-}
-
-char	*get_exp_var(char *str, size_t var_exp_len, char **env)
-{
-	while (*env)
-	{
-		if (!ft_strncmp(str + 1, *env, var_exp_len)
-			&& *(*env + var_exp_len) == '=')
-			return (*env + var_exp_len + 1);
-		env++;
-	}
-	return ("");
-}
-
-char	*concatenate_expanded_string(char **str, size_t *i, t_data *data)
-{
-	size_t	exp_len;
-	char	*s1;
-	char	*s2;
-	char	*s3;
-	char	*expanded_string;
-
-	exp_len = get_variable_expansion_length(&(*str)[*i]);
-	if (!exp_len)
-		return (NULL);
-	s1 = ft_substr(*str, 0, *i);
-	s3 = ft_substr(*str, *i + exp_len + 1, ft_strlen(*str) - *i - exp_len);
-	if ((*str)[*i + 1] == '?')
-		s2 = ft_itoa(data->wstatus);
-	else
-		s2 = ft_strdup(get_exp_var(&(*str)[*i], exp_len, data->env));
-	expanded_string = ft_concat(3, s1, s2, s3);
-	*i += ft_strlen(s2);
-	free(s1);
-	s1 = NULL;
-	free(s2);
-	s2 = NULL;
-	free(s3);
-	s3 = NULL;
-	return (expanded_string);
-}
-
-int	expand_variables(char **str, t_data *data)
+/**
+ * @brief Loop through the string str to expand all the variables it contains
+ * 
+ * @param str Double pointer  to the beginning of the string
+ * @param data The main data structure to access the environment variable
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	expand_string(char **str, t_data *data)
 {
 	size_t	i;
 	char	*tmp;
@@ -78,6 +30,8 @@ int	expand_variables(char **str, t_data *data)
 		if ((*str)[i] == '$')
 		{
 			tmp = concatenate_expanded_string(str, &i, data);
+			if (!tmp)
+				return (EXIT_FAILURE);
 			free(*str);
 			*str = tmp;
 		}
@@ -87,31 +41,65 @@ int	expand_variables(char **str, t_data *data)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Expands the command string if it is not single quoted
+ * 
+ * @param node The current command node
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	expand_command(t_commands *node, t_data *data)
+{
+	if (node->command_type != SGL_QUOTE)
+	{
+		if (expand_string(&node->command, data))
+			return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * @brief Expands all the non quoted arguments comntained in a t_list object
+ * 
+ * @param list Pointer to the list to expand
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	expand_list_of_str(t_list *list, t_data *data)
+{
+	while (list)
+	{
+		if (list->type != SGL_QUOTE)
+		{
+			if (expand_string(&list->value, data))
+				return (EXIT_FAILURE);
+		}
+		list = list->next;
+	}
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * @brief Loop through all commands, their arguments and their flags to expand
+ * all tokens that are not single-quoted
+ * 
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	expander(t_data *data)
 {
-	t_commands	*cmd_ptr;
-	t_list		*lst_ptr;
+	t_commands	*cmd_node;
 
-	cmd_ptr = data->commands;
-	while (cmd_ptr)
+	cmd_node = data->commands;
+	while (cmd_node)
 	{
-		if (cmd_ptr->command_type != SGL_QUOTE)
-			expand_variables(&cmd_ptr->command, data);
-		lst_ptr = cmd_ptr->arguments;
-		while (lst_ptr)
-		{
-			if (lst_ptr->type != SGL_QUOTE)
-				expand_variables(&lst_ptr->value, data);
-			lst_ptr = lst_ptr->next;
-		}
-		lst_ptr = cmd_ptr->flags;
-		while (lst_ptr)
-		{
-			if (lst_ptr->type != SGL_QUOTE)
-				expand_variables(&lst_ptr->value, data);
-			lst_ptr = lst_ptr->next;
-		}
-		cmd_ptr = cmd_ptr->next;
+		if (expand_command(cmd_node, data))
+			return (EXIT_FAILURE);
+		if (expand_list_of_str(cmd_node->arguments, data))
+			return (EXIT_FAILURE);
+		if (expand_list_of_str(cmd_node->flags, data))
+			return (EXIT_FAILURE);
+		cmd_node = cmd_node->next;
 	}
 	return (EXIT_SUCCESS);
 }
