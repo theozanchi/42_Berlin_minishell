@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/08 18:49:14 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 15:23:03 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ int	parser(t_data *data)
 			parser_helper_redirections(data, ptr);
 		ptr = ptr->next;
 	}
+	if (expander(data))
+		return (EXIT_FAILURE);
 	if (concatenate_successive_commands(data))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);

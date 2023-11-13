@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 18:55:37 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 20:08:34 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/10 18:30:56 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	check_end_of_string(char *str)
 }
 
 /**
- * @brief hecks for two consecutive SUPPORTED_SYMBOLS. If two consecutive
+ * @brief Checks for two consecutive SUPPORTED_SYMBOLS. If two consecutive
 symbols are found, only '<<' and '>>' are valid combinations
  * 
  * @param str User input

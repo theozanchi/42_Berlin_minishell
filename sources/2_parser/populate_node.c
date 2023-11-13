@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:43:17 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/08 18:51:20 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/10 19:25:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	populate_node_command(t_commands *node, t_token *token)
 	node->command = ft_strdup(token->value);
 	if (!node->command)
 		return (EXIT_FAILURE);
+	node->command_type = token->type;
 	return (EXIT_SUCCESS);
 }
 
@@ -42,6 +43,7 @@ int	populate_node_flag(t_commands *node, t_token *token)
 		return (EXIT_FAILURE);
 	if (add_new_list_node(&node->flags, token->value))
 		return (EXIT_FAILURE);
+	node->flags->type = token->type;
 	return (EXIT_SUCCESS);
 }
 
@@ -58,5 +60,6 @@ int	populate_node_argument(t_commands *node, t_token *token)
 		return (EXIT_FAILURE);
 	if (add_new_list_node(&node->arguments, token->value))
 		return (EXIT_FAILURE);
+	node->arguments->type = token->type;
 	return (EXIT_SUCCESS);
 }

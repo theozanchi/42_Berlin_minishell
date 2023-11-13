@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:56:47 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/08 11:58:55 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 15:31:15 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ char	*save_symbol(t_data *data, char *str)
 		ptr = str + 1;
 		new = new_token(NULL, NULL, PIPE);
 	}
-	if (*str == '$')
-		ptr = lexer_helper_dollar_sign(str, &new);
+	// if (*str == '$')
+	// 	ptr = lexer_helper_dollar_sign(str, &new);
 	if (!new)
 		return (NULL);
 	ft_tokenlst_addback(data, new);

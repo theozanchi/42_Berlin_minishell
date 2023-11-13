@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/08 18:46:43 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 15:40:45 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define GREEN_BOLD "\033[1;32m"
 
 /*program parameters*/
-# define SUPPORTED_SYMBOLS "<|>$"
+# define SUPPORTED_SYMBOLS "<|>"
 
 /*data_structure*/
 typedef enum e_type
@@ -47,6 +47,7 @@ typedef enum e_type
 typedef struct s_list
 {
 	char			*value;
+	t_type			type;
 	struct s_list	*next;
 }	t_list;
 
@@ -63,6 +64,7 @@ typedef struct s_token
 typedef struct s_commands
 {
 	char				*command;
+	t_type				command_type;
 	t_list				*arguments;
 	t_list				*flags;
 	struct s_commands	*next;
@@ -81,6 +83,7 @@ typedef struct s_data
 {
 	char		**env;
 	char		*path;
+	int			wstatus;
 	char		*argv;
 	t_token		*tokens;
 	t_commands	*commands;
@@ -138,7 +141,14 @@ int			populate_node_command(t_commands *node, t_token *token);
 int			populate_node_flag(t_commands *node, t_token *token);
 int			populate_node_argument(t_commands *node, t_token *token);
 
-/* 4_free ***************         ******************************************* */
+/* 3_expander *************************************************************** */
+size_t		get_variable_expansion_length(char *str);
+char		*get_exp_var(char *str, size_t var_exp_len, char **env);
+char		*concatenate_expanded_string(char *str, size_t *i, t_data *data);
+int			expand_variables(char *str, t_data *data);
+int			expander(t_data *data);
+
+/* 4_free ******************************************************************* */
 /*free_1.c*/
 void		free_tokens(t_data *data);
 void		free_char_array(char **array);
