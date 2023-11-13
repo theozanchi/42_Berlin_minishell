@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
+#    By: jschott <jschott@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/08 18:40:29 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/11/13 16:50:14 by jschott          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,9 @@ SRC			=	0_utils/utils_1.c \
 				2_parser/parser_main.c \
 				2_parser/parser_utils.c \
 				2_parser/populate_node.c \
+				3_executer/cmd_execute.c \
+				3_executer/env_extract_path.c \
+				3_executer/executer_main.c \
 				4_free/free_1.c \
 				4_free/free_2.c \
 				init.c \

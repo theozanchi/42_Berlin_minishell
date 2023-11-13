@@ -6,11 +6,12 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:34:51 by jschott           #+#    #+#             */
-/*   Updated: 2023/10/31 16:51:52 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/13 16:50:59 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executer.h"
+// #include "executer.h"
+#include "minishell.h"
 
 t_commands	*cmds_extract_last(t_commands *cmds)
 {

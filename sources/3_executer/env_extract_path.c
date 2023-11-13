@@ -6,11 +6,12 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:04:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/13 14:47:57 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/13 17:13:31 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executer.h"
+// #include "executer.h"
+#include "minishell.h"
 
 /**
  * @brief Frees a given array of strings
@@ -67,6 +68,6 @@ char	**env_extract_paths(char **env)
 		}
 	}
 	// printf("CIAO extract path\n\n");
-	free_str_arr(path_split);
+	free_char_array(path_split);
 	return (path_split_full);
 }

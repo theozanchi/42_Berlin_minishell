@@ -10,7 +10,8 @@
 /*																			*/
 /* ************************************************************************** */
 
-#include "executer.h"
+// #include "executer.h"
+#include "minishell.h"
 
 void add_back(t_commands **lst, char *str) {
 	t_commands *pos;

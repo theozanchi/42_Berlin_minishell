@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:37:00 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/07 17:27:30 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/13 16:48:52 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,15 @@ typedef struct t_output
 	char	*path;
 }	t_output;
 
-t_commands	*cmds_extract_last(t_commands *cmds);
-char		**env_extract_paths(char **env);
+/* 2_executerr ***************************************************************** */
+/*cmd_exectute.c*/
 int			cmd_execute(t_commands *cmd, char **env);
+
+/*executer_main.c*/
 int			executer(t_output **out_redirect, t_commands *cmds, t_input **in_redirect, char **env);
+
+/*env_extract_path.c*/
+char		**env_extract_paths(char **env);
 int			cmd_count(t_commands **cmds);
 
 #endif
