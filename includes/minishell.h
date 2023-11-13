@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 20:58:00 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 21:06:43 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ int			populate_node_argument(t_commands *node, t_token *token);
 int			expand_string(char **str, t_data *data);
 int			expand_command(t_commands *node, t_data *data);
 int			expand_list_of_str(t_list *list, t_data *data);
-int			expand_io(t_data *data);
 int			expander(t_data *data);
 
 /*expander_utils.c*/
