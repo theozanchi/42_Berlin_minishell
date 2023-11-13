@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 15:54:22 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 18:04:38 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 18:15:30 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*get_exp_var(char *str, size_t var_exp_len, char **env)
 			return (*env + var_exp_len + 1);
 		env++;
 	}
-	return (NULL);
+	return ("");
 }
 
 char	*concatenate_expanded_string(char **str, size_t *i, t_data *data)
