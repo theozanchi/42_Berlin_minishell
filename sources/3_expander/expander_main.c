@@ -6,16 +6,18 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 15:54:22 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 18:28:22 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 18:58:24 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	get_variable_expansion_length(char *str)
+ssize_t	get_variable_expansion_length(char *str)
 {
-	size_t	length;
+	ssize_t	length;
 
+	if (*(str + 1) == '?')
+		return (1);
 	length = -1;
 	while (*str && !ft_isspace(*str))
 	{
@@ -46,6 +48,8 @@ char	*concatenate_expanded_string(char **str, size_t *i, t_data *data)
 	char	*expanded_string;
 
 	exp_len = get_variable_expansion_length(&(*str)[*i]);
+	if (!exp_len)
+		return (NULL);
 	s1 = ft_substr(*str, 0, *i);
 	s3 = ft_substr(*str, *i + exp_len + 1, ft_strlen(*str) - *i - exp_len);
 	if ((*str)[*i + 1] == '?')

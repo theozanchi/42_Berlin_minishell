@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "/home/tzanchi/42_Berlin_minishell/minishell",
       "args": [],
-      "stopAtEntry": false,
+      "stopAtEntry": true,
       "cwd": "/home/tzanchi/42_Berlin_minishell",
       "environment": [],
       "externalConsole": false,
