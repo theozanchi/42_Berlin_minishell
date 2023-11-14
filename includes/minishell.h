@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/14 12:44:23 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 15:03:06 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/history.h>
 # include <sys/errno.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 # include <fcntl.h>
 # include <signal.h>
 
@@ -161,6 +162,18 @@ char		*concatenate_expanded_string(char **str, size_t *i, t_data *data);
 void		free_utils_strings(char **s1, char **s2, char **s3);
 
 /* 4_free ******************************************************************* */
+/* 2_executer *************************************************************** */
+/*cmd_exectute.c*/
+int			cmd_execute(t_commands *cmd, char **env);
+
+/*executer_main.c*/
+int			executer(t_data *data);
+
+/*env_extract_path.c*/
+char		**env_extract_paths(char **env);
+int			cmd_count(t_commands *cmds);
+
+/* 4_free ***************         ******************************************* */
 /*free_1.c*/
 void		free_tokens(t_data *data);
 void		free_char_array(char **array);

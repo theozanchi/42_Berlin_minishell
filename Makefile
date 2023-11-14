@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/13 19:09:04 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/11/14 15:03:25 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,9 @@ SRC			=	0_utils/utils_1.c \
 				2_parser/populate_node.c \
 				3_expander/expander_main.c \
 				3_expander/expander_utils.c \
+				3_executer/cmd_execute.c \
+				3_executer/env_extract_path.c \
+				3_executer/executer_main.c \
 				4_free/free_1.c \
 				4_free/free_2.c \
 				init.c \

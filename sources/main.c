@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 20:42:21 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 15:02:22 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,9 @@ void	launch_minishell(t_data *data)
 	{
 		data->argv = readline(ENTRY_PROMPT);
 		add_history(data->argv);
-		if (lexer(data))
-		{
-			free_memory_between_commands(data);
-			continue ;
-		}
-		if (parser(data))
-		{
-			free_memory_between_commands(data);
-			continue ;
-		}
+		lexer(data);
+		parser(data);
+		executer(data);
 		free_memory_between_commands(data);
 	}
 }
