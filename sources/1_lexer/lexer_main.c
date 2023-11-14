@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:49:34 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/29 12:21:45 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 16:51:51 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
  */
 int	check_arg(char *arg)
 {
+	if (!arg)
+		return (EXIT_FAILURE);
 	while (ft_isspace(*arg))
 		arg++;
 	if (*arg == '|')
