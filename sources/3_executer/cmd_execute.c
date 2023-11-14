@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/14 14:12:49 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/14 17:54:30 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ int	cmd_execute(t_commands *cmd, char **env)
 		write(2, "COMMAND ", 8);
 		write(2, cmd->command, ft_strlen(cmd->command));
 		write(2, " NOT FOUND\n", 11);
-	}
-	if (i >= 0)
 		free (exec_path);
-	// free_char_array(paths);
+		return (EXIT_FAILURE);
+	}
+	free (exec_path);
 	return (EXIT_SUCCESS);
 }

@@ -6,31 +6,13 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:04:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/13 17:13:31 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/14 16:52:36 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "executer.h"
 #include "minishell.h"
 
-/**
- * @brief Frees a given array of strings
- * 
- * @param arr Array with pointers to strings
- * @param int index
- * @return 1 if success. 0 if arr is NULL
- */
-/* int	free_str_arr(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
-	return (1);
-}
- */
 /**
  * @brief Splits all paths returned from env into seperate strings 
  * 

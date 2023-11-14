@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/14 12:47:51 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/14 17:54:02 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,14 @@ void	launch_minishell(t_data *data)
 	while (1)
 	{
 		data->argv = readline(ENTRY_PROMPT);
+		int original_stdin = dup(0);
+		int original_stdout = dup(1);
 		add_history(data->argv);
 		lexer(data);
 		parser(data);
 		executer(data);
+		dup2(original_stdin, 0);
+		dup2(original_stdout, 1);
 		free_memory_between_commands(data);
 	}
 }
