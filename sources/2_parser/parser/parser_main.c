@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 21:00:36 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 16:23:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,16 @@
  * @param token The current token being parsed
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	parser_helper_operands(t_data *data, t_token *token)
+int	parser_helper_operands(t_data *data, t_token *token, int *create_new_node)
 {
 	static t_commands	*ptr = NULL;
 
-	if (!token->prev
-		|| (token->prev->type >= PIPE && token->prev->type <= HERE_DOC))
+	if (*create_new_node)
 	{
 		ptr = add_new_command_node(data);
+		*create_new_node = 0;
+		if (!ptr)
+			return (EXIT_FAILURE);
 		if (populate_node_command(ptr, token))
 			return (EXIT_FAILURE);
 	}
@@ -111,13 +113,17 @@ int	parser_helper_redirections(t_data *data, t_token *token)
 int	parser(t_data *data)
 {
 	t_token	*ptr;
+	int		create_new_node;
 
 	ptr = data->tokens;
+	create_new_node = 1;
 	while (ptr)
 	{
-		if (ptr->type == OPERAND)
-			parser_helper_operands(data, ptr);
-		else if (ptr->type != PIPE)
+		if (ptr->type == PIPE)
+			create_new_node = 1;
+		else if (ptr->type == OPERAND)
+			parser_helper_operands(data, ptr, &create_new_node);
+		else
 			parser_helper_redirections(data, ptr);
 		ptr = ptr->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/14 15:11:01 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 16:23:03 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,8 @@ int			add_flags_to_final(size_t *i, t_commands *command_ptr);
 int			concatenate_successive_commands(t_data *data);
 
 /*parser_main.c*/
-int			parser_helper_operands(t_data *data, t_token *token);
+int			parser_helper_operands(t_data *data, t_token *token, \
+									int *create_new_node);
 int			open_redirection_fd(t_data *data, t_io *redir, t_token *token, \
 								int oflag);
 int			parser_helper_redirections(t_data *data, t_token *token);
