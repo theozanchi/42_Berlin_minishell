@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/14 15:03:06 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 15:11:01 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,20 @@ char		*save_word(t_data *data, char *str);
 char		*save_quote(t_data *data, char *str, char quote_symbol);
 
 /* 2_parser ***************************************************************** */
+/* expander */
+/*expander_main.c*/
+int			expand_string(char **str, t_data *data);
+int			expand_command(t_commands *node, t_data *data);
+int			expand_list_of_str(t_list *list, t_data *data);
+int			expander(t_data *data);
+
+/*expander_utils.c*/
+ssize_t		get_variable_expansion_length(char *str);
+char		*get_exp_var(char *str, size_t var_exp_len, char **env);
+char		*concatenate_expanded_string(char **str, size_t *i, t_data *data);
+void		free_utils_strings(char **s1, char **s2, char **s3);
+
+/* parser */
 /*concatenate_final_commands.c*/
 int			add_command_to_final(size_t *i, t_commands *command_ptr);
 int			add_arguments_to_final(size_t *i, t_commands *command_ptr);
@@ -148,21 +162,7 @@ int			populate_node_command(t_commands *node, t_token *token);
 int			populate_node_flag(t_commands *node, t_token *token);
 int			populate_node_argument(t_commands *node, t_token *token);
 
-/* 3_expander *************************************************************** */
-/*expander_main.c*/
-int			expand_string(char **str, t_data *data);
-int			expand_command(t_commands *node, t_data *data);
-int			expand_list_of_str(t_list *list, t_data *data);
-int			expander(t_data *data);
-
-/*expander_utils.c*/
-ssize_t		get_variable_expansion_length(char *str);
-char		*get_exp_var(char *str, size_t var_exp_len, char **env);
-char		*concatenate_expanded_string(char **str, size_t *i, t_data *data);
-void		free_utils_strings(char **s1, char **s2, char **s3);
-
-/* 4_free ******************************************************************* */
-/* 2_executer *************************************************************** */
+/* 3_executer *************************************************************** */
 /*cmd_exectute.c*/
 int			cmd_execute(t_commands *cmd, char **env);
 
@@ -173,7 +173,7 @@ int			executer(t_data *data);
 char		**env_extract_paths(char **env);
 int			cmd_count(t_commands *cmds);
 
-/* 4_free ***************         ******************************************* */
+/* 4_free ******************************************************************* */
 /*free_1.c*/
 void		free_tokens(t_data *data);
 void		free_char_array(char **array);
@@ -197,5 +197,7 @@ int			init_data(t_data *data, char **env);
 int			main(int argc, char **argv, char **env);
 void		launch_minishell(t_data *data);
 void		exit_minishell(t_data *data, int exit_code);
+
+/*signals.c*/
 
 #endif
