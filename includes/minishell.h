@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 21:06:43 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 12:44:23 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/errno.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <signal.h>
 
 /*formatting*/
 # define GREEN_BOLD "\033[1;32m"
