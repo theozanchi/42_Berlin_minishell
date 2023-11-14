@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/13 17:02:55 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/14 12:46:02 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,16 +139,16 @@ int			populate_node_command(t_commands *node, t_token *token);
 int			populate_node_flag(t_commands *node, t_token *token);
 int			populate_node_argument(t_commands *node, t_token *token);
 
-/* 2_executer ***************************************************************** */
+/* 2_executer *************************************************************** */
 /*cmd_exectute.c*/
 int			cmd_execute(t_commands *cmd, char **env);
 
 /*executer_main.c*/
-int			executer(t_io **out_redirect, t_commands *cmds, t_io **in_redirect, char **env);
+int			executer(t_data *data);
 
 /*env_extract_path.c*/
 char		**env_extract_paths(char **env);
-int			cmd_count(t_commands **cmds);
+int			cmd_count(t_commands *cmds);
 
 /* 4_free ***************         ******************************************* */
 /*free_1.c*/

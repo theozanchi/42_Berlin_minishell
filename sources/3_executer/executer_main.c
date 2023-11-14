@@ -6,89 +6,31 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/13 17:19:40 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/14 14:16:25 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "executer.h"
 #include "minishell.h"
 
-void	pipe2fd(t_io **out, t_commands *cmd, int *fd_pipe, char **env)
+void	fd2fd(int fd_out, t_commands *cmd, int fd_in, char **env)
 {
-	int	i;
-	int	fd_out;
-
-	i = -1;
-	if (fd_pipe)
-	{
-		dup2(fd_pipe[0], 0);
-		close(fd_pipe[1]);
-	}
-	if (!out[0]->value)
-	{
-		dup2(1, 1);
-		// close(fd_pipe[1]);
-		cmd_execute(cmd, env);
-		exit (0);
-	}
-	while (out && out[++i])
-	{
-		fd_out = open(out[i]->value, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		if (fd_out <= 0)
-			return ; //ERROR MGMT TBD
-		dup2(fd_out, 1);
-		// close(fd_pipe[1]);
-		cmd_execute(cmd, env);
-		close (fd_pipe[0]);
-		close (fd_out);
-	}
-	exit (0);
-}
-
-void	pipe2pipe(int *fd_pipeout, t_commands *cmd, int *fd_pipein, char **env)
-{
-	if (!fd_pipeout || !fd_pipein)
-		return ; //ERROR MGMT TBD
-	// close(fd_pipein[1]);
-	// close(fd_pipeout[0]);
-
-	dup2(fd_pipein[0], 0);
-	dup2(fd_pipeout[1], 1);
-	
+	if (!cmd || !env)
+		write(2, "FDF2FDF ERROR\n", 14);
+	dup2(fd_out, 1);
+	dup2(fd_in, 0);
 	cmd_execute(cmd, env);
-
-	// close(fd_pipein[0]);
-	// close(fd_pipeout[1]);
-	exit (0);
-}
-
-void	fd2pipe(int *fd_pipe, t_commands *cmd, t_io **in, char **env)
-{
-	int	fd_in;
-
-	fd_in = 0;
-	if (in[0] != 0)
-	{
-		fd_in = open(in[0]->value, O_RDONLY);
-		if (fd_in <= 0)
-			return ;
-		dup2(fd_in, 0);
-	}
-	dup2(fd_pipe[1], 1);
-	close(fd_pipe[0]);
-	cmd_execute(cmd, env);
-	// close(fd_pipe[1]);
 	close (fd_in);
-	exit (0);
+	close (fd_out);
 }
 
-int	cmd_count(t_commands **cmds)
+int	cmd_count(t_commands *cmds)
 {
 	int			i;
 	t_commands	*ptr;
 
 	i = 0;
-	ptr = *cmds;
+	ptr = cmds;
 	while (ptr)
 	{
 		ptr = ptr->next;
@@ -97,48 +39,75 @@ int	cmd_count(t_commands **cmds)
 	return (i);
 }
 
-int	executer(t_io **out_redirect, t_commands *cmds, \
-				t_io **in_redirect, char **env)
-{
-	int		i;
-	int		cmds_num;
-	int		*fd_pipes;
-	int		*lastpipe;
-	pid_t	*pid;
+/**
+ * @brief Executes and pipes multiple commands including redirects
+ * 
+ * @param data main data struct includes all commands & redirects
+ * @param i index
+ * @param cmds_num number of commands to execute
+ * @param fd_pipes array with the in/out fds of all pipes
+ * @param pid array of all process ids
+ * @param cmds pointer to the current command to execute
+ * @return 0 if success. -1 if arr is NULL
+ */
 
-	cmds_num = cmd_count(&cmds);
-	lastpipe = 0;
+int	executer(t_data *data)
+{
+	int			i;
+	int			cmds_num;
+	int			*fd_pipes;
+	pid_t		*pid;
+	t_commands	*cmds;
+
 	i = 0;
-	fd_pipes = (int *) ft_calloc(cmds_num, 2 * sizeof(int));
-	fd_pipes[cmds_num] = '\0';
+	cmds = data->commands;
+	write(2, cmds->command, ft_strlen(cmds->command));
+		write(2, "\n\n", 2);
+	cmds_num = cmd_count(data->commands);
+	fd_pipes = (int *) ft_calloc(3 + cmds_num, 2 * sizeof(int));
+	if (!fd_pipes)
+		write(2, "EXEC MALLOC ERROR\n", 18); // ERROR MGMT TBD
+	fd_pipes[cmds_num + 3] = '\0'; // Probalbly don't need this one
 	pid = (pid_t *) ft_calloc (cmds_num - 1, sizeof(pid_t));
-	while (fd_pipes && pid && i < cmds_num - 1)
+	if (!pid)
+		write(2, "EXEC MALLOC ERROR\n", 18); // ERROR MGMT TBD
+	fd_pipes[0] = data->input.fd;
+	fd_pipes[1] = data->output.fd;
+	i = 0;
+	while (cmds->next)
 	{
-		if (pipe(&fd_pipes[i * 2]) < -1)
-			printf("ERROR\n"); // ERROR MGMT TBD
+		if (pipe(&fd_pipes[(i * 2) + 2]) < -1)
+			write(2, "PIPING ERROR\n", 13); // ERROR MGMT TBD
 		pid[i] = fork();
 		if (pid[i] == -1)
-			return (0); // ERROR MGMT TBD
-		if (pid[i] == 0 && i > 0)
-			pipe2pipe(&fd_pipes[i * 2], cmds, &fd_pipes[(i * 2) - 2], env);
-		else if (pid[i] == 0)
-			fd2pipe(&fd_pipes[i * 2], cmds, in_redirect, env);
+			write(2, "FORKING ERROR\n", 14); // ERROR MGMT TBD
+		if (pid[i] == 0)
+		{
+//DEBBUGING STUFF
+		write(2, "out & in: ", 10);
+		write(2, "  ", 2);
+		write(2, ft_itoa((i * 2) + 3), 1);
+		write(2, ft_itoa(i * 2), 1);
+		write(2, "  ", 2);
+		write(2, ft_itoa((i * 2) + 1), 1);
+		write(2, ft_itoa((i * 2) + 2), 1);
+		write(2, "\n\n", 2);
+			
+			if (i > 0)
+				close(fd_pipes[(i * 2) + 1]);
+			close(fd_pipes[(i * 2) + 2]);
+			fd2fd(fd_pipes[(i * 2) + 3], cmds, fd_pipes[i * 2], data->env);
+		}
 		if (pid[i] != 0)
 		{
 			wait (NULL);
-			// close(fd_pipes[(i * 2) * 2]);
-			// close(fd_pipes[(i * 2) + 3]);
-			// close(fd_pipes[i * 2]);
-			close(fd_pipes[i * 2 + 1]);
+			close(fd_pipes[3 + (i * 2)]);
 			++i;
 			cmds = cmds->next;
 		}
 	}
-	if (fd_pipes && pid && out_redirect)
-		pipe2fd (out_redirect, cmds, &fd_pipes[(i - 1) * 2], env);
-	dup2(1, 1);
-	dup2(0, 0);
+	fd2fd (fd_pipes[1], cmds, fd_pipes[i * 2], data->env);
 	free (fd_pipes);
 	free (pid);
-	return (1);
+	return (0);
 }

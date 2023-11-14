@@ -60,3 +60,5 @@ dkms.conf
 # Doxygen documentation
 doxygen_doc*
 includes/minishell.h
+in
+.gitignore

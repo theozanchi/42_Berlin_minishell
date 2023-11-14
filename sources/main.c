@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/07 18:03:39 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 12:47:51 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	launch_minishell(t_data *data)
 		add_history(data->argv);
 		lexer(data);
 		parser(data);
+		executer(data);
 		free_memory_between_commands(data);
 	}
 }
