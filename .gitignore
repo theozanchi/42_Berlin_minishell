@@ -63,3 +63,4 @@ includes/minishell.h
 in
 .gitignore
 sources/3_executer/OLDexecuter_main.c
+out

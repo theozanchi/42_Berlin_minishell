@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/15 12:58:01 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/15 15:19:58 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	cmd_execute(t_commands *cmd, char **env)
 
 // printf("HELLO EXEC\n%s\n\n", cmd->command);
 	if (!cmd || !cmd->command)
-		return (-1);
+		exit (EXIT_FAILURE);
 	i = 0;
 	paths = 0;
 // check if command is a direct path to existing executable
@@ -61,5 +61,5 @@ int	cmd_execute(t_commands *cmd, char **env)
 		exit (EXIT_FAILURE);
 	}
 	free (exec_path);
-	return (EXIT_SUCCESS);
+	exit (EXIT_SUCCESS);
 }
