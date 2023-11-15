@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 18:55:37 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/30 20:08:34 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 20:14:36 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param type type of token to store
  * @return Pointer to new token
  */
-t_token	*new_token(char *start, char *end, t_type type)
+t_token	*new_token(char *start, char *end, t_type type, t_quote quote)
 {
 	t_token	*new;
 
@@ -43,6 +43,7 @@ t_token	*new_token(char *start, char *end, t_type type)
 	else
 		new->value = NULL;
 	new->type = type;
+	new->quote = quote;
 	new->next = NULL;
 	return (new);
 }
@@ -69,7 +70,7 @@ int	check_end_of_string(char *str)
 }
 
 /**
- * @brief hecks for two consecutive SUPPORTED_SYMBOLS. If two consecutive
+ * @brief Checks for two consecutive SUPPORTED_SYMBOLS. If two consecutive
 symbols are found, only '<<' and '>>' are valid combinations
  * 
  * @param str User input

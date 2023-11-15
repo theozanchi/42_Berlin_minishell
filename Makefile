@@ -6,7 +6,7 @@
 #    By: jschott <jschott@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/15 14:43:48 by jschott          ###   ########.fr        #
+#    Updated: 2023/11/15 15:49:14 by jschott          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,10 +37,12 @@ SRC			=	0_utils/utils_1.c \
 				1_lexer/lexer_utils.c \
 				1_lexer/save_symbol.c \
 				1_lexer/save_word_save_quote.c \
-				2_parser/concatenate_final_commands.c \
-				2_parser/parser_main.c \
-				2_parser/parser_utils.c \
-				2_parser/populate_node.c \
+				2_parser/parser/concatenate_final_commands.c \
+				2_parser/parser/parser_main.c \
+				2_parser/parser/parser_utils.c \
+				2_parser/parser/populate_node.c \
+				2_parser/expander/expander_main.c \
+				2_parser/expander/expander_utils.c \
 				3_executer/cmd_execute.c \
 				3_executer/env_extract_path.c \
 				3_executer/executer_main.c \
@@ -48,6 +50,7 @@ SRC			=	0_utils/utils_1.c \
 				4_free/free_2.c \
 				init.c \
 				main.c \
+				signals.c
 
 SRCS		=	$(addprefix ${SRCS_DIR}, ${SRC})
 SRC_NR		=	$(words ${SRCS})

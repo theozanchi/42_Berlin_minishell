@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 08:59:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/08 13:09:08 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/13 20:28:48 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,13 @@ void	ft_lst_addback(t_list *list, t_list *new)
 }
 
 /**
- * @brief Creates and adds a new node at the end of of a list, with str as a
- * node value
+ * @brief Creates and adds a new node at the end of of a list from a token
  * 
  * @param list The list in which to create the new node
- * @param str The string that will be the value of the new node
+ * @param token The toiken that will be copied to the new node
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	add_new_list_node(t_list **list, char *str)
+int	add_new_list_node(t_list **list, t_token *token)
 {
 	t_list	*new;
 
@@ -72,9 +71,10 @@ int	add_new_list_node(t_list **list, char *str)
 	if (!new)
 		return (perror_return_failure("new list node malloc"));
 	ft_memset(new, 0, sizeof(t_list));
-	new->value = ft_strdup(str);
+	new->value = ft_strdup(token->value);
 	if (!new->value)
 		return (perror_return_failure("ft_strdup in add_new_list_node"));
+	new->quote = token->quote;
 	if (!*list)
 		*list = new;
 	else

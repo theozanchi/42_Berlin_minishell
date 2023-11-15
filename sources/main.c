@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 10:48:42 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/15 15:50:30 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
  */
 int	main(int argc, char **argv, char **env)
 {
-	t_data	data;
+	t_data				data;
+	struct sigaction	sa[2];
 
 	(void)argv;
 	if (argc != 1)
@@ -34,8 +35,9 @@ int	main(int argc, char **argv, char **env)
 	ft_memset(&data, 0, sizeof(t_data));
 	if (init_data(&data, env))
 		exit_minishell(&data, EXIT_FAILURE);
-	else
-		launch_minishell(&data);
+	if (init_signals(sa))
+		exit_minishell(&data, EXIT_FAILURE);
+	launch_minishell(&data);
 	return (EXIT_SUCCESS);
 }
 
@@ -49,10 +51,14 @@ void	launch_minishell(t_data *data)
 	while (1)
 	{
 		data->argv = readline(ENTRY_PROMPT);
+		if (!data->argv)
+			exit_minishell(data, EXIT_SUCCESS);
 		add_history(data->argv);
-		lexer(data);
-		parser(data);
-		executer(data);
+		if (lexer(data) || parser(data) || executer(data))
+		{
+			free_memory_between_commands(data);
+			continue ;
+		}
 		free_memory_between_commands(data);
 	}
 }
@@ -66,6 +72,7 @@ terminates the process with exit code `exit_code`
  */
 void	exit_minishell(t_data *data, int exit_code)
 {
+	ft_printf_colour(RED_BOLD, "Exiting minishell 👋\n");
 	free_all_memory(data);
 	rl_clear_history();
 	exit(exit_code);

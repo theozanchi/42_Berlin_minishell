@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/08 18:49:14 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/14 16:23:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,23 @@
 /**
  * @brief If a token is an operand, it is analyzed and stored properly depending
  * on whether it is a command, a flag or an argument. If the token before an
- * operand is an operator, then a new command node is created and added at the
+ * NO_QUOTE is an operator, then a new command node is created and added at the
  * end of the commands list thanks to a static variable
  * 
  * @param data The main data structure
  * @param token The current token being parsed
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	parser_helper_operands(t_data *data, t_token *token)
+int	parser_helper_operands(t_data *data, t_token *token, int *create_new_node)
 {
 	static t_commands	*ptr = NULL;
 
-	if (!token->prev
-		|| (token->prev->type >= PIPE && token->prev->type <= HERE_DOC))
+	if (*create_new_node)
 	{
 		ptr = add_new_command_node(data);
+		*create_new_node = 0;
+		if (!ptr)
+			return (EXIT_FAILURE);
 		if (populate_node_command(ptr, token))
 			return (EXIT_FAILURE);
 	}
@@ -55,17 +57,20 @@ int	parser_helper_operands(t_data *data, t_token *token)
  * @param oflag The flags for opneing the file
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	open_redirection_fd(t_io *redirection, t_token *token, int oflag)
+int	open_redirection_fd(t_data *data, t_io *redir, t_token *token, int oflag)
 {
-	if (redirection->type != STDIN && redirection->type != STDOUT)
-		close(redirection->fd);
-	redirection->type = token->type;
-	redirection->value = ft_strdup(token->value);
-	if (!redirection->value)
+	if (redir->type != STDIN && redir->type != STDOUT)
+		close(redir->fd);
+	redir->type = token->type;
+	redir->quote = token->quote;
+	redir->value = ft_strdup(token->value);
+	if (!redir->value)
 		return (perror_return_failure("ft_strdup for redirection value"));
-	redirection->fd = open(token->value, oflag, 0644);
-	if (redirection->fd < 0)
-		return (perror_return_failure(redirection->value));
+	if (redir->quote != SGL)
+		expand_string(&redir->value, data);
+	redir->fd = open(redir->value, oflag, 0644);
+	if (redir->fd < 0)
+		return (perror_return_failure(redir->value));
 	return (EXIT_SUCCESS);
 }
 
@@ -80,17 +85,17 @@ int	parser_helper_redirections(t_data *data, t_token *token)
 {
 	if (token->type == INPUT || token->type == HERE_DOC)
 	{
-		if (open_redirection_fd(&data->input, token, O_RDONLY))
+		if (open_redirection_fd(data, &data->input, token, O_RDONLY))
 			return (EXIT_FAILURE);
 	}
 	else if (token->type == OUTPUT)
 	{
-		if (open_redirection_fd(&data->output, token, O_WRONLY | O_CREAT))
+		if (open_redirection_fd(data, &data->output, token, O_WRONLY | O_CREAT))
 			return (EXIT_FAILURE);
 	}
 	else
 	{
-		if (open_redirection_fd(&data->output, token,
+		if (open_redirection_fd(data, &data->output, token,
 				O_WRONLY | O_APPEND | O_CREAT))
 			return (EXIT_FAILURE);
 	}
@@ -108,16 +113,22 @@ int	parser_helper_redirections(t_data *data, t_token *token)
 int	parser(t_data *data)
 {
 	t_token	*ptr;
+	int		create_new_node;
 
 	ptr = data->tokens;
+	create_new_node = 1;
 	while (ptr)
 	{
-		if (ptr->type <= DBL_QUOTE || ptr->type >= EXIT_CODE)
-			parser_helper_operands(data, ptr);
-		else if (ptr->type >= INPUT && ptr->type <= HERE_DOC)
+		if (ptr->type == PIPE)
+			create_new_node = 1;
+		else if (ptr->type == OPERAND)
+			parser_helper_operands(data, ptr, &create_new_node);
+		else
 			parser_helper_redirections(data, ptr);
 		ptr = ptr->next;
 	}
+	if (expander(data))
+		return (EXIT_FAILURE);
 	if (concatenate_successive_commands(data))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
