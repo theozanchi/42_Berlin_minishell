@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/14 16:23:03 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/15 15:20:50 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,12 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <unistd.h>
+# include <termios.h>
 
 /*formatting*/
 # define GREEN_BOLD "\033[1;32m"
+# define RED_BOLD "\033[1;31m"
 
 /*program parameters*/
 # define SUPPORTED_SYMBOLS "<|>"
@@ -200,5 +203,7 @@ void		launch_minishell(t_data *data);
 void		exit_minishell(t_data *data, int exit_code);
 
 /*signals.c*/
+void		signal_handler(int signum);
+int			init_signals(struct sigaction *sa);
 
 #endif
