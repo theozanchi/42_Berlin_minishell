@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/15 15:19:58 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/15 18:20:08 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,16 @@ int	cmd_execute(t_commands *cmd, char **env)
 	char	**paths;
 	int		i;
 
-// printf("HELLO EXEC\n%s\n\n", cmd->command);
 	if (!cmd || !cmd->command)
 		exit (EXIT_FAILURE);
 	i = 0;
 	paths = 0;
-// check if command is a direct path to existing executable
 	if (access(cmd->command, X_OK | F_OK) == 0)
 		exec_path = cmd->command;
 	else
 	{
 		paths = env_extract_paths(env);
-// check if command is included in builtin
+// TBD check if command is included in builtin
 			// exec_path = ft_strjoin(BUILTIN_PATH, cmd->command);
 		exec_path = ft_strjoin(paths[0], cmd->command);
 		while (paths[++i] && access(exec_path, X_OK | F_OK) != 0)
@@ -52,14 +50,18 @@ int	cmd_execute(t_commands *cmd, char **env)
 		}
 		free_char_array (paths);
 	}
+	write(2, "doin execve\n", 12);
+	write(2, cmd->command, ft_strlen(cmd->command));
+	write(2, "\n", 1);
 	if (execve(exec_path, cmd->final, env) == -1)
 	{
 		write(2, "COMMAND ", 8);
 		write(2, cmd->command, ft_strlen(cmd->command));
 		write(2, " NOT FOUND\n", 11);
 		free (exec_path);
-		exit (EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
+	write(2, "done execve\n", 12);
 	free (exec_path);
-	exit (EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }
