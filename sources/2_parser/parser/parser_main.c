@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 16:07:53 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:27:26 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ int	parser_helper_redirections(t_data *data, t_token *token)
 	}
 	else if (token->type == OUTPUT)
 	{
-		if (open_redirection_fd(data, &data->output, token, O_WRONLY | O_CREAT))
+		if (open_redirection_fd(data, &data->output, token, 
+				O_WRONLY | O_TRUNC | O_CREAT))
 			return (EXIT_FAILURE);
 	}
 	else
