@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 17:24:28 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/15 17:40:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ terminates the process with exit code `exit_code`
  */
 void	exit_minishell(t_data *data, int exit_code)
 {
-	ft_printf_colour(RED_BOLD, "Exiting minishell 👋\n");
+	ft_printf_colour(RED_BOLD, "Exiting minishell 👋\n\n");
 	free_all_memory(data);
 	rl_clear_history();
 	exit(exit_code);
