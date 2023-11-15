@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 16:27:26 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/15 17:23:12 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	parser(t_data *data)
 			parser_helper_redirections(data, ptr);
 		ptr = ptr->next;
 	}
-	if (create_new_node)
+	if (create_new_node && *data->argv)
 		return (ft_printf_exit_code("No command after pipe\n", EXIT_FAILURE));
 	if (expander(data))
 		return (EXIT_FAILURE);
