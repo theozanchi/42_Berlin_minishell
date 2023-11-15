@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 17:31:01 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/15 18:08:44 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,10 @@ int			executer(t_data *data);
 char		**env_extract_paths(char **env);
 int			cmd_count(t_commands *cmds);
 
-/* 4_free ******************************************************************* */
+/* 4_builtins *************************************************************** */
+int			builtin_echo(t_commands *c, int fd_out);
+
+/* 5_free ******************************************************************* */
 /*free_1.c*/
 void		free_tokens(t_data *data);
 void		free_char_array(char **array);
