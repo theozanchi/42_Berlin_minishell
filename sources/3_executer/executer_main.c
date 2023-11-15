@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/14 18:00:54 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/15 13:56:09 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,10 @@ void	fd2fd(int fd_out, t_commands *cmd, int fd_in, char **env)
 {
 	if (!cmd || !env)
 		write(2, "FDF2FDF ERROR\n", 14);
-	// int original_stdin = dup(0);
-	// int original_stdout = dup(1);
-	// printf("stdin:  %i\nstdout: %i\n", original_stdin, original_stdout);
-
+	printf("my pipes: %i | %i\n", fd_out, fd_in);
 	dup2(fd_out, 1);
 	dup2(fd_in, 0);
 	cmd_execute(cmd, env);
-	close (fd_in);
-	close (fd_out);
-	// dup2(original_stdin, 0);
-	// dup2(original_stdout, 1);
 }
 
 int	cmd_count(t_commands *cmds)
@@ -70,71 +63,84 @@ void	close_all_fd(int *fd_pipes)
  * @return 0 if success. -1 if arr is NULL
  */
 
-int	executer(t_data *data)
+int	*create_pipes(int fd_out, int fd_in, int cmds_num)
+{
+	int			*fd_pipes;
+
+	if (!cmds_num)
+		return (0);
+	fd_pipes = (int *) ft_calloc((2 * cmds_num) + 3, sizeof(int));
+	if (!fd_pipes)
+	{
+		write(2, "PIPES MALLOC ERROR\n", 18); // ERROR MGMT TBD
+		return (0);
+	}
+	fd_pipes[2 * cmds_num + 2] = '\0'; // Probalbly don't need this one
+	fd_pipes[0] = fd_in;
+	fd_pipes[1] = fd_in;
+	fd_pipes[2 * cmds_num] = fd_out;
+	fd_pipes[(2 * cmds_num) + 1] = fd_out;
+	int i = 0;
+	while (fd_pipes[i])
+		printf(" %i", fd_pipes[i++]);
+	printf("\n");
+	return (fd_pipes);
+}
+
+void	child_process(int *fd_pipes, pid_t *pid, t_data *data)
 {
 	int			i;
+	t_commands	*cmd;
+
+	if (!fd_pipes || !pid || !data)
+		return ;
+	i = 0;
+	cmd = data->commands;
+	while (cmd)
+	{
+		pid[i] = fork ();
+		if (pid[i] == -1)
+			write(2, "FORKING_ERROR\n", 14);// ERROR MGMT TBD
+		if (pid[i] == 0)
+			fd2fd(fd_pipes[(2 * i) + 2], cmd, fd_pipes[2 * i], data->env);
+		if (pid[i] > 0)
+		{
+			wait (NULL);
+			close (fd_pipes[2 * i]);
+			close (fd_pipes[(2 * i) + 2]);
+			++i;
+			cmd = cmd->next;
+		}
+	}
+}
+
+int	executer(t_data *data)
+{
 	int			cmds_num;
 	int			*fd_pipes;
 	pid_t		*pid;
-	t_commands	*cmds;
 
-	// int original_stdin = dup(0);
-	// int original_stdout = dup(1);
-	// printf("stdin:  %i\nstdout: %i\n", original_stdin, original_stdout);
-
-	i = 0;
-	cmds = data->commands;
-write(2, cmds->command, ft_strlen(cmds->command));
-write(2, "\n\n", 2);
 	cmds_num = cmd_count(data->commands);
-	fd_pipes = (int *) ft_calloc(3 + cmds_num, 2 * sizeof(int));
+	fd_pipes = create_pipes(data->output.fd, data->input.fd, cmds_num);
 	if (!fd_pipes)
-		write(2, "EXEC MALLOC ERROR\n", 18); // ERROR MGMT TBD
-	fd_pipes[cmds_num + 2] = '\0'; // Probalbly don't need this one
-	pid = (pid_t *) ft_calloc (cmds_num - 1, sizeof(pid_t));
+		return (EXIT_SUCCESS); // ERROR MGMT TBD
+	pid = (pid_t *) ft_calloc (cmds_num, sizeof(pid_t)); // LEAKS
 	if (!pid)
-		write(2, "EXEC MALLOC ERROR\n", 18); // ERROR MGMT TBD
-	fd_pipes[0] = data->input.fd;
-	fd_pipes[1] = data->output.fd;
-	i = 0;
-	while (cmds->next)
 	{
-		if (pipe(&fd_pipes[(i * 2) + 2]) < -1)
-			write(2, "PIPING ERROR\n", 13); // ERROR MGMT TBD
-		pid[i] = fork();
-		if (pid[i] == -1)
-			write(2, "FORKING ERROR\n", 14); // ERROR MGMT TBD
-		if (pid[i] == 0)
-		{
-/* //DEBBUGING STUFF
-write(2, "out & in: ", 10);
-write(2, "  ", 2);
-write(2, ft_itoa((i * 2) + 3), 1);
-write(2, ft_itoa(i * 2), 1);
-write(2, "  ", 2);
-write(2, ft_itoa((i * 2) + 1), 1);
-write(2, ft_itoa((i * 2) + 2), 1);
-write(2, "\n\n", 2);
-*/
-			if (i > 0)
-				close(fd_pipes[(i * 2) + 1]);
-			close(fd_pipes[(i * 2) + 2]);
-			fd2fd(fd_pipes[(i * 2) + 3], cmds, fd_pipes[i * 2], data->env);
-		}
-		if (pid[i] != 0)
-		{
-			wait (NULL);
-			close(fd_pipes[(i * 2) + 3]);
-			++i;
-			cmds = cmds->next;
-		}
+		free (fd_pipes);
+		return (write(2, "EXEC MALLOC ERROR\n", 18)); // ERROR MGMT TBD
 	}
-	return (EXIT_SUCCESS);
-	fd2fd (fd_pipes[1], cmds, fd_pipes[i * 2], data->env);
-	// dup2(original_stdin, 0);
-	// dup2(original_stdout, 1);
-	close_all_fd(fd_pipes);
-	free (fd_pipes);
-	free (pid);
+	pid[0] = fork();
+	if (pid[0] == -1)
+		return (write(2, "FORKING_ERROR\n", 14)); // ERROR MGMT TBD
+	if (pid[0] == 0)
+		child_process(fd_pipes, &pid[1], data);
+	if (pid[0] == 1)
+	{
+		wait (NULL);
+	}
+		close_all_fd(fd_pipes);
+		free (fd_pipes);
+		free (pid);
 	return (EXIT_SUCCESS);
 }

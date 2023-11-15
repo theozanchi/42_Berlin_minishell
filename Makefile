@@ -6,13 +6,13 @@
 #    By: jschott <jschott@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/13 16:50:14 by jschott          ###   ########.fr        #
+#    Updated: 2023/11/15 13:53:40 by jschott          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #Compiler targets and libraries
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror -g #-fsanitize=address
 NAME		=	minishell
 LIBFT		=	libft.a
 READLINE	=	-lreadline
