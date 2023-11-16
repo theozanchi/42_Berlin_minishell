@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 15:20:50 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:12:16 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,19 @@ int			executer(t_data *data);
 char		**env_extract_paths(char **env);
 int			cmd_count(t_commands *cmds);
 
-/* 4_free ******************************************************************* */
+/* 4_builtins *************************************************************** */
+/*builtins_utils.c*/
+int			cmd_is_a_builtin(t_commands *node);
+int			launch_builtin(t_commands *c, t_data *data);
+int			builtin_cd(t_commands *c, t_data *data);
+int			builtin_echo(t_commands *c);
+int			builtin_env(t_commands *c, t_data *data);
+int			builtin_exit(t_commands *c, t_data *data);
+int			builtin_export(t_commands *c, t_data *data);
+int			builtin_pwd(t_commands *c);
+int			builtin_unset(t_commands *c, t_data *data);
+
+/* 5_free ******************************************************************* */
 /*free_1.c*/
 void		free_tokens(t_data *data);
 void		free_char_array(char **array);
@@ -203,7 +215,9 @@ void		launch_minishell(t_data *data);
 void		exit_minishell(t_data *data, int exit_code);
 
 /*signals.c*/
-void		signal_handler(int signum);
-int			init_signals(struct sigaction *sa);
+void		reset_line(int signum);
+void		display_new_line(int signum);
+int			signals_interactive(void);
+int			signals_non_interactive(void);
 
 #endif

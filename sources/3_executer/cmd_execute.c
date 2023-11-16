@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/11/16 13:12:32 by jschott          ###   ########.fr       */
+=======
+/*   Updated: 2023/11/16 11:34:16 by tzanchi          ###   ########.fr       */
+>>>>>>> 30fa827bb2ba2aed8a636d9ec9748d0384e64e89
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +66,27 @@ int	cmd_execute(t_commands *cmd, char **env)
 	if (access(cmd->command, X_OK | F_OK) == 0)
 		exec_path = cmd->command;
 	else
+<<<<<<< HEAD
 		exec_path = search_cmd_path(cmd, env);
 	if (!exec_path)
 		return (EXIT_FAILURE);
+=======
+	{
+		paths = env_extract_paths(env);
+// check if command is included in builtin
+	// if (cmd_is_a_builtin(cmd))
+	// 	launch_builtin(cmd, data)
+	// else launch execve
+			// exec_path = ft_strjoin(BUILTIN_PATH, cmd->command);
+		exec_path = ft_strjoin(paths[0], cmd->command);
+		while (paths[++i] && access(exec_path, X_OK | F_OK) != 0)
+		{
+			free (exec_path);
+			exec_path = ft_strjoin(paths[i], cmd->command);
+		}
+		free_char_array (paths);
+	}
+>>>>>>> 30fa827bb2ba2aed8a636d9ec9748d0384e64e89
 	if (execve(exec_path, cmd->final, env) == -1)
 	{
 		write(2, "COMMAND ", 8);

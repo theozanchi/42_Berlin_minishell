@@ -6,7 +6,11 @@
 #    By: jschott <jschott@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2023/11/15 15:52:43 by jschott          ###   ########.fr        #
+=======
+#    Updated: 2023/11/16 13:12:35 by tzanchi          ###   ########.fr        #
+>>>>>>> 30fa827bb2ba2aed8a636d9ec9748d0384e64e89
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,8 +50,15 @@ SRC			=	0_utils/utils_1.c \
 				3_executer/cmd_execute.c \
 				3_executer/env_extract_path.c \
 				3_executer/executer_main.c \
-				4_free/free_1.c \
-				4_free/free_2.c \
+				4_builtins/builtins_utils.c \
+				4_builtins/echo.c \
+				4_builtins/env.c \
+				4_builtins/exit.c \
+				4_builtins/cd.c \
+				4_builtins/pwd.c \
+				4_builtins/unset.c \
+				5_free/free_1.c \
+				5_free/free_2.c \
 				init.c \
 				main.c \
 				signals.c
