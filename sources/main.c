@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/11/16 11:00:48 by jschott          ###   ########.fr       */
-=======
-/*   Updated: 2023/11/15 17:40:29 by tzanchi          ###   ########.fr       */
->>>>>>> 30fa827bb2ba2aed8a636d9ec9748d0384e64e89
+/*   Updated: 2023/11/16 16:01:00 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_exit[2];
 
 /**
  * @brief Initializes the data needed for the project and launches the program
@@ -52,7 +50,7 @@ void	launch_minishell(t_data *data)
 	while (1)
 	{
 		if (signals_interactive())
-			exit_minishell(data, EXIT_FAILURE);
+			exit_minishell(data, EXIT_SUCCESS);
 		data->argv = readline(ENTRY_PROMPT);
 		if (!data->argv)
 			exit_minishell(data, EXIT_SUCCESS);
@@ -64,6 +62,8 @@ void	launch_minishell(t_data *data)
 			free_memory_between_commands(data);
 			continue ;
 		}
+		if (g_exit[0])
+			exit_minishell(data, g_exit[1]);
 		free_memory_between_commands(data);
 	}
 }

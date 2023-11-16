@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 13:13:16 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 15:53:33 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	launch_builtin(t_commands *node, t_data *data)
 	else if (!ft_strcmp(node->command, "cd"))
 		exit_code = builtin_cd(node, data);
 	else if (!ft_strcmp(node->command, "pwd"))
-		exit_code = builtin_pwd(node);
+		exit_code = builtin_pwd(node, data);
 	else if (!ft_strcmp(node->command, "export"))
 		exit_code = builtin_export(node, data);
 	else if (!ft_strcmp(node->command, "unset"))
@@ -59,6 +59,6 @@ int	launch_builtin(t_commands *node, t_data *data)
 	else if (!ft_strcmp(node->command, "env"))
 		exit_code = builtin_env(node, data);
 	else
-		exit_code = builtin_exit(node, data);
+		exit_code = builtin_exit(node);
 	return (exit_code);
 }

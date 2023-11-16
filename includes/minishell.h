@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 14:48:48 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 18:13:15 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ typedef struct s_data
 	t_io		output;
 }	t_data;
 
+extern int	g_exit[2];
+
 /* 0_utils ****************************************************************** */
 /*utils_1.c*/
 int			perror_return_failure(char *str);
@@ -167,15 +169,23 @@ int			populate_node_flag(t_commands *node, t_token *token);
 int			populate_node_argument(t_commands *node, t_token *token);
 
 /* 3_executer *************************************************************** */
-/*cmd_exectute.c*/
-int			cmd_execute(t_commands *cmd, t_data *data);
-
 /*executer_main.c*/
 int			executer(t_data *data);
-
-/*env_extract_path.c*/
-char		**env_extract_paths(char **env);
 int			cmd_count(t_commands *cmds);
+
+/*pipes_creator.c*/
+int			*create_pipes(int fd_out, int fd_in, int cmds_num);
+
+/*pipeline_executer.c*/
+int			execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data);
+void		fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data);
+void		close_all_fd(int *fd_pipes);
+int			close_fd(int fd);;
+
+/*command_executer.c*/
+int			command_executer(t_commands *cmd, t_data *data);
+char		*search_cmd_path(t_commands *cmd, char **env);
+char		**env_extract_paths(char **env);
 
 /* 4_builtins *************************************************************** */
 /*builtins_utils.c*/
@@ -184,9 +194,9 @@ int			launch_builtin(t_commands *c, t_data *data);
 int			builtin_cd(t_commands *c, t_data *data);
 int			builtin_echo(t_commands *c);
 int			builtin_env(t_commands *c, t_data *data);
-int			builtin_exit(t_commands *c, t_data *data);
+int			builtin_exit(t_commands *c);
 int			builtin_export(t_commands *c, t_data *data);
-int			builtin_pwd(t_commands *c);
+int			builtin_pwd(t_commands *c, t_data *data);
 int			builtin_unset(t_commands *c, t_data *data);
 
 /* 5_free ******************************************************************* */

@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:47:42 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 12:06:23 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 15:23:21 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #define PWD_ERR_FLAGS "minishell: pwd: no options supported\n"
 #define PWD_ERR_EXTRA_ARG "minishell: pwd: too many arguments\n"
+#define PWD_ERR_PWD_NOT_FOUND "minishell: pwd: PWD not found in env\n"
+
 
 /**
  * @brief Check that the command does not have any argument or flag
@@ -31,23 +33,28 @@ static int	check_arg(t_commands *c)
 }
 
 /**
- * @brief Displays the current working directory in fd_out
+ * @brief Displays the current working directory from the environment
  * 
- * @param fd_out The output file descriptor
+ * @param c 
+ * @param data 
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	builtin_pwd(t_commands *c)
+int	builtin_pwd(t_commands *c, t_data *data)
 {
-	char	*cwd;
+	size_t	i;
 
 	if (check_arg(c))
 		return (EXIT_FAILURE);
-	cwd = NULL;
-	getcwd(cwd, 0);
-	if (cwd == NULL)
-		return (perror_return_failure("getcwd"));
-	ft_putstr_fd(cwd, 1);
-	free(cwd);
-	cwd = NULL;
-	return (EXIT_SUCCESS);
+	i = 0;
+	while (data->env[i])
+	{
+		if (!ft_strncmp(data->env[i], "PWD=", 4))
+		{
+			ft_putstr_fd(&data->env[i][4], 1);
+			write(1, "\n", 1);
+			return (EXIT_SUCCESS);
+		}
+		i++;
+	}
+	return (ft_printf_exit_code(PWD_ERR_PWD_NOT_FOUND, EXIT_FAILURE));
 }

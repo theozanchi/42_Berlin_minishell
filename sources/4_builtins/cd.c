@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:17:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 11:22:30 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 15:25:43 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	builtin_cd(t_commands *c, t_data *data)
 	}
 	else
 		new_directory = c->arguments->value;
-	chdir(new_directory);
+	// chdir(new_directory);
 	if (update_env_variable(new_directory, data))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
