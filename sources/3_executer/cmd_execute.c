@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/16 13:20:00 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/16 15:02:51 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,27 @@ int	cmd_execute(t_commands *cmd, t_data *data)
 	i = 0;
 	paths = 0;
 	if (cmd_is_a_builtin(cmd))
-		launch_builtin(cmd, data);
-	if (access(cmd->command, X_OK | F_OK) == 0)
-		exec_path = cmd->command;
-	else
-		exec_path = search_cmd_path(cmd, data->env);
-	if (!exec_path)
-		return (EXIT_FAILURE);
-	if (execve(exec_path, cmd->final, data->env) == -1)
 	{
-		write(2, "COMMAND ", 8);
-		write(2, cmd->command, ft_strlen(cmd->command));
-		write(2, " NOT FOUND\n", 11);
-		free (exec_path);
-		return (EXIT_FAILURE);
+		launch_builtin(cmd, data);
+		exit(EXIT_SUCCESS);
 	}
-	free (exec_path);
+	else
+	{
+		if (access(cmd->command, X_OK | F_OK) == 0)
+			exec_path = cmd->command;
+		else
+			exec_path = search_cmd_path(cmd, data->env);
+		if (!exec_path)
+			return (EXIT_FAILURE);
+		if (execve(exec_path, cmd->final, data->env) == -1)
+		{
+			write(2, "COMMAND ", 8);
+			write(2, cmd->command, ft_strlen(cmd->command));
+			write(2, " NOT FOUND\n", 11);
+			free (exec_path);
+			return (EXIT_FAILURE);
+		}
+		free (exec_path);
+	}
 	return (EXIT_SUCCESS);
 }

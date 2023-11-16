@@ -33,8 +33,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/tzanchi/42_Berlin_minishell/sources/4_builtins",
-      "program": "/home/tzanchi/42_Berlin_minishell/sources/4_builtins/build/Debug/outDebug",
+      "cwd": "/home/tzanchi/42_Berlin_minishell/sources",
+      "program": "/home/tzanchi/42_Berlin_minishell/sources/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
