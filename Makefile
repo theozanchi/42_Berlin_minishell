@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/16 09:48:36 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/11/16 11:06:52 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRC			=	0_utils/utils_1.c \
 				3_executer/executer_main.c \
 				4_builtins/builtins_utils.c \
 				4_builtins/echo.c \
+				4_builtins/exit.c \
 				4_builtins/cd.c \
 				4_builtins/pwd.c \
 				5_free/free_1.c \
