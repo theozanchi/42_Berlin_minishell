@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 12:21:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 15:56:24 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,5 +104,7 @@ int	init_data(t_data *data, char **env)
 		return (EXIT_FAILURE);
 	init_io(data);
 	data->wstatus = 0;
+	g_exit[0] = 0;
+	g_exit[1] = EXIT_SUCCESS;
 	return (EXIT_SUCCESS);
 }
