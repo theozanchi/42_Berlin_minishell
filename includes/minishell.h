@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 13:12:16 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:31:27 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int			add_new_list_node(t_list **list, t_token *token);
 
 /* 1_lexer ****************************************************************** */
 /*lexer_main.c*/
-int			check_arg(char *arg);
+int			check_user_arg(char *arg);
 int			lexer(t_data *data);
 
 /*lexer_utils.c*/

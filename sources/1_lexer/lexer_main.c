@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:49:34 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 15:45:01 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:28:25 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param arg User input
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	check_arg(char *arg)
+int	check_user_arg(char *arg)
 {
 	if (!arg)
 		return (EXIT_FAILURE);
@@ -56,7 +56,7 @@ int	lexer(t_data *data)
 	char	*ptr;
 
 	ptr = data->argv;
-	if (check_arg(data->argv))
+	if (check_user_arg(data->argv))
 		return (EXIT_FAILURE);
 	while (*ptr)
 	{

@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 11:10:33 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 11:28:51 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:29:56 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param data The main data structure
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	check_arg(t_commands *c, t_data *data)
+static int	check_arg(t_commands *c)
 {
 	if (c->flags)
 		return (ft_printf_exit_code(ENV_ERR_FLAGS, EXIT_FAILURE));
@@ -42,7 +42,7 @@ int	builtin_env(t_commands *c, t_data *data)
 {
 	size_t	i;
 
-	if (check_arg(c, data))
+	if (check_arg(c))
 		return (EXIT_FAILURE);
 	i = 0;
 	while (data->env[i])
