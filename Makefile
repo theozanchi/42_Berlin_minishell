@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jschott <jschott@student.42.fr>            +#+  +:+       +#+         #
+#    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/16 13:22:10 by jschott          ###   ########.fr        #
+#    Updated: 2023/11/16 14:51:29 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ SRC			=	0_utils/utils_1.c \
 				4_builtins/echo.c \
 				4_builtins/env.c \
 				4_builtins/exit.c \
+				4_builtins/export.c \
 				4_builtins/cd.c \
 				4_builtins/pwd.c \
 				4_builtins/unset.c \
