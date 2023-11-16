@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:47:42 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 10:09:30 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 10:10:49 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	builtin_pwd(int fd_out)
 	cwd = NULL;
 	getcwd(cwd, 0);
 	if (cwd == NULL)
-		return (EXIT_FAILURE);
+		return (perror_return_failure("getcwd"));
 	ft_putstr_fd(cwd, fd_out);
 	free(cwd);
 	cwd = NULL;
