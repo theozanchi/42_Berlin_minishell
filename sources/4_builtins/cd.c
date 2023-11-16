@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:17:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 10:03:15 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 10:09:58 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,3 @@ int	builtin_cd(t_commands *c, t_data *data)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
-
