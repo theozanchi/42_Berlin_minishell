@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 17:47:56 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 18:09:49 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 11:14:37 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	builtin_echo(t_commands *c, int fd_out)
 	t_list	*ptr;
 
 	if (c->flags && (c->flags->next || ft_strcmp(c->flags->value, "-n")))
-		return (ft_printf_exit_code("Only -n is supported", EXIT_FAILURE));
+		return (ft_printf_exit_code("Only -n is supported\n", EXIT_FAILURE));
 	ptr = c->arguments;
 	while (ptr)
 	{

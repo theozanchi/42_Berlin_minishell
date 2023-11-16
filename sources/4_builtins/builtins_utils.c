@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 10:19:41 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 11:26:52 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	launch_builtin(t_commands *node, t_data *data, int fd_in, int fd_out)
 	else if (!ft_strcmp(node->command, "unset"))
 		exit_code = builtin_unset();
 	else if (!ft_strcmp(node->command, "env"))
-		exit_code = builtin_env();
+		exit_code = builtin_env(node->command, data);
 	else
 		exit_code = builtin_exit();
 	return (exit_code);

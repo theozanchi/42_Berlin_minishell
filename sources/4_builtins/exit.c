@@ -6,11 +6,15 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:56:06 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 11:10:03 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 11:19:53 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#define EXIT_ERR_FLAGS "minishell: exit: no options supported\n"
+#define EXIT_ERR_EXTRA_ARG "minishell: exit: too many arguments\n"
+#define EXIT_ERR_NON_NUM_ARG "minishell: exit: numeric argument required\n"
 
 /**
  * @brief Check that the argument for the exit function are valid: one max,
@@ -23,22 +27,13 @@
 static int	check_arg(t_commands *c, t_data *data)
 {
 	if (c->flags)
-	{
-		ft_printf("exit: no options supported");
-		return (EXIT_FAILURE);
-	}
+		return (ft_printf_exit_code(EXIT_ERR_FLAGS, EXIT_FAILURE));
 	if (c->arguments)
 	{
 		if (c->arguments->next)
-		{
-			ft_printf("minishell: exit: too many arguments");
-			return (EXIT_FAILURE);
-		}
+			return (ft_printf_exit_code(EXIT_ERR_EXTRA_ARG));
 		if (!ft_isnumeric(c->arguments->value))
-		{
-			ft_printf("minishell: exit: numeric argument required");
-			return (EXIT_FAILURE);
-		}
+			return (ft_printf_exit_code(EXIT_ERR_NON_NUM_ARG, EXIT_FAILURE));
 	}
 	return (EXIT_SUCCESS);
 }
