@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/15 15:19:58 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/16 11:34:16 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ int	cmd_execute(t_commands *cmd, char **env)
 	{
 		paths = env_extract_paths(env);
 // check if command is included in builtin
+	// if (cmd_is_a_builtin(cmd))
+	// 	launch_builtin(cmd, data)
+	// else launch execve
 			// exec_path = ft_strjoin(BUILTIN_PATH, cmd->command);
 		exec_path = ft_strjoin(paths[0], cmd->command);
 		while (paths[++i] && access(exec_path, X_OK | F_OK) != 0)

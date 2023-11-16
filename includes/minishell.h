@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 11:27:26 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 12:59:08 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,12 +180,13 @@ int			cmd_count(t_commands *cmds);
 /* 4_builtins *************************************************************** */
 /*builtins_utils.c*/
 int			cmd_is_a_builtin(t_commands *node);
-int			launch_builtin(t_commands *c, t_data *data, int fd_in, int fd_out);
-int			builtin_echo(t_commands *c, int fd_out);
-int			builtin_env(t_commands *c, t_data *data);
+int			launch_builtin(t_commands *c, t_data *data);
 int			builtin_cd(t_commands *c, t_data *data);
-int			builtin_pwd(int fd_out);
+int			builtin_echo(t_commands *c);
+int			builtin_env(t_commands *c, t_data *data);
 int			builtin_exit(t_commands *c, t_data *data);
+int			builtin_export(t_commands *c, t_data *data);
+int			builtin_pwd(t_commands *c);
 
 /* 5_free ******************************************************************* */
 /*free_1.c*/

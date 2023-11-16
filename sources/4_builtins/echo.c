@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 17:47:56 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 11:14:37 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 11:34:50 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param fd_out The file descriptor in which to write
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	builtin_echo(t_commands *c, int fd_out)
+int	builtin_echo(t_commands *c)
 {
 	t_list	*ptr;
 
@@ -29,10 +29,10 @@ int	builtin_echo(t_commands *c, int fd_out)
 	ptr = c->arguments;
 	while (ptr)
 	{
-		ft_putstr_fd(ptr->value, fd_out);
+		ft_putstr_fd(ptr->value, 1);
 		ptr = ptr->next;
 	}
 	if (c->flags && ft_strcmp(c->flags->value, "-n"))
-		ft_putstr_fd("\n", fd_out);
+		ft_putstr_fd("\n", 1);
 	return (EXIT_SUCCESS);
 }
