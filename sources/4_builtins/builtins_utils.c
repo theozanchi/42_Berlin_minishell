@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 10:08:38 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 10:19:41 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ int	cmd_is_a_builtin(t_commands *node)
  * @param fd_out The output file descriptor
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	launch_builtin(t_commands *c, t_data *data, int fd_in, int fd_out)
+int	launch_builtin(t_commands *node, t_data *data, int fd_in, int fd_out)
 {
 	int	exit_code;
 
 	if (!ft_strcmp(node->command, "echo"))
-		exit_code = builtin_echo(c, fd_out);
+		exit_code = builtin_echo(node, fd_out);
 	else if (!ft_strcmp(node->command, "cd"))
-		exit_code = builtin_cd(c, data);
+		exit_code = builtin_cd(node, data);
 	else if (!ft_strcmp(node->command, "pwd"))
 		exit_code = builtin_pwd(fd_out);
 	else if (!ft_strcmp(node->command, "export"))
