@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:56:06 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 11:19:53 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:32:14 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@
  * @param data The main data structure
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	check_arg(t_commands *c, t_data *data)
+static int	check_arg(t_commands *c)
 {
 	if (c->flags)
 		return (ft_printf_exit_code(EXIT_ERR_FLAGS, EXIT_FAILURE));
 	if (c->arguments)
 	{
 		if (c->arguments->next)
-			return (ft_printf_exit_code(EXIT_ERR_EXTRA_ARG));
+			return (ft_printf_exit_code(EXIT_ERR_EXTRA_ARG, EXIT_FAILURE));
 		if (!ft_isnumeric(c->arguments->value))
 			return (ft_printf_exit_code(EXIT_ERR_NON_NUM_ARG, EXIT_FAILURE));
 	}
@@ -49,10 +49,16 @@ static int	check_arg(t_commands *c, t_data *data)
  */
 int	builtin_exit(t_commands *c, t_data *data)
 {
-	if (check_arg(c, data))
+	if (check_arg(c))
 		return (EXIT_FAILURE);
 	if (c->arguments)
+	{
 		exit_minishell(data, ft_atoi(c->arguments->value));
+		return (EXIT_SUCCESS);
+	}
 	else
+	{
 		exit_minishell(data, EXIT_SUCCESS);
+		return (EXIT_SUCCESS);
+	}
 }
