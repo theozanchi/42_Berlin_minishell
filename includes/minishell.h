@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 14:48:48 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 15:16:32 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ int			builtin_echo(t_commands *c);
 int			builtin_env(t_commands *c, t_data *data);
 int			builtin_exit(t_commands *c, t_data *data);
 int			builtin_export(t_commands *c, t_data *data);
-int			builtin_pwd(t_commands *c);
+int			builtin_pwd(t_commands *c, t_data *data);
 int			builtin_unset(t_commands *c, t_data *data);
 
 /* 5_free ******************************************************************* */
