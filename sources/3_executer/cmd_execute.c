@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/15 18:20:08 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/16 12:37:44 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ int	cmd_execute(t_commands *cmd, char **env)
 		}
 		free_char_array (paths);
 	}
-	write(2, "doin execve\n", 12);
-	write(2, cmd->command, ft_strlen(cmd->command));
-	write(2, "\n", 1);
+	// write(1, "doin execve: ", 13);
+	// write(1, cmd->command, ft_strlen(cmd->command));
+	// write(1, "\n\n", 3);
 	if (execve(exec_path, cmd->final, env) == -1)
 	{
 		write(2, "COMMAND ", 8);
@@ -61,7 +61,7 @@ int	cmd_execute(t_commands *cmd, char **env)
 		free (exec_path);
 		return (EXIT_FAILURE);
 	}
-	write(2, "done execve\n", 12);
+	// write(2, "done execve\n", 12);
 	free (exec_path);
 	return (EXIT_SUCCESS);
 }
