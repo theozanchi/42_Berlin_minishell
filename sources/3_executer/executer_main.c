@@ -6,12 +6,17 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/16 12:55:37 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:05:08 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/// @brief redirects fds to given values and calls function that executes
+/// @param fd_out desired filedescriptor for output
+/// @param cmd command to execute incl. arguments and flags
+/// @param fd_in desired filedescriptor for output
+/// @param env environmental variable
 void	fd2fd(int fd_out, t_commands *cmd, int fd_in, char **env)
 {
 	if (!cmd || !env)
@@ -19,7 +24,6 @@ void	fd2fd(int fd_out, t_commands *cmd, int fd_in, char **env)
 	dup2(fd_out, 1);
 	dup2(fd_in, 0);
 	cmd_execute(cmd, env);
-	exit (EXIT_SUCCESS);
 }
 
 /**
@@ -97,18 +101,21 @@ int	child_process(int *fd_pipes, pid_t *pid, t_data *data)
 	{
 		pid[i] = fork ();
 		if (pid[i] == -1)
-			return (write(2, "FORKING_ERROR\n", 14));// ERROR MGMT TBD
+			return(write(2, "FORKING_ERROR\n", 14));// ERROR MGMT TBD
 		if (pid[i] == 0)
 			fd2fd(fd_pipes[(2 * i) + 3], cmd, fd_pipes[2 * i], data->env);
 		if (pid[i] > 0)
 		{
 			wait (NULL);
-			close (fd_pipes[2 * i]);
-			close (fd_pipes[(2 * i) + 3]);
+			if (fd_pipes[(2 * i)] > 2)
+				close (fd_pipes[2 * i]);
+			if (fd_pipes[(2 * i) + 3] > 2)
+				close (fd_pipes[(2 * i) + 3]);
 			++i;
 			cmd = cmd->next;
 		}
 	}
+	close_all_fd(fd_pipes);
 	return (EXIT_SUCCESS);
 }
 
