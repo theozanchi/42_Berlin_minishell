@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/16 13:20:00 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/16 15:40:33 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,9 @@ int	cmd_execute(t_commands *cmd, t_data *data)
 {
 	char	*exec_path;
 	char	**paths;
-	int		i;
 
 	if (!cmd || !cmd->command)
 		exit (EXIT_FAILURE);
-	i = 0;
 	paths = 0;
 	if (cmd_is_a_builtin(cmd))
 		launch_builtin(cmd, data);
@@ -67,11 +65,11 @@ int	cmd_execute(t_commands *cmd, t_data *data)
 		exec_path = search_cmd_path(cmd, data->env);
 	if (!exec_path)
 		return (EXIT_FAILURE);
-	if (execve(exec_path, cmd->final, data->env) == -1)
+	data->wstatus = execve(exec_path, cmd->final, data->env) == -1;
+	if (data->wstatus == -1)
 	{
-		write(2, "COMMAND ", 8);
-		write(2, cmd->command, ft_strlen(cmd->command));
-		write(2, " NOT FOUND\n", 11);
+		perror("command not found: ");
+		perror(cmd->command);
 		free (exec_path);
 		return (EXIT_FAILURE);
 	}
