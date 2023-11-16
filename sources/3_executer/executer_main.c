@@ -6,30 +6,31 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/15 15:18:46 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:21:06 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "executer.h"
 #include "minishell.h"
 
-void	fd2fd(int fd_out, t_commands *cmd, int fd_in, char **env)
+/// @brief redirects fds to given values and calls function that executes
+/// @param fd_out desired filedescriptor for output
+/// @param cmd command to execute incl. arguments and flags
+/// @param fd_in desired filedescriptor for output
+/// @param env environmental variable
+void	fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data)
 {
-	if (!cmd || !env)
+	if (!cmd || !data)
 		write(2, "FDF2FDF ERROR\n", 14);
-// printf("my pipes: %i | %i\n", fd_out, fd_in);
-	write(2, "reading from: ", 14);
-	write(2, ft_itoa(fd_in), 1);
-	write(2, "\n", 1);
-	write(2, "writing to:   ", 14);
-	write(2, ft_itoa(fd_out), 1);
-	write(2, "\n\n", 2);
 	dup2(fd_out, 1);
 	dup2(fd_in, 0);
-	cmd_execute(cmd, env);
-	exit (EXIT_SUCCESS);
+	cmd_execute(cmd, data);
 }
 
+/**
+* @brief counts the elements in a linked list of type t_command 
+* @param cmds pointer to the first element of a list
+* @return integer of number of elements
+*/
 int	cmd_count(t_commands *cmds)
 {
 	int			i;
@@ -59,18 +60,6 @@ void	close_all_fd(int *fd_pipes)
 	}
 }
 
-/**
- * @brief Executes and pipes multiple commands including redirects
- * 
- * @param data main data struct includes all commands & redirects
- * @param i index
- * @param cmds_num number of commands to execute
- * @param fd_pipes array with the in/out fds of all pipes
- * @param pid array of all process ids
- * @param cmds pointer to the current command to execute
- * @return 0 if success. -1 if arr is NULL
- */
-
 int	*create_pipes(int fd_out, int fd_in, int cmds_num)
 {
 	int	*fd_pipes;
@@ -84,7 +73,7 @@ int	*create_pipes(int fd_out, int fd_in, int cmds_num)
 		write(2, "PIPES MALLOC ERROR\n", 18); // ERROR MGMT TBD
 		return (0);
 	}
-	fd_pipes[2 * cmds_num + 2] = '\0'; // Probalbly don't need this one
+	fd_pipes[2 * cmds_num + 2] = '\0';
 	fd_pipes[0] = fd_in;
 	fd_pipes[1] = fd_in;
 	i = 2;
@@ -96,41 +85,49 @@ int	*create_pipes(int fd_out, int fd_in, int cmds_num)
 	fd_pipes[2 * cmds_num] = fd_out;
 	fd_pipes[(2 * cmds_num) + 1] = fd_out;
 	i = 0;
-// printf ("fd_pipes:");
-// while (i <= (2 * cmds_num) + 1)
-// 	printf(" | %i", fd_pipes[i++]);
-// printf("\n");
 	return (fd_pipes);
 }
 
-void	child_process(int *fd_pipes, pid_t *pid, t_data *data)
+int	child_process(int *fd_pipes, pid_t *pid, t_data *data)
 {
 	int			i;
 	t_commands	*cmd;
 
 	if (!fd_pipes || !pid || !data)
-		return ;
+		return (EXIT_FAILURE);
 	i = 0;
 	cmd = data->commands;
 	while (cmd)
 	{
 		pid[i] = fork ();
 		if (pid[i] == -1)
-			write(2, "FORKING_ERROR\n", 14);// ERROR MGMT TBD
+			return(write(2, "FORKING_ERROR\n", 14));// ERROR MGMT TBD
 		if (pid[i] == 0)
-			fd2fd(fd_pipes[(2 * i) + 3], cmd, fd_pipes[2 * i], data->env);
+			fd2fd(fd_pipes[(2 * i) + 3], cmd, fd_pipes[2 * i], data);
 		if (pid[i] > 0)
 		{
 			wait (NULL);
-			close (fd_pipes[2 * i]);
-			close (fd_pipes[(2 * i) + 3]);
+			if (fd_pipes[(2 * i)] > 2)
+				close (fd_pipes[2 * i]);
+			if (fd_pipes[(2 * i) + 3] > 2)
+				close (fd_pipes[(2 * i) + 3]);
+			++i;
+			cmd = cmd->next;
 		}
-		++i;
-		cmd = cmd->next;
 	}
-	exit (EXIT_SUCCESS);
+	close_all_fd(fd_pipes);
+	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Executes and pipes multiple commands including redirects
+ * 
+ * @param data main data struct includes all commands & redirects
+ * @param cmds_num number of commands to execute
+ * @param fd_pipes array with the in/out fds of all pipes
+ * @param pid array of all process ids
+ * @return 0 if success. -1 on errors
+ */
 int	executer(t_data *data)
 {
 	int			cmds_num;
@@ -147,19 +144,10 @@ int	executer(t_data *data)
 		free (fd_pipes);
 		return (write(2, "EXEC MALLOC ERROR\n", 18)); // ERROR MGMT TBD
 	}
-	pid[0] = fork();
-	if (pid[0] == -1)
-		return (write(2, "FORKING_ERROR\n", 14)); // ERROR MGMT TBD
-	if (pid[0] == 0)
-		child_process(fd_pipes, &pid[1], data);
-	if (pid[0] > 1)
-	{
-		wait (NULL);
-		close_all_fd(fd_pipes);
-		free (fd_pipes);
-		free (pid);
-		dup2(0, 0);
-		dup2(1, 1);
-	}
+	child_process(fd_pipes, &pid[1], data);
+	free (fd_pipes);
+	free (pid);
+	dup2(0, 0);
+	dup2(1, 1);
 	return (EXIT_SUCCESS);
 }

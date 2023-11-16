@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 13:31:27 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 14:48:48 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ int			populate_node_argument(t_commands *node, t_token *token);
 
 /* 3_executer *************************************************************** */
 /*cmd_exectute.c*/
-int			cmd_execute(t_commands *cmd, char **env);
+int			cmd_execute(t_commands *cmd, t_data *data);
 
 /*executer_main.c*/
 int			executer(t_data *data);
