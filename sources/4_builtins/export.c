@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:11:38 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 13:02:08 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/16 13:10:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 #define EXPORT_ERR_FLAGS "minishell: export: no options supported\n"
 #define EXPORT_INV_IDEN "minishell: export: '%s': not a valid identifier\n"
 
+/**
+ * @brief Extracts the identifier from the export argument, i.e. all characters
+ * located before the '=' sign
+ * 
+ * @param str The argument passed to the builtin
+ * @return Pointer to the substring, which has been malloc'ed or NULL in case of
+ * error or if no equal sign is present
+ */
 static char	*extract_identifier(char *str)
 {
 	size_t	identifier_length;
@@ -33,6 +41,13 @@ static char	*extract_identifier(char *str)
 	return (identifier);
 }
 
+/**
+ * @brief Extracts the identifier from the argument and checks its validity: only
+ * lower and upper letters, or underscore signs
+ * 
+ * @param str The arguments passed to the builtin
+ * @return Pointer to the identifier, or NULL if invalid
+ */
 static char	*get_and_check_identifier(char *str)
 {
 	char	*identifier;
@@ -57,6 +72,13 @@ static char	*get_and_check_identifier(char *str)
 	return (identifier);
 }
 
+/**
+ * @brief If an environment variable is already in the env array, it is
+ * overwritten by the new value
+ * 
+ * @param old The old env variable
+ * @param new The new env variable
+ */
 static void	overwrite_env_variable(char **old, char *new)
 {
 	free(*old);
@@ -65,6 +87,15 @@ static void	overwrite_env_variable(char **old, char *new)
 		perror("minishell: export: malloc");
 }
 
+/**
+ * @brief Loops through the env array, if the variable is foundm it is
+ * overwritten, if not it is added at the end o the array
+ * 
+ * @param identifier The identifier of the variable
+ * @param str The new value to store in env
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 static int	add_variable_to_env(char *identifier, char *str, t_data *data)
 {
 	size_t	length;
@@ -91,6 +122,14 @@ static int	add_variable_to_env(char *identifier, char *str, t_data *data)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Loops through the arguments of a t_command node, and if they are valid
+ * identifiers, adds them to the env array in the main data structure
+ * 
+ * @param c The current command node
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	builtin_export(t_commands *c, t_data *data)
 {
 	t_list	*ptr;
