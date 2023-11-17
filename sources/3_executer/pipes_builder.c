@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipes_creator.c                                    :+:      :+:    :+:   */
+/*   pipes_builder.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:47:13 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/16 18:08:58 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/17 11:25:24 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /// @param fd_in file descriptor of output of command pipeline
 /// @param cmds_num number of commands in the pipeline
 /// @return pointer to the pipes created
-int	*create_pipes(int fd_out, int fd_in, int cmds_num)
+int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 {
 	int	*fd_pipes;
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 18:13:15 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/17 11:25:14 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ int			executer(t_data *data);
 int			cmd_count(t_commands *cmds);
 
 /*pipes_creator.c*/
-int			*create_pipes(int fd_out, int fd_in, int cmds_num);
+int			*build_pipes(int fd_out, int fd_in, int cmds_num);
 
 /*pipeline_executer.c*/
 int			execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data);

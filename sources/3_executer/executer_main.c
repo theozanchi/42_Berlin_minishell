@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/16 18:06:48 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/17 12:15:18 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	cmd_count(t_commands *cmds)
 
 /**
  * @brief builds a execution pipeline of multiple commands including in-
- * & output redirect
+ * & output redirect and calls and waits for execution of the pipeline
  * 
  * @param data main data struct includes all commands & redirects
  * @param cmds_num number of commands to execute
@@ -52,11 +52,11 @@ int	executer(t_data *data)
 	pid = (pid_t *) ft_calloc (cmds_num + 1, sizeof(pid_t));
 	if (!pid)
 		return (EXIT_FAILURE);
-	fd_pipes = create_pipes(data->output.fd, data->input.fd, cmds_num);
+	fd_pipes = build_pipes(data->output.fd, data->input.fd, cmds_num);
 	if (!fd_pipes)
 		return (EXIT_FAILURE);
-	execute_pipeline(fd_pipes, &pid[1], data);
-	// close_all_fd(fd_pipes);
+	execute_pipeline(fd_pipes, pid, data);
+	close_all_fd(fd_pipes);
 	free (fd_pipes);
 	free (pid);
 	dup2(0, 0);

@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/16 18:14:31 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/17 12:25:53 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,24 @@ void	fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data)
 		write(2, "FDF2FDF ERROR\n", 14);
 	dup2(fd_out, 1);
 	dup2(fd_in, 0);
-	command_executer(cmd, data);
+}
+
+/**
+ * @brief Waits for a given childprocess of pid, saves its exec-code to data
+ * 			and closes pipes, used by child
+ * @param fd_out fd of the output pipe
+ * @param fd_in fd of input pipe
+ * @param pid process id of child to wait to exit
+ * @param data  main datastructure
+*/
+void	parent(int fd_out, int fd_in, pid_t pid, t_data *data)
+{
+	int			status;
+
+	waitpid(pid, &status, 0);
+	data->wstatus = WEXITSTATUS(status);
+	close_fd (fd_in);
+	close_fd (fd_out);
 }
 
 /**
@@ -65,7 +82,6 @@ void	fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data)
 int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 {
 	int			i;
-	int			status;
 	t_commands	*cmd;
 
 	if (!fd_pipes || !pid || !data)
@@ -74,23 +90,17 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	cmd = data->commands;
 	while (cmd)
 	{
-		// printf("current wstatus: %i\n", data->wstatus);
 		pid[i] = fork ();
 		if (pid[i] == -1)
 			return (EXIT_FAILURE);
 		if (pid[i] == 0)
+		{
 			fd2fd(fd_pipes[(2 * i) + 3], cmd, fd_pipes[2 * i], data);
+			command_executer(cmd, data);
+		}
 		if (pid[i] > 0)
 		{
-			// wait (NULL);
-			waitpid(pid[i], &status, 0);
-			data->wstatus = WEXITSTATUS(status);
-			// printf("new status: %i\n", status);
-			// printf("%s\n", strerror(255));
-			// printf("new wstatus: %i\n\n\n", data->wstatus);
-			close_fd (fd_pipes[2 * i]);
-			close_fd (fd_pipes[(2 * i) + 3]);
-			++i;
+			parent(fd_pipes[2 * i], fd_pipes[(2 * i) + 3], pid[i], data);
 			cmd = cmd->next;
 		}
 	}

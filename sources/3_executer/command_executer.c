@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/16 18:16:38 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/17 12:36:19 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ char	**env_extract_paths(char **env)
 	char	**path_split_full;
 	int		i;
 
-	// printf("HELLO extract path\n\n");
 	path_split = 0;
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
@@ -40,14 +39,8 @@ char	**env_extract_paths(char **env)
 	{
 		path_split_full[i] = 0;
 		while (--i >= 0)
-		{
 			path_split_full[i] = ft_strjoin(path_split[i], "/");
-			// printf("%s\n", path_split_full[i]);
-			// write(2, path_split_full[i], ft_strlen(path_split_full[i]));
-			// write(2, "\n", 1);
-		}
 	}
-	// printf("CIAO extract path\n\n");
 	free_char_array(path_split);
 	return (path_split_full);
 }
@@ -68,16 +61,17 @@ char	*search_cmd_path(t_commands *cmd, char **env)
 	paths = env_extract_paths(env);
 	while (paths[++i])
 	{
-		exec_path = ft_strjoin(paths[0], cmd->command);
-		if (access(exec_path, X_OK | F_OK) != 0)
-			break ;
+		exec_path = ft_strjoin(paths[i], cmd->command);
+		if (access(exec_path, X_OK | F_OK) == 0)
+		{
+			free_char_array (paths);
+			return (exec_path);
+		}
 		free (exec_path);
-		exec_path = 0;
-		// exec_path = ft_strjoin(paths[i], cmd->command);
 	}
 	free_char_array (paths);
 	perror(cmd->command);
-	exit (127); // 127 is standart error for not found
+	exit (127); // 127 is standard error for not found
 }
 
 /**
@@ -100,16 +94,18 @@ int	command_executer(t_commands *cmd, t_data *data)
 	if (!cmd || !cmd->command)
 		exit (EXIT_FAILURE);
 	paths = 0;
+	exec_path = 0;
 	if (cmd_is_a_builtin(cmd))
 		exit (launch_builtin(cmd, data));
 	else
 	{
 		if (access(cmd->command, X_OK | F_OK) == 0)
-			exec_path = cmd->command;
+			data->wstatus = execve(cmd->command, cmd->final, data->env);
 		else
 			exec_path = search_cmd_path(cmd, data->env);
 		if (!exec_path)
-			return (EXIT_FAILURE);
+			exit (127);
+		// write(2, exec_path, ft_strlen(exec_path));
 		data->wstatus = execve(exec_path, cmd->final, data->env);
 		// char *errnum = ft_itoa(data->wstatus);
 		// write(2, errnum, ft_strlen(errnum));

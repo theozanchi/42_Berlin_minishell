@@ -6,7 +6,7 @@
 #    By: jschott <jschott@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/16 18:08:20 by jschott          ###   ########.fr        #
+#    Updated: 2023/11/17 11:18:33 by jschott          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,10 +43,10 @@ SRC			=	0_utils/utils_1.c \
 				2_parser/parser/populate_node.c \
 				2_parser/expander/expander_main.c \
 				2_parser/expander/expander_utils.c \
-				3_executer/command_executer.c \
-				3_executer/pipes_creator.c \
 				3_executer/executer_main.c \
+				3_executer/pipes_builder.c \
 				3_executer/pipeline_executer.c \
+				3_executer/command_executer.c \
 				4_builtins/builtins_utils.c \
 				4_builtins/echo.c \
 				4_builtins/env.c \
