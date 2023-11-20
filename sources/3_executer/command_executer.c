@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/20 12:25:00 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/20 17:10:12 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #define CEXEC_EXIT_ERR_PATH "minishell: PATH not found in env\n"
 #define CEXEC_EXIT_ERR_CMND "minishell: command not found: "
-
 
 /**
  * @brief Splits all paths returned from env into seperate strings 
@@ -30,7 +29,6 @@ char	**env_extract_paths(char **env)
 	char	**path_split_full;
 	int		i;
 
-	path_split = 0;
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
 		i++;
@@ -82,7 +80,7 @@ char	*search_cmd_path(t_commands *cmd, char **env)
 	ft_putstr_fd(CEXEC_EXIT_ERR_CMND, 2);
 	ft_putstr_fd(cmd->command, 2);
 	ft_putstr_fd("\n", 2);
-	exit (127); // 127 is standard error for not found
+	exit (127);
 }
 
 /**
@@ -106,10 +104,7 @@ int	command_executer(t_commands *cmd, t_data *data)
 		exit (EXIT_FAILURE);
 	paths = 0;
 	exec_path = 0;
-	if (cmd_is_a_builtin(cmd))
-		exit (0);
-		// exit (launch_builtin(cmd, data));
-	else
+	if (!cmd_is_a_builtin(cmd))
 	{
 		if (access(cmd->command, X_OK | F_OK) == 0)
 			data->wstatus = execve(cmd->command, cmd->final, data->env);
@@ -121,5 +116,5 @@ int	command_executer(t_commands *cmd, t_data *data)
 		free (exec_path);
 		exit (data->wstatus);
 	}
-	return (EXIT_FAILURE);
+	exit (EXIT_SUCCESS);
 }
