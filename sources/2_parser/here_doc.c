@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 17:39:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 18:49:17 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 19:15:57 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ void	populate_here_doc(int write_fd, char *delimiter)
 
 	while (1)
 	{
+		signals_interactive();
 		line = readline(HERE_DOC_PROMPT);
+		signals_non_interactive();
 		if (!line)
 			break ;
 		if (!ft_strcmp(line, delimiter))
