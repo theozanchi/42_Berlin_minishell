@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:11:38 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 13:10:29 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:46:32 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static char	*extract_identifier(char *str)
 		ft_printf(EXPORT_INV_IDEN, str);
 		return (NULL);
 	}
-	identifier = ft_substr(str, 0, identifier_length);
+	identifier = ft_substr(str, 0, identifier_length + 1);
 	return (identifier);
 }
 
@@ -59,7 +59,7 @@ static char	*get_and_check_identifier(char *str)
 	if (!identifier)
 		return (NULL);
 	i = 0;
-	while (identifier[i])
+	while (identifier[i] && identifier[i] != '=')
 	{
 		if (!ft_strchr(VALID_CHARACTERS, identifier[i]))
 		{
@@ -79,11 +79,18 @@ static char	*get_and_check_identifier(char *str)
  * @param old The old env variable
  * @param new The new env variable
  */
-static void	overwrite_env_variable(char **old, char *new)
+static void	overwrite_env_variable(t_data *data, char *identifier, char *new)
 {
-	free(*old);
-	*old = ft_strdup(new);
-	if (!(*old))
+	size_t	i;
+	size_t	identifier_length;
+
+	i = 0;
+	identifier_length = ft_strlen(identifier);
+	while (ft_strncmp(data->env[i], identifier, identifier_length))
+		i++;
+	free(data->env[i]);
+	data->env[i] = ft_strdup(new);
+	if (!data->env[i])
 		perror("minishell: export: malloc");
 }
 
@@ -96,25 +103,26 @@ static void	overwrite_env_variable(char **old, char *new)
  * @param data The main data structure
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	add_variable_to_env(char *identifier, char *str, t_data *data)
+static int	add_variable_to_env(char *str, t_data *data)
 {
 	size_t	length;
 	char	**new_env;
+	size_t	i;
 
 	length = 0;
 	while (data->env[length])
-	{
-		if (!ft_strncmp(identifier, data->env[length], ft_strlen(identifier)))
-		{
-			overwrite_env_variable(&data->env[length], str);
-			return (EXIT_SUCCESS);
-		}
 		length++;
-	}
 	new_env = malloc((length + 2) * sizeof(char *));
 	if (!new_env)
 		return (EXIT_FAILURE);
-	ft_memcpy(new_env, data->env, length * sizeof(char *));
+	i = 0;
+	while (i < length)
+	{
+		new_env[i] = ft_strdup(data->env[i]);
+		if (!new_env[i])
+			return (reverse_free_char_array(new_env, i, EXIT_FAILURE));
+		i++;
+	}
 	new_env[length] = ft_strdup(str);
 	new_env[length + 1] = NULL;
 	free_char_array(data->env);
@@ -141,17 +149,17 @@ int	builtin_export(t_commands *c, t_data *data)
 	while (ptr)
 	{
 		identifier = get_and_check_identifier(ptr->value);
-		if (identifier)
+		if (!identifier)
 		{
-			if (add_variable_to_env(identifier, ptr->value, data))
-			{
-				free (identifier);
-				identifier = NULL;
-				return (EXIT_FAILURE);
-			}
-			free(identifier);
-			identifier = NULL;
+			ptr = ptr->next;
+			continue ;
 		}
+		if (get_str_from_env(identifier, data))
+			overwrite_env_variable(data, identifier, ptr->value);
+		else
+			add_variable_to_env(ptr->value, data);
+		free(identifier);
+		identifier = NULL;
 		ptr = ptr->next;
 	}
 	return (EXIT_SUCCESS);

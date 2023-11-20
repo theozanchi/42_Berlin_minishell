@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 10:16:15 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:42:52 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,20 @@ int	launch_builtin(t_commands *node, t_data *data)
 	else
 		exit_code = builtin_exit(node, data);
 	return (exit_code);
+}
+
+char	*get_str_from_env(char *str, t_data *data)
+{
+	size_t	i;
+	size_t	str_len;
+
+	i = 0;
+	str_len = ft_strlen(str);
+	while (data->env[i])
+	{
+		if (!ft_strncmp(str, data->env[i], str_len))
+			return (data->env[i]);
+		i++;
+	}
+	return (NULL);
 }

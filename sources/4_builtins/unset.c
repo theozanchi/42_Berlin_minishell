@@ -6,13 +6,39 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 13:11:23 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 13:27:11 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 16:22:49 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 #define UNSET_ERR_FLAGS "minishell: unset: no options supported\n"
+
+static int	build_new_env(t_data *data, char ***new_env, ssize_t length,
+							ssize_t identifier_index)
+{
+	ssize_t	i;
+	ssize_t	j;
+
+	*new_env = malloc((length) * sizeof(char *));
+	if (!*new_env)
+		return (EXIT_FAILURE);
+	i = 0;
+	j = 0;
+	while (i < length)
+	{
+		if (i != identifier_index)
+		{
+			(*new_env)[j] = ft_strdup(data->env[i]);
+			if (!(*new_env)[j])
+				return (reverse_free_char_array(*new_env, j, EXIT_FAILURE));
+			j++;
+		}
+		i++;
+	}
+	(*new_env)[j] = NULL;
+	return (EXIT_SUCCESS);
+}
 
 static int	remove_variable_from_env(char *identifier, t_data *data)
 {
@@ -22,21 +48,18 @@ static int	remove_variable_from_env(char *identifier, t_data *data)
 
 	length = 0;
 	identifier_index = -1;
+	new_env = NULL;
 	while (data->env[length])
 	{
-		if (!ft_strncmp(identifier, data->env[length], ft_strlen(identifier)))
+		if (!ft_strncmp(identifier, data->env[length], ft_strlen(identifier))
+			&& data->env[length][ft_strlen(identifier)] == '=')
 			identifier_index = length;
 		length++;
 	}
 	if (identifier_index == -1)
 		return (EXIT_SUCCESS);
-	new_env = malloc((length) * sizeof(char *));
-	if (!new_env)
+	if (build_new_env(data, &new_env, length, identifier_index))
 		return (EXIT_FAILURE);
-	ft_memcpy(new_env, data->env, (identifier_index - 1) * sizeof(char *));
-	ft_memcpy(new_env + identifier_index, data->env + identifier_index + 1,
-		(length - identifier_index) * sizeof(char *));
-	new_env[length] = NULL;
 	free_char_array(data->env);
 	data->env = new_env;
 	return (EXIT_SUCCESS);

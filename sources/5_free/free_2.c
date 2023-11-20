@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:29:08 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/14 16:44:43 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:15:43 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,16 @@ void	free_and_reset_io(t_data *data)
 		data->output.value = NULL;
 	}
 	data->output.fd = 1;
+}
+
+int	reverse_free_char_array(char **array, size_t i, int exit_code)
+{
+	while (i)
+	{
+		free(array[i]);
+		array[i] = NULL;
+		i--;
+	}
+	array = NULL;
+	return (exit_code);
 }

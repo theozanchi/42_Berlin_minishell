@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 10:16:28 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:22:26 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ char		**env_extract_paths(char **env);
 /*builtins_utils.c*/
 int			cmd_is_a_builtin(t_commands *node);
 int			launch_builtin(t_commands *c, t_data *data);
+char		*get_str_from_env(char *str, t_data *data);
 int			builtin_cd(t_commands *c, t_data *data);
 int			builtin_echo(t_commands *c);
 int			builtin_env(t_commands *c, t_data *data);
@@ -208,6 +209,7 @@ void		free_all_memory(t_data *data);
 void		free_memory_between_commands(t_data *data);
 void		free_list(t_list *list);
 void		free_and_reset_io(t_data *data);
+int			reverse_free_char_array(char **array, size_t i, int exit_code);
 
 /* ************************************************************************** */
 
