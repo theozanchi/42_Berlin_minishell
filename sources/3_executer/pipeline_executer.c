@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/17 12:25:53 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/20 12:25:58 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,11 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 		}
 		if (pid[i] > 0)
 		{
+			if (cmd_is_a_builtin(cmd))
+				(launch_builtin(cmd, data));
 			parent(fd_pipes[2 * i], fd_pipes[(2 * i) + 3], pid[i], data);
 			cmd = cmd->next;
+			i++;
 		}
 	}
 	return (EXIT_SUCCESS);
