@@ -6,11 +6,27 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:49:34 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 14:49:05 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 19:39:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief Checks that the user input is not just spaces
+ * 
+ * @param arg The user input
+ * @return 0 or 1
+ */
+static int	is_just_spaces(char *arg)
+{
+	while (*arg)
+	{
+		if (!ft_isspace(*arg++))
+			return (0);
+	}
+	return (1);
+}
 
 /**
  * @brief Loops through the argument string to assess its validity (not starting
@@ -22,6 +38,8 @@
 int	check_user_arg(char *arg)
 {
 	if (!arg)
+		return (EXIT_FAILURE);
+	if (is_just_spaces(arg))
 		return (EXIT_FAILURE);
 	while (ft_isspace(*arg))
 		arg++;
