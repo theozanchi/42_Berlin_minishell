@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 17:47:56 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 15:13:10 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 19:22:42 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 #define ECHO_ERR_FLAGS "minishell: cd: only -n is supported\n"
 
+/**
+ * @brief Checks that argument is valid: only -n flag is supported
+ * 
+ * @param c The current command node
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 static int	check_arg(t_commands *c)
 {
 	if (!c->flags)

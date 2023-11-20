@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 13:11:23 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 16:22:49 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 19:26:31 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 
 #define UNSET_ERR_FLAGS "minishell: unset: no options supported\n"
 
+/**
+ * @brief Allocates memory and duplicates the old environment variable while
+ * omitting the variable that has to be unset
+ * 
+ * @param data The main data structure
+ * @param new_env The new variable to populate
+ * @param length The new length of the env array
+ * @param identifier_index The index of the variable to unset
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 static int	build_new_env(t_data *data, char ***new_env, ssize_t length,
 							ssize_t identifier_index)
 {
@@ -40,6 +50,14 @@ static int	build_new_env(t_data *data, char ***new_env, ssize_t length,
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Loops through the old env to locate the variable and unset it. If the
+ * variable is not found, EXIT_SUCCESS is returned
+ * 
+ * @param identifier The identifier of the variable to unset
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 static int	remove_variable_from_env(char *identifier, t_data *data)
 {
 	size_t	length;
@@ -65,6 +83,13 @@ static int	remove_variable_from_env(char *identifier, t_data *data)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Loops through the env variable and unset the variables passed as args
+ * 
+ * @param c The current command node
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	builtin_unset(t_commands *c, t_data *data)
 {
 	t_list	*ptr;

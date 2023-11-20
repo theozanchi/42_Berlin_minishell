@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 15:42:52 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 19:22:03 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ int	launch_builtin(t_commands *node, t_data *data)
 	return (exit_code);
 }
 
+/**
+ * @brief Loops through the env object to identify the line that begins by str
+ * 
+ * @param str The string to look for
+ * @param data The main data structure
+ * @return The string or NULL if the string is not found
+ */
 char	*get_str_from_env(char *str, t_data *data)
 {
 	size_t	i;

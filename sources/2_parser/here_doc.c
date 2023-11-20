@@ -6,12 +6,19 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 17:39:15 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 19:15:57 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 19:20:22 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Adds all lines to the the input fd, until delimiter is reached
+ * Signals are set to interactive mode
+ * 
+ * @param write_fd The fd in which to write
+ * @param delimiter The delimiter to reach by the here_doc
+ */
 void	populate_here_doc(int write_fd, char *delimiter)
 {
 	char	*line;
@@ -36,6 +43,13 @@ void	populate_here_doc(int write_fd, char *delimiter)
 	close(write_fd);
 }
 
+/**
+ * @brief Open an interactive mode for the here_doc, and assign the here_doc as
+ * the data->input.fd
+ * 
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int	here_doc(t_data *data)
 {
 	int	pipe_fds[2];
