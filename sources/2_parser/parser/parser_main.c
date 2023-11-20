@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:54:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 17:23:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 18:47:03 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int	parser_helper_operands(t_data *data, t_token *token, int *create_new_node)
  */
 int	open_redirection_fd(t_data *data, t_io *redir, t_token *token, int oflag)
 {
-	if (redir->type != STDIN && redir->type != STDOUT)
+	if (redir->type != STDIN && redir->type != STDOUT
+		&& redir->type != HERE_DOC)
 		close(redir->fd);
 	redir->type = token->type;
 	redir->quote = token->quote;
@@ -68,7 +69,8 @@ int	open_redirection_fd(t_data *data, t_io *redir, t_token *token, int oflag)
 		return (perror_return_failure("ft_strdup for redirection value"));
 	if (redir->quote != SGL)
 		expand_string(&redir->value, data);
-	redir->fd = open(redir->value, oflag, 0644);
+	if (redir->type != HERE_DOC)
+		redir->fd = open(redir->value, oflag, 0644);
 	if (redir->fd < 0)
 		return (perror_return_failure(redir->value));
 	return (EXIT_SUCCESS);
@@ -133,6 +135,8 @@ int	parser(t_data *data)
 	if (expander(data))
 		return (EXIT_FAILURE);
 	if (concatenate_successive_commands(data))
+		return (EXIT_FAILURE);
+	if (data->input.type == HERE_DOC && here_doc(data))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

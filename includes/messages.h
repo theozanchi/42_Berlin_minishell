@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:36 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/10/08 10:20:00 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 18:22:12 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 /*prompts*/
 # define ENTRY_PROMPT "\033[1;32mminishell\033[0m> "
+# define HERE_DOC_PROMPT "\033[0;35m> \033[0m"
 
 /*errors*/
 # define ERR_ARG_NR "Minishell does not take any argument\n"
