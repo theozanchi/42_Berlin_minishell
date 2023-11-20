@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/20 12:25:58 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/20 16:45:08 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,27 @@ void	fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data)
  * @param pid process id of child to wait to exit
  * @param data  main datastructure
 */
-void	parent(int fd_out, int fd_in, pid_t pid, t_data *data)
+void	parent(int fd_out, int fd_in, pid_t pid, t_data *data, t_commands *cmd)
 {
-	int			status;
+	int	status;
+	int	orig_fdin;
+	int	orig_fdout;
 
 	waitpid(pid, &status, 0);
-	data->wstatus = WEXITSTATUS(status);
-	close_fd (fd_in);
+	if (cmd_is_a_builtin(cmd))
+	{
+		orig_fdout = dup(1);
+		orig_fdin = dup(0);
+		dup2(fd_out, 1);
+		dup2(fd_in, 0);
+		launch_builtin(cmd, data);
+		dup2(orig_fdout, 1);
+		dup2(orig_fdin, 0);
+	}
+	else
+		data->wstatus = WEXITSTATUS(status);
 	close_fd (fd_out);
+	close_fd (fd_in);
 }
 
 /**
@@ -100,9 +113,7 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 		}
 		if (pid[i] > 0)
 		{
-			if (cmd_is_a_builtin(cmd))
-				(launch_builtin(cmd, data));
-			parent(fd_pipes[2 * i], fd_pipes[(2 * i) + 3], pid[i], data);
+			parent(fd_pipes[(2 * i) + 3], fd_pipes[2 * i], pid[i], data, cmd);
 			cmd = cmd->next;
 			i++;
 		}
