@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:47:42 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 15:23:21 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 18:52:53 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #define PWD_ERR_FLAGS "minishell: pwd: no options supported\n"
 #define PWD_ERR_EXTRA_ARG "minishell: pwd: too many arguments\n"
 #define PWD_ERR_PWD_NOT_FOUND "minishell: pwd: PWD not found in env\n"
-
 
 /**
  * @brief Check that the command does not have any argument or flag
