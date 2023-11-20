@@ -6,15 +6,31 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:11:38 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 15:46:32 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 20:48:12 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define VALID_CHARACTERS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+#define VALID_CHARACTERS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\
+							0123456789_"
 #define EXPORT_ERR_FLAGS "minishell: export: no options supported\n"
 #define EXPORT_INV_IDEN "minishell: export: '%s': not a valid identifier\n"
+
+char	*extract_value(char *str)
+{
+	char	*start;
+	char	end_char;
+	char	*end;
+
+	start = ft_strchr(str, '=') + 1;
+	if (*start == '\'' || *start == '\"')
+		end_char = *start++;
+	else
+		end_char = '\0';
+	end = ft_strrchr(start, end_char);
+	return (ft_substr(start, 0, end - start));
+}
 
 /**
  * @brief Extracts the identifier from the export argument, i.e. all characters
@@ -103,30 +119,32 @@ static void	overwrite_env_variable(t_data *data, char *identifier, char *new)
  * @param data The main data structure
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	add_variable_to_env(char *str, t_data *data)
+static int	add_variable_to_env(char *id, char *value, t_data *data)
 {
 	size_t	length;
-	char	**new_env;
+	char	**new;
 	size_t	i;
 
 	length = 0;
 	while (data->env[length])
 		length++;
-	new_env = malloc((length + 2) * sizeof(char *));
-	if (!new_env)
+	new = malloc((length + 2) * sizeof(char *));
+	if (!new)
 		return (EXIT_FAILURE);
 	i = 0;
 	while (i < length)
 	{
-		new_env[i] = ft_strdup(data->env[i]);
-		if (!new_env[i])
-			return (reverse_free_char_array(new_env, i, EXIT_FAILURE));
+		new[i] = ft_strdup(data->env[i]);
+		if (!new[i])
+			return (reverse_free_char_array(new, i, EXIT_FAILURE));
 		i++;
 	}
-	new_env[length] = ft_strdup(str);
-	new_env[length + 1] = NULL;
+	new[length] = malloc((ft_strlen(id) + ft_strlen(value) + 1) * sizeof(char));
+	ft_strlcpy(new[length], id, ft_strlen(id) + 1);
+	ft_strlcpy(&new[length][ft_strlen(id)], value, ft_strlen(value) + 1);
+	new[length + 1] = NULL;
 	free_char_array(data->env);
-	data->env = new_env;
+	data->env = new;
 	return (EXIT_SUCCESS);
 }
 
@@ -142,6 +160,7 @@ int	builtin_export(t_commands *c, t_data *data)
 {
 	t_list	*ptr;
 	char	*identifier;
+	char	*value;
 
 	if (c->flags)
 		return (ft_printf_exit_code(EXPORT_ERR_FLAGS, EXIT_FAILURE));
@@ -154,12 +173,22 @@ int	builtin_export(t_commands *c, t_data *data)
 			ptr = ptr->next;
 			continue ;
 		}
+		value = extract_value(ptr->value);
+		if (!value)
+		{
+			free(identifier);
+			identifier = NULL;
+			ptr = ptr->next;
+			continue ;
+		}
 		if (get_str_from_env(identifier, data))
-			overwrite_env_variable(data, identifier, ptr->value);
+			overwrite_env_variable(data, identifier, value);
 		else
-			add_variable_to_env(ptr->value, data);
+			add_variable_to_env(identifier, value, data);
 		free(identifier);
 		identifier = NULL;
+		free(value);
+		value = NULL;
 		ptr = ptr->next;
 	}
 	return (EXIT_SUCCESS);
