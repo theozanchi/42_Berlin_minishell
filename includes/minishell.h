@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 10:16:28 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 17:04:58 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int			*build_pipes(int fd_out, int fd_in, int cmds_num);
 
 /*pipeline_executer.c*/
 int			execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data);
-void		fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data);
+void		fd2fd(int *fd_pipes, t_commands *cmd, t_data *data);
 void		close_all_fd(int *fd_pipes);
 int			close_fd(int fd);;
 

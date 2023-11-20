@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/20 16:45:08 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/20 17:04:24 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,13 @@ void	close_all_fd(int *fd_pipes)
  * @param fd_in desired filedescriptor for output
  * @param env environmental variable
  */
-void	fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data)
+void	fd2fd(int *fd_pipes, t_commands *cmd, t_data *data)
 {
+	int	fd_in;
+	int	fd_out;
+
+	fd_in = fd_pipes[0];
+	fd_out = fd_pipes[3];
 	if (!cmd || !data)
 		write(2, "FDF2FDF ERROR\n", 14);
 	dup2(fd_out, 1);
@@ -62,27 +67,31 @@ void	fd2fd(int fd_out, t_commands *cmd, int fd_in, t_data *data)
  * @param pid process id of child to wait to exit
  * @param data  main datastructure
 */
-void	parent(int fd_out, int fd_in, pid_t pid, t_data *data, t_commands *cmd)
+void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
 {
 	int	status;
 	int	orig_fdin;
 	int	orig_fdout;
+	int	fd_in;
+	int	fd_out;
 
 	waitpid(pid, &status, 0);
+	fd_in = fd_pipes[0];
+	fd_out = fd_pipes[3];
 	if (cmd_is_a_builtin(cmd))
 	{
 		orig_fdout = dup(1);
 		orig_fdin = dup(0);
 		dup2(fd_out, 1);
 		dup2(fd_in, 0);
-		launch_builtin(cmd, data);
+		data->wstatus = launch_builtin(cmd, data);
 		dup2(orig_fdout, 1);
 		dup2(orig_fdin, 0);
 	}
 	else
 		data->wstatus = WEXITSTATUS(status);
-	close_fd (fd_out);
 	close_fd (fd_in);
+	close_fd (fd_out);
 }
 
 /**
@@ -108,12 +117,12 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 			return (EXIT_FAILURE);
 		if (pid[i] == 0)
 		{
-			fd2fd(fd_pipes[(2 * i) + 3], cmd, fd_pipes[2 * i], data);
+			fd2fd(&fd_pipes[2 * i], cmd, data);
 			command_executer(cmd, data);
 		}
 		if (pid[i] > 0)
 		{
-			parent(fd_pipes[(2 * i) + 3], fd_pipes[2 * i], pid[i], data, cmd);
+			parent(&fd_pipes[2 * i], pid[i], data, cmd);
 			cmd = cmd->next;
 			i++;
 		}
