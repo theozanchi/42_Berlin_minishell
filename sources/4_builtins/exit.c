@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:56:06 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/16 15:56:29 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/20 10:17:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,13 @@ static int	check_arg(t_commands *c)
  * @param data The main data structure
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int	builtin_exit(t_commands *c)
+int	builtin_exit(t_commands *c, t_data *data)
 {
 	if (check_arg(c))
 		return (EXIT_FAILURE);
-	g_exit[0] = 1;
-	if (c->arguments)
-		g_exit[1] = ft_atoi(c->arguments->value);
+	if (!c->arguments)
+		exit_minishell(data, EXIT_SUCCESS);
+	else
+		exit_minishell(data, ft_atoi(c->arguments->value));
 	return (EXIT_SUCCESS);
 }
