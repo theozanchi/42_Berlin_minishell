@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/17 13:43:09 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/20 12:25:00 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ int	command_executer(t_commands *cmd, t_data *data)
 	paths = 0;
 	exec_path = 0;
 	if (cmd_is_a_builtin(cmd))
-		exit (launch_builtin(cmd, data));
+		exit (0);
+		// exit (launch_builtin(cmd, data));
 	else
 	{
 		if (access(cmd->command, X_OK | F_OK) == 0)
