@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:57:20 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 13:01:21 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 20:38:35 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # define EXPORT_ERR_FLAGS "minishell: export: no options supported\n"
 # define EXPORT_INV_IDEN "minishell: export: '%s': not a valid identifier\n"
 
-char	*get_str_from_env(char *str, t_data *data);
 char	*extract_value(char *str);
 char	*extract_identifier(char *str);
 char	*get_and_check_identifier(char *str);

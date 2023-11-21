@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 12:57:50 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 20:39:07 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,27 @@ int	launch_builtin(t_commands *node, t_data *data)
 	else
 		exit_code = builtin_exit(node, data);
 	return (exit_code);
+}
+
+/**
+ * @brief Loops through the env object to identify the line that begins by str
+ * 
+ * @param str The string to look for
+ * @param data The main data structure
+ * @return The string or NULL if the string is not found
+ */
+char	*ft_getenv(char *str, t_data *data)
+{
+	size_t	i;
+	size_t	str_len;
+
+	i = 0;
+	str_len = ft_strlen(str);
+	while (data->env[i])
+	{
+		if (!ft_strncmp(str, data->env[i], str_len))
+			return (data->env[i]);
+		i++;
+	}
+	return (NULL);
 }
