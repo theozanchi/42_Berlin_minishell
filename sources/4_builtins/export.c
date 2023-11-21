@@ -6,87 +6,11 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:11:38 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 20:48:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 13:02:49 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-#define VALID_CHARACTERS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\
-							0123456789_"
-#define EXPORT_ERR_FLAGS "minishell: export: no options supported\n"
-#define EXPORT_INV_IDEN "minishell: export: '%s': not a valid identifier\n"
-
-char	*extract_value(char *str)
-{
-	char	*start;
-	char	end_char;
-	char	*end;
-
-	start = ft_strchr(str, '=') + 1;
-	if (*start == '\'' || *start == '\"')
-		end_char = *start++;
-	else
-		end_char = '\0';
-	end = ft_strrchr(start, end_char);
-	return (ft_substr(start, 0, end - start));
-}
-
-/**
- * @brief Extracts the identifier from the export argument, i.e. all characters
- * located before the '=' sign
- * 
- * @param str The argument passed to the builtin
- * @return Pointer to the substring, which has been malloc'ed or NULL in case of
- * error or if no equal sign is present
- */
-static char	*extract_identifier(char *str)
-{
-	size_t	identifier_length;
-	char	*identifier;
-
-	identifier_length = 0;
-	while (str[identifier_length] && str[identifier_length] != '=')
-		identifier_length++;
-	if (!identifier_length)
-	{
-		ft_printf(EXPORT_INV_IDEN, str);
-		return (NULL);
-	}
-	identifier = ft_substr(str, 0, identifier_length + 1);
-	return (identifier);
-}
-
-/**
- * @brief Extracts the identifier from the argument and checks its validity: only
- * lower and upper letters, or underscore signs
- * 
- * @param str The arguments passed to the builtin
- * @return Pointer to the identifier, or NULL if invalid
- */
-static char	*get_and_check_identifier(char *str)
-{
-	char	*identifier;
-	size_t	i;
-
-	if (!ft_strchr(str, '='))
-		return (NULL);
-	identifier = extract_identifier(str);
-	if (!identifier)
-		return (NULL);
-	i = 0;
-	while (identifier[i] && identifier[i] != '=')
-	{
-		if (!ft_strchr(VALID_CHARACTERS, identifier[i]))
-		{
-			ft_printf(EXPORT_INV_IDEN, identifier);
-			free(identifier);
-			return (NULL);
-		}
-		i++;
-	}
-	return (identifier);
-}
+#include "export.h"
 
 /**
  * @brief If an environment variable is already in the env array, it is
@@ -95,17 +19,17 @@ static char	*get_and_check_identifier(char *str)
  * @param old The old env variable
  * @param new The new env variable
  */
-static void	overwrite_env_variable(t_data *data, char *identifier, char *new)
+void	overwrite_env_variable(char *id, char *value, t_data *data)
 {
 	size_t	i;
-	size_t	identifier_length;
+	size_t	id_length;
 
 	i = 0;
-	identifier_length = ft_strlen(identifier);
-	while (ft_strncmp(data->env[i], identifier, identifier_length))
+	id_length = ft_strlen(id);
+	while (ft_strncmp(data->env[i], id, id_length))
 		i++;
 	free(data->env[i]);
-	data->env[i] = ft_strdup(new);
+	data->env[i] = ft_concat(2, id, value);
 	if (!data->env[i])
 		perror("minishell: export: malloc");
 }
@@ -119,7 +43,7 @@ static void	overwrite_env_variable(t_data *data, char *identifier, char *new)
  * @param data The main data structure
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-static int	add_variable_to_env(char *id, char *value, t_data *data)
+int	add_variable_to_env(char *id, char *value, t_data *data)
 {
 	size_t	length;
 	char	**new;
@@ -168,27 +92,18 @@ int	builtin_export(t_commands *c, t_data *data)
 	while (ptr)
 	{
 		identifier = get_and_check_identifier(ptr->value);
-		if (!identifier)
-		{
-			ptr = ptr->next;
-			continue ;
-		}
 		value = extract_value(ptr->value);
-		if (!value)
+		if (!identifier || !value)
 		{
-			free(identifier);
-			identifier = NULL;
+			free_and_set_to_null(2, identifier, value);
 			ptr = ptr->next;
 			continue ;
 		}
 		if (get_str_from_env(identifier, data))
-			overwrite_env_variable(data, identifier, value);
+			overwrite_env_variable(identifier, value, data);
 		else
 			add_variable_to_env(identifier, value, data);
-		free(identifier);
-		identifier = NULL;
-		free(value);
-		value = NULL;
+		free_and_set_to_null(2, identifier, value);
 		ptr = ptr->next;
 	}
 	return (EXIT_SUCCESS);

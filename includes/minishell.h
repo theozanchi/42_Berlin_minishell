@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 18:46:23 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 13:00:02 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,6 @@ char		**env_extract_paths(char **env);
 /*builtins_utils.c*/
 int			cmd_is_a_builtin(t_commands *node);
 int			launch_builtin(t_commands *c, t_data *data);
-char		*get_str_from_env(char *str, t_data *data);
 int			builtin_cd(t_commands *c, t_data *data);
 int			builtin_echo(t_commands *c);
 int			builtin_env(t_commands *c, t_data *data);
