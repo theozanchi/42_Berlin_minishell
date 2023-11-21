@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:47:13 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/21 16:00:03 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/21 17:29:58 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 			ft_putstr_fd("minishell: error while piping\n", 2);
 			free (fd_pipes);
 		}
-		close_fd(fd_pipes[i * 2]);
+		close_fd(fd_pipes[(i * 2) + 3]);
 	}
 	return (fd_pipes);
 }
