@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:47:13 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/21 15:15:03 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:00:03 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 		return (0);
 	}
 	fd_pipes[0] = fd_in;
-	fd_pipes[1] = fd_in;
-	fd_pipes[2 * cmds_num] = fd_out;
+	// fd_pipes[1] = fd_in;
+	// fd_pipes[2 * cmds_num] = fd_out;
 	fd_pipes[(2 * cmds_num) + 1] = fd_out;
 	i = 0;
 	while (fd_pipes && ++i < cmds_num)
@@ -42,6 +42,7 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 			ft_putstr_fd("minishell: error while piping\n", 2);
 			free (fd_pipes);
 		}
+		close_fd(fd_pipes[i * 2]);
 	}
 	return (fd_pipes);
 }
