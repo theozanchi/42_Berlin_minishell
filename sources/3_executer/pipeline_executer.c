@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/20 17:04:24 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/21 11:20:32 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	fd2fd(int *fd_pipes, t_commands *cmd, t_data *data)
 	fd_out = fd_pipes[3];
 	if (!cmd || !data)
 		write(2, "FDF2FDF ERROR\n", 14);
+	close_fd(fd_pipes[1]);
+	close_fd(fd_pipes[2]);
 	dup2(fd_out, 1);
 	dup2(fd_in, 0);
 }
@@ -78,10 +80,14 @@ void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
 	waitpid(pid, &status, 0);
 	fd_in = fd_pipes[0];
 	fd_out = fd_pipes[3];
+	close_fd (fd_in);
+	close_fd (fd_out);
 	if (cmd_is_a_builtin(cmd))
 	{
 		orig_fdout = dup(1);
 		orig_fdin = dup(0);
+		close (fd_pipes[1]);
+		close (fd_pipes[2]);
 		dup2(fd_out, 1);
 		dup2(fd_in, 0);
 		data->wstatus = launch_builtin(cmd, data);
@@ -104,11 +110,13 @@ void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
 int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 {
 	int			i;
+	int			j;
 	t_commands	*cmd;
 
 	if (!fd_pipes || !pid || !data)
 		return (EXIT_FAILURE);
 	i = 0;
+	j = -1;
 	cmd = data->commands;
 	while (cmd)
 	{
@@ -119,13 +127,16 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 		{
 			fd2fd(&fd_pipes[2 * i], cmd, data);
 			command_executer(cmd, data);
+			exit (EXIT_SUCCESS);
 		}
-		if (pid[i] > 0)
-		{
-			parent(&fd_pipes[2 * i], pid[i], data, cmd);
-			cmd = cmd->next;
-			i++;
-		}
+		cmd = cmd->next;
+		i++;
+	}
+	cmd = data->commands;
+	while (++j < i)
+	{
+		parent(&fd_pipes[2 * j], pid[j], data, cmd);
+		cmd = cmd->next;
 	}
 	return (EXIT_SUCCESS);
 }
