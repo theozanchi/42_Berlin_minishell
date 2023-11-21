@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:06:49 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 16:18:03 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:28:23 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,12 @@ char	*get_equal_sign_pos(t_commands *node)
  * @brief Concatenated the current arguments->value and the new token value until
  * the closing quote is found
  * 
- * @param node 
- * @param token 
- * @param quote_sign 
- * @param add_new_node 
- * @return int 
+ * @param node The current command node
+ * @param token The current token
+ * @param quote_sign The sign used to quote the variable (" or ')
+ * @param add_new_node A flag to indicate wether a new arg node should be
+ * initialised
+ * @return EXIT_SUCCESS or EXIT_FAILURE
  */
 int	helper_quote_var(t_commands *node, t_token *token, char quote_sign,
 	int *add_new_node)

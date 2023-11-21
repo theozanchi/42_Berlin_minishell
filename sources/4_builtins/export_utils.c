@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:57:02 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 16:24:59 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:29:04 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ char	*get_str_from_env(char *str, t_data *data)
 	return (NULL);
 }
 
+/**
+ * @brief Extracts the value of the variable
+ * 
+ * @param str The current argument
+ * @return Pointer to the string value (located after the = sign if present) 
+ */
 char	*extract_value(char *str)
 {
 	char	*start;
