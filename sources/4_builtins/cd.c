@@ -6,15 +6,13 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:17:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 22:12:40 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 22:16:51 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 #define CD_ERR_HOME_NOT_FOUND "minishell: cd: HOME directory not found in env\n"
-#define CD_ERR_OLDPWD_NOT_FOUND "minishell: cd: OLDPWD directory not found in \
-									env\n"
 #define CD_ERR_PWD_NOT_FOUND "minishell: cd: PWD directory not found in env\n"
 #define CD_ERR_FLAGS "minishell: cd: no options supported\n"
 #define CD_ERR_EXTRA_ARG "minishell: cd: too many arguments\n"
@@ -47,16 +45,6 @@ static char	*get_new_path(t_commands *c, t_data *data)
 			return (path);
 		}
 		path += 5;
-	}
-	else if (!ft_strcmp(c->arguments->value, "-"))
-	{
-		path = ft_getenv("OLDPWD=", data);
-		if (!path)
-		{
-			ft_printf(CD_ERR_OLDPWD_NOT_FOUND);
-			return (path);
-		}
-		path += 7;
 	}
 	else
 		path = c->arguments->value;
