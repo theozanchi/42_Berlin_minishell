@@ -6,11 +6,18 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/20 17:04:24 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/21 17:36:27 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	sigpipe_handler(int signum)
+{
+	(void)signum; // Unused parameter
+	write(2, "RECEIVED SIGNAL\n", 16);
+	exit (EXIT_SUCCESS);
+}
 
 /**
  * @brief closes a given file descriptor, that is neither stdin, stdout or stderr
@@ -21,7 +28,7 @@ int	close_fd(int fd)
 {
 	if (fd > 2)
 		return (close(fd));
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 /**
@@ -55,6 +62,8 @@ void	fd2fd(int *fd_pipes, t_commands *cmd, t_data *data)
 	fd_out = fd_pipes[3];
 	if (!cmd || !data)
 		write(2, "FDF2FDF ERROR\n", 14);
+	close_fd(fd_pipes[1]);
+	close_fd(fd_pipes[2]);
 	dup2(fd_out, 1);
 	dup2(fd_in, 0);
 }
@@ -76,12 +85,15 @@ void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
 	int	fd_out;
 
 	waitpid(pid, &status, 0);
+	// write(2, "PARENT STARTED\n", 15);
 	fd_in = fd_pipes[0];
 	fd_out = fd_pipes[3];
 	if (cmd_is_a_builtin(cmd))
 	{
 		orig_fdout = dup(1);
 		orig_fdin = dup(0);
+		// close_fd (fd_pipes[1]);
+		// close_fd (fd_pipes[2]);
 		dup2(fd_out, 1);
 		dup2(fd_in, 0);
 		data->wstatus = launch_builtin(cmd, data);
@@ -92,6 +104,7 @@ void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
 		data->wstatus = WEXITSTATUS(status);
 	close_fd (fd_in);
 	close_fd (fd_out);
+	// write(2, "PARENT DONE\n", 12);
 }
 
 /**
@@ -104,11 +117,23 @@ void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
 int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 {
 	int			i;
+	int			j;
 	t_commands	*cmd;
+
+	struct sigaction	sa;
+
+	sa.sa_handler = sigpipe_handler;
+	sa.sa_flags = SA_RESTART;
+	if (sigaction(SIGPIPE, &sa, NULL) == -1) {
+		perror("Error setting up signal handler");
+		return EXIT_FAILURE;
+	}
+
 
 	if (!fd_pipes || !pid || !data)
 		return (EXIT_FAILURE);
 	i = 0;
+	j = -1;
 	cmd = data->commands;
 	while (cmd)
 	{
@@ -120,12 +145,14 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 			fd2fd(&fd_pipes[2 * i], cmd, data);
 			command_executer(cmd, data);
 		}
-		if (pid[i] > 0)
-		{
-			parent(&fd_pipes[2 * i], pid[i], data, cmd);
-			cmd = cmd->next;
-			i++;
-		}
+		cmd = cmd->next;
+		i++;
+	}
+	cmd = data->commands;
+	while (++j < i)
+	{
+		parent(&fd_pipes[2 * j], pid[j], data, cmd);
+		cmd = cmd->next;
 	}
 	return (EXIT_SUCCESS);
 }

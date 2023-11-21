@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:17:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 10:31:34 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 08:54:00 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ int	builtin_cd(t_commands *c, t_data *data)
 		new_directory = c->arguments->value;
 	if (update_env_variable(new_directory, data))
 		return (EXIT_FAILURE);
+	chdir(new_directory);
 	return (EXIT_SUCCESS);
 }

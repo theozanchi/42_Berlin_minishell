@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/20 17:10:12 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/21 12:52:01 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ char	**env_extract_paths(char **env)
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
 		i++;
-	if (!env[i])
+	if (!env[i] || !(ft_strchr(env[i], '=') + 1))
 	{
 		ft_putstr_fd(CEXEC_EXIT_ERR_PATH, 2);
-		return (0);
+		exit (EXIT_FAILURE);
 	}
-	path_split = ft_split(ft_strchr(env[i], '/'), ':');
+	path_split = ft_split(ft_strchr(env[i], '=') + 1, ':');
 	i = 0;
 	while (path_split[i])
 		i++;
@@ -111,7 +111,7 @@ int	command_executer(t_commands *cmd, t_data *data)
 		else
 			exec_path = search_cmd_path(cmd, data->env);
 		if (!exec_path)
-			exit (127);
+			return (127);
 		data->wstatus = execve(exec_path, cmd->final, data->env);
 		free (exec_path);
 		exit (data->wstatus);

@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:47:13 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/17 11:25:24 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/21 17:29:58 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,25 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 
 	if (!cmds_num)
 		return (0);
-	fd_pipes = (int *) ft_calloc((2 * cmds_num) + 3, sizeof(int));
+	fd_pipes = (int *) ft_calloc((2 * cmds_num) + 2, sizeof(int));
 	if (!fd_pipes)
 	{
-		perror("couldn't malloc pipes\n");
+		ft_putstr_fd("minishell: couldn't malloc pipes array\n", 2);
 		return (0);
 	}
-	fd_pipes[2 * cmds_num + 2] = '\0';
 	fd_pipes[0] = fd_in;
-	fd_pipes[1] = fd_in;
-	i = 2;
-	while (i < 2 * cmds_num)
-	{
-		pipe(&fd_pipes[i]);
-		i += 2;
-	}
-	fd_pipes[2 * cmds_num] = fd_out;
+	// fd_pipes[1] = fd_in;
+	// fd_pipes[2 * cmds_num] = fd_out;
 	fd_pipes[(2 * cmds_num) + 1] = fd_out;
 	i = 0;
+	while (fd_pipes && ++i < cmds_num)
+	{
+		if (pipe(&fd_pipes[i * 2]) < 0)
+		{
+			ft_putstr_fd("minishell: error while piping\n", 2);
+			free (fd_pipes);
+		}
+		close_fd(fd_pipes[(i * 2) + 3]);
+	}
 	return (fd_pipes);
 }
