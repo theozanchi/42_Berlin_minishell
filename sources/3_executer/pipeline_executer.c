@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/21 11:20:32 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/21 12:58:00 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,14 @@ void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
 	waitpid(pid, &status, 0);
 	fd_in = fd_pipes[0];
 	fd_out = fd_pipes[3];
-	close_fd (fd_in);
-	close_fd (fd_out);
+	// close_fd (fd_in);
+	// close_fd (fd_out);
 	if (cmd_is_a_builtin(cmd))
 	{
 		orig_fdout = dup(1);
 		orig_fdin = dup(0);
-		close (fd_pipes[1]);
-		close (fd_pipes[2]);
+		close_fd (fd_pipes[1]);
+		close_fd (fd_pipes[2]);
 		dup2(fd_out, 1);
 		dup2(fd_in, 0);
 		data->wstatus = launch_builtin(cmd, data);
@@ -127,7 +127,6 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 		{
 			fd2fd(&fd_pipes[2 * i], cmd, data);
 			command_executer(cmd, data);
-			exit (EXIT_SUCCESS);
 		}
 		cmd = cmd->next;
 		i++;
