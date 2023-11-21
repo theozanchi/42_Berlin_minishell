@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 20:39:07 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 22:08:37 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,68 @@ char	*ft_getenv(char *str, t_data *data)
 		i++;
 	}
 	return (NULL);
+}
+
+/**
+ * @brief If an environment variable is already in the env array, it is
+ * overwritten by the new value
+ * 
+ * @param old The old env variable
+ * @param new The new env variable
+ */
+int	overwrite_env_variable(char *id, char *value, t_data *data)
+{
+	size_t	i;
+	size_t	id_length;
+
+	i = 0;
+	id_length = ft_strlen(id);
+	while (ft_strncmp(data->env[i], id, id_length))
+		i++;
+	free(data->env[i]);
+	data->env[i] = ft_concat(2, id, value);
+	if (!data->env[i])
+	{
+		perror("minishell: overwrite_env_variable: malloc");
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * @brief Loops through the env array, if the variable is foundm it is
+ * overwritten, if not it is added at the end o the array
+ * 
+ * @param identifier The identifier of the variable
+ * @param str The new value to store in env
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int	add_variable_to_env(char *id, char *value, t_data *data)
+{
+	size_t	length;
+	char	**new;
+	size_t	i;
+
+	length = 0;
+	while (data->env[length])
+		length++;
+	new = malloc((length + 2) * sizeof(char *));
+	if (!new)
+		return (EXIT_FAILURE);
+	i = 0;
+	while (i < length)
+	{
+		new[i] = ft_strdup(data->env[i]);
+		if (!new[i])
+			return (reverse_free_char_array(new, i, EXIT_FAILURE));
+		i++;
+	}
+	new[length] = malloc((ft_strlen(id) + ft_strlen(value) + 1) * sizeof(char));
+	ft_strlcpy(new[length], id, ft_strlen(id) + 1);
+	ft_strlcpy(&new[length][ft_strlen(id)], value, ft_strlen(value) + 1);
+	new[length + 1] = NULL;
+	free_char_array(data->env);
+	data->env = new;
+	return (EXIT_SUCCESS);
 }

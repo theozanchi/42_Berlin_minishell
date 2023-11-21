@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 20:38:53 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 22:08:47 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <unistd.h>
+# include <limits.h>
 
 /*formatting*/
 # define GREEN_BOLD "\033[1;32m"
@@ -200,6 +201,10 @@ char		**env_extract_paths(char **env);
 int			cmd_is_a_builtin(t_commands *node);
 int			launch_builtin(t_commands *c, t_data *data);
 char		*ft_getenv(char *str, t_data *data);
+int			overwrite_env_variable(char *id, char *value, t_data *data);
+int			add_variable_to_env(char *id, char *value, t_data *data);
+
+/*builtins*/
 int			builtin_cd(t_commands *c, t_data *data);
 int			builtin_echo(t_commands *c);
 int			builtin_env(t_commands *c, t_data *data);

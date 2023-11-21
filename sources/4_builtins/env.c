@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 11:10:33 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 16:02:55 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 20:47:39 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
  * @brief Checks that no flag and no arguments are passed to the builtin
  * 
  * @param c The current command node
- * @param data The main data structure
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
 static int	check_arg(t_commands *c)

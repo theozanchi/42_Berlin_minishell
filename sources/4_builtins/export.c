@@ -6,70 +6,96 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:11:38 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 20:38:06 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 21:59:42 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "export.h"
+#include "minishell.h"
+
+#define VALID_CHARACTERS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\
+							0123456789_"
+#define EXPORT_ERR_FLAGS "minishell: export: no options supported\n"
+#define EXPORT_INV_IDEN "minishell: export: '%s': not a valid identifier\n"
 
 /**
- * @brief If an environment variable is already in the env array, it is
- * overwritten by the new value
+ * @brief Extracts the value of the variable
  * 
- * @param old The old env variable
- * @param new The new env variable
+ * @param str The current argument
+ * @return Pointer to the string value (located after the = sign if present) 
  */
-void	overwrite_env_variable(char *id, char *value, t_data *data)
+static char	*extract_value(char *str)
 {
-	size_t	i;
-	size_t	id_length;
+	char	*start;
+	char	end_char;
+	char	*end;
 
-	i = 0;
-	id_length = ft_strlen(id);
-	while (ft_strncmp(data->env[i], id, id_length))
-		i++;
-	free(data->env[i]);
-	data->env[i] = ft_concat(2, id, value);
-	if (!data->env[i])
-		perror("minishell: export: malloc");
+	start = ft_strchr(str, '=');
+	if (!start)
+		return (NULL);
+	if ((start + 1))
+		start++;
+	if (*start == '\'' || *start == '\"')
+		end_char = *start++;
+	else
+		end_char = '\0';
+	end = ft_strrchr(start, end_char);
+	return (ft_substr(start, 0, end - start));
 }
 
 /**
- * @brief Loops through the env array, if the variable is foundm it is
- * overwritten, if not it is added at the end o the array
+ * @brief Extracts the identifier from the export argument, i.e. all characters
+ * located before the '=' sign
  * 
- * @param identifier The identifier of the variable
- * @param str The new value to store in env
- * @param data The main data structure
- * @return EXIT_SUCCESS or EXIT_FAILURE
+ * @param str The argument passed to the builtin
+ * @return Pointer to the substring, which has been malloc'ed or NULL in case of
+ * error or if no equal sign is present
  */
-int	add_variable_to_env(char *id, char *value, t_data *data)
+static char	*extract_identifier(char *str)
 {
-	size_t	length;
-	char	**new;
+	size_t	identifier_length;
+	char	*identifier;
+
+	identifier_length = 0;
+	while (str[identifier_length] && str[identifier_length] != '=')
+		identifier_length++;
+	if (!identifier_length)
+	{
+		ft_printf(EXPORT_INV_IDEN, str);
+		return (NULL);
+	}
+	identifier = ft_substr(str, 0, identifier_length + 1);
+	return (identifier);
+}
+
+/**
+ * @brief Extracts the identifier from the argument and checks its validity: only
+ * lower and upper letters, or underscore signs
+ * 
+ * @param str The arguments passed to the builtin
+ * @return Pointer to the identifier, or NULL if invalid
+ */
+static char	*get_and_check_identifier(char *str)
+{
+	char	*identifier;
 	size_t	i;
 
-	length = 0;
-	while (data->env[length])
-		length++;
-	new = malloc((length + 2) * sizeof(char *));
-	if (!new)
-		return (EXIT_FAILURE);
+	if (!ft_strchr(str, '='))
+		return (NULL);
+	identifier = extract_identifier(str);
+	if (!identifier)
+		return (NULL);
 	i = 0;
-	while (i < length)
+	while (identifier[i] && identifier[i] != '=')
 	{
-		new[i] = ft_strdup(data->env[i]);
-		if (!new[i])
-			return (reverse_free_char_array(new, i, EXIT_FAILURE));
+		if (!ft_strchr(VALID_CHARACTERS, identifier[i]))
+		{
+			ft_printf(EXPORT_INV_IDEN, identifier);
+			free(identifier);
+			return (NULL);
+		}
 		i++;
 	}
-	new[length] = malloc((ft_strlen(id) + ft_strlen(value) + 1) * sizeof(char));
-	ft_strlcpy(new[length], id, ft_strlen(id) + 1);
-	ft_strlcpy(&new[length][ft_strlen(id)], value, ft_strlen(value) + 1);
-	new[length + 1] = NULL;
-	free_char_array(data->env);
-	data->env = new;
-	return (EXIT_SUCCESS);
+	return (identifier);
 }
 
 /**
