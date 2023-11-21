@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:43:17 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/20 21:14:58 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:15:18 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,10 @@ int	populate_node_flag(t_commands *node, t_token *token)
 	return (EXIT_SUCCESS);
 }
 
-static char	*get_equal_sign_pos(t_commands *node)
-{
-	t_list	*ptr;
-
-	ptr = node->arguments;
-	while (ptr->next)
-		ptr = ptr->next;
-	return (ft_strchr(ptr->value, '='));
-}
-
 /**
- * @brief Add the token value to the current command node in the arguments field
+ * @brief Add the token value to the current command node in the arguments field.
+ * If the current node uses the 'export' command, a dedicated parsing function
+ * helper_export_builtin() is called
  * 
  * @param node The current node
  * @param token The current token
@@ -65,8 +57,6 @@ static char	*get_equal_sign_pos(t_commands *node)
  */
 int	populate_node_argument(t_commands *node, t_token *token)
 {
-	char	*tmp;
-
 	if (!node)
 		return (EXIT_FAILURE);
 	if (ft_strcmp(node->command, "export"))
@@ -75,27 +65,6 @@ int	populate_node_argument(t_commands *node, t_token *token)
 			return (EXIT_FAILURE);
 	}
 	else
-	{
-		if (!node->arguments)
-			add_new_list_node(&node->arguments, token);
-		else
-		{
-			char	*equal_pos = get_equal_sign_pos(node);
-			if (equal_pos
-				&& (*(equal_pos + 1) == '\'' || *(equal_pos + 1) == '\"'))
-			{
-				t_list	*ptr = node->arguments;
-				while (ptr->next)
-					ptr = ptr->next;
-				tmp = ft_concat(3, ptr->value, " ", token->value);
-				if (!tmp)
-					return (EXIT_FAILURE);
-				free(ptr->value);
-				ptr->value = tmp;
-			}
-			else
-				add_new_list_node(&node->arguments, token);
-		}
-	}
+		helper_export_builtin(node, token);
 	return (EXIT_SUCCESS);
 }

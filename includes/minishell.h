@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 13:00:02 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:10:10 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,13 @@ int			add_command_to_final(size_t *i, t_commands *command_ptr);
 int			add_arguments_to_final(size_t *i, t_commands *command_ptr);
 int			add_flags_to_final(size_t *i, t_commands *command_ptr);
 int			concatenate_successive_commands(t_data *data);
+
+/*parser_helper_export_builtin.c*/
+t_list		*get_current_argument(t_commands *node);
+char		*get_equal_sign_pos(t_commands *node);
+int			helper_quote_var(t_commands *node, t_token *token, \
+							char quote_sign, int *add_new_node);
+int			helper_export_builtin(t_commands *node, t_token *token);
 
 /*parser_main.c*/
 int			parser_helper_operands(t_data *data, t_token *token, \

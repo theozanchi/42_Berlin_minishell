@@ -6,7 +6,7 @@
 #    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/21 13:02:01 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/11/21 15:07:30 by tzanchi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC			=	0_utils/utils_1.c \
 				1_lexer/save_symbol.c \
 				1_lexer/save_word_save_quote.c \
 				2_parser/parser/concatenate_final_commands.c \
+				2_parser/parser/parser_helper_export_builtin.c \
 				2_parser/parser/parser_main.c \
 				2_parser/parser/parser_utils.c \
 				2_parser/parser/populate_node.c \
