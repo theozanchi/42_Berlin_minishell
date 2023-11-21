@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:17:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 22:07:50 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 22:12:40 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,29 +65,15 @@ static char	*get_new_path(t_commands *c, t_data *data)
 
 static int	update_env(char *new_path, char *old_path, t_data *data)
 {
+	if (ft_getenv("PWD=", data))
 	{
-		if (!ft_getenv("PWD=", data))
-		{
-			if (add_variable_to_env("PWD=", new_path, data))
-				return (EXIT_FAILURE);
-		}
-		else
-		{
-			if (overwrite_env_variable("PWD=", new_path, data))
-				return (EXIT_FAILURE);
-		}
+		if (overwrite_env_variable("PWD=", new_path, data))
+			return (EXIT_FAILURE);
 	}
+	if (ft_getenv("OLDPWD=", data))
 	{
-		if (!ft_getenv("OLDPWD=", data))
-		{
-			if (add_variable_to_env("OLDPWD=", old_path, data))
-				return (EXIT_FAILURE);
-		}
-		else
-		{
-			if (overwrite_env_variable("OLDPWD=", old_path, data))
-				return (EXIT_FAILURE);
-		}
+		if (overwrite_env_variable("OLDPWD=", old_path, data))
+			return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }
