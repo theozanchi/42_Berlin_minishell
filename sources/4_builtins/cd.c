@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:17:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 22:16:51 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 22:18:49 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,13 @@ static int	check_arg(t_commands *c)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Get the new path based on the argument entered by the user
+ * 
+ * @param c The current command node
+ * @param data The main data structure
+ * @return The path or NULL on error 
+ */
 static char	*get_new_path(t_commands *c, t_data *data)
 {
 	char	*path;
@@ -51,16 +58,24 @@ static char	*get_new_path(t_commands *c, t_data *data)
 	return (path);
 }
 
-static int	update_env(char *new_path, char *old_path, t_data *data)
+/**
+ * @brief If PWD and OLDPWD are in the env variable, they are updated
+ * 
+ * @param new_pwd The new working directory
+ * @param old_pwd The old working directory
+ * @param data The main data structure
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+static int	update_env(char *new_pwd, char *old_pwd, t_data *data)
 {
 	if (ft_getenv("PWD=", data))
 	{
-		if (overwrite_env_variable("PWD=", new_path, data))
+		if (overwrite_env_variable("PWD=", new_pwd, data))
 			return (EXIT_FAILURE);
 	}
 	if (ft_getenv("OLDPWD=", data))
 	{
-		if (overwrite_env_variable("OLDPWD=", old_path, data))
+		if (overwrite_env_variable("OLDPWD=", old_pwd, data))
 			return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
