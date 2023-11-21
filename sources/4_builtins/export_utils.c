@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:57:02 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 13:00:22 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:24:59 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,11 @@ char	*extract_value(char *str)
 	char	end_char;
 	char	*end;
 
-	start = ft_strchr(str, '=') + 1;
+	start = ft_strchr(str, '=');
+	if (!start)
+		return (NULL);
+	if ((start + 1))
+		start++;
 	if (*start == '\'' || *start == '\"')
 		end_char = *start++;
 	else
