@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/21 17:32:32 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/22 17:49:24 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,15 @@ int	executer(t_data *data)
 	if (!pid)
 		return (EXIT_FAILURE);
 	fd_pipes = build_pipes(data->output.fd, data->input.fd, cmds_num);
-	close_all_fd(fd_pipes);
 	if (!fd_pipes)
 		return (EXIT_FAILURE);
+
+close_all_fd(fd_pipes);
 	execute_pipeline(fd_pipes, pid, data);
-	close_all_fd(fd_pipes);
+	
+	
+	
+	// 
 	free (fd_pipes);
 	free (pid);
 	// write(2, "I AM DONE \n", 11);

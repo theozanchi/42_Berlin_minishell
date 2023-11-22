@@ -6,18 +6,11 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/21 17:36:27 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/22 18:23:37 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	sigpipe_handler(int signum)
-{
-	(void)signum; // Unused parameter
-	write(2, "RECEIVED SIGNAL\n", 16);
-	exit (EXIT_SUCCESS);
-}
 
 /**
  * @brief closes a given file descriptor, that is neither stdin, stdout or stderr
@@ -55,17 +48,13 @@ void	close_all_fd(int *fd_pipes)
  */
 void	fd2fd(int *fd_pipes, t_commands *cmd, t_data *data)
 {
-	int	fd_in;
-	int	fd_out;
-
-	fd_in = fd_pipes[0];
-	fd_out = fd_pipes[3];
+	close_fd(fd_pipes[1]);
+	if (!cmd_is_a_builtin(cmd))
+		close_fd(fd_pipes[2]);
 	if (!cmd || !data)
 		write(2, "FDF2FDF ERROR\n", 14);
-	close_fd(fd_pipes[1]);
-	close_fd(fd_pipes[2]);
-	dup2(fd_out, 1);
-	dup2(fd_in, 0);
+	dup2(fd_pipes[3], 1);
+	dup2(fd_pipes[0], 0);
 }
 
 /**
@@ -76,35 +65,26 @@ void	fd2fd(int *fd_pipes, t_commands *cmd, t_data *data)
  * @param pid process id of child to wait to exit
  * @param data  main datastructure
 */
-void	parent(int *fd_pipes, pid_t pid, t_data *data, t_commands *cmd)
+void	parent(int *fd_pipes, pid_t pid, t_data *data, int i)
 {
 	int	status;
-	int	orig_fdin;
-	int	orig_fdout;
 	int	fd_in;
 	int	fd_out;
 
-	waitpid(pid, &status, 0);
-	// write(2, "PARENT STARTED\n", 15);
+	if (pid == -1)
+		return ;
 	fd_in = fd_pipes[0];
 	fd_out = fd_pipes[3];
-	if (cmd_is_a_builtin(cmd))
-	{
-		orig_fdout = dup(1);
-		orig_fdin = dup(0);
-		// close_fd (fd_pipes[1]);
-		// close_fd (fd_pipes[2]);
-		dup2(fd_out, 1);
-		dup2(fd_in, 0);
-		data->wstatus = launch_builtin(cmd, data);
-		dup2(orig_fdout, 1);
-		dup2(orig_fdin, 0);
-	}
-	else
-		data->wstatus = WEXITSTATUS(status);
 	close_fd (fd_in);
 	close_fd (fd_out);
-	// write(2, "PARENT DONE\n", 12);
+	// ft_putstr_fd("Parent waiting for child #", 2);
+	// ft_putnbr_fd(i, 2);
+	// ft_putendl_fd("", 2);
+	waitpid(pid, &status, 0);
+	data->wstatus = WEXITSTATUS(status);
+	// ft_putstr_fd("Parent found child #", 2);
+	// ft_putnbr_fd(i, 2);
+	// ft_putendl_fd("\n", 2);
 }
 
 /**
@@ -119,16 +99,8 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	int			i;
 	int			j;
 	t_commands	*cmd;
-
-	struct sigaction	sa;
-
-	sa.sa_handler = sigpipe_handler;
-	sa.sa_flags = SA_RESTART;
-	if (sigaction(SIGPIPE, &sa, NULL) == -1) {
-		perror("Error setting up signal handler");
-		return EXIT_FAILURE;
-	}
-
+	int			orig_fdin;
+	int			orig_fdout;
 
 	if (!fd_pipes || !pid || !data)
 		return (EXIT_FAILURE);
@@ -137,22 +109,43 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	cmd = data->commands;
 	while (cmd)
 	{
-		pid[i] = fork ();
-		if (pid[i] == -1)
-			return (EXIT_FAILURE);
-		if (pid[i] == 0)
+		if (!cmd_is_a_builtin(cmd))
 		{
-			fd2fd(&fd_pipes[2 * i], cmd, data);
-			command_executer(cmd, data);
+			pid[i] = fork ();
+			if (pid[i] == -1)
+				return (EXIT_FAILURE);
+			if (pid[i] == 0)
+			{
+				fd2fd(&fd_pipes[2 * i], cmd, data);
+				// sleep(1);
+				// exit (EXIT_SUCCESS);
+				command_executer(cmd, data);
+				exit (EXIT_SUCCESS);
+			}
+		}
+		else
+		{
+			pid[i] = -1; //Setting to -1 to skip this pid in parent later
+			orig_fdin = dup(0); // saving stdin to reset it later to this value
+			orig_fdout = dup(1);
+			fd2fd(&fd_pipes[2 * i], cmd, data); // redirecting stdin&stdout
+			data->wstatus = launch_builtin(cmd, data); // save exit value
+			close_fd(fd_pipes[2 * i]); // closing used fds after execution
+			close_fd(fd_pipes[(2 * i) + 3]); // **
+			fd_pipes[2 * i] = -1; // set used to -1, so they won't get used again
+			fd_pipes[(2 * i) + 3] = -1;
+			dup2(orig_fdout, 1);
+			dup2(orig_fdin, 0);
 		}
 		cmd = cmd->next;
 		i++;
 	}
-	cmd = data->commands;
-	while (++j < i)
-	{
-		parent(&fd_pipes[2 * j], pid[j], data, cmd);
-		cmd = cmd->next;
-	}
+
+	while (--i >= 0)
+		parent(&fd_pipes[2 * i], pid[i], data, i);
+	// sleep (1);
+	// while (++j < i)
+	// 	parent(&fd_pipes[2 * j], pid[j], data, j);
+	ft_putstr_fd("DONE\n", 2);
 	return (EXIT_SUCCESS);
 }

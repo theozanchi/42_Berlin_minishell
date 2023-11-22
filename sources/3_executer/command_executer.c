@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/21 12:52:01 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/22 18:12:39 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,17 +104,13 @@ int	command_executer(t_commands *cmd, t_data *data)
 		exit (EXIT_FAILURE);
 	paths = 0;
 	exec_path = 0;
-	if (!cmd_is_a_builtin(cmd))
-	{
-		if (access(cmd->command, X_OK | F_OK) == 0)
-			data->wstatus = execve(cmd->command, cmd->final, data->env);
-		else
-			exec_path = search_cmd_path(cmd, data->env);
-		if (!exec_path)
-			return (127);
-		data->wstatus = execve(exec_path, cmd->final, data->env);
-		free (exec_path);
-		exit (data->wstatus);
-	}
-	exit (EXIT_SUCCESS);
+	if (access(cmd->command, X_OK | F_OK) == 0)
+		data->wstatus = execve(cmd->command, cmd->final, data->env);
+	else
+		exec_path = search_cmd_path(cmd, data->env);
+	if (!exec_path)
+		return (127);
+	data->wstatus = execve(exec_path, cmd->final, data->env);
+	free (exec_path);
+	exit (data->wstatus);
 }
