@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/22 17:49:24 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/23 11:26:59 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	executer(t_data *data)
 	if (!fd_pipes)
 		return (EXIT_FAILURE);
 
-close_all_fd(fd_pipes);
+
 	execute_pipeline(fd_pipes, pid, data);
 	
 	

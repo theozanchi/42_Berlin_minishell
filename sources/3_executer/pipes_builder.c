@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:47:13 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/22 18:10:01 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/23 12:20:14 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 	}
 	fd_pipes[0] = fd_in;
 	fd_pipes[1] = -1;
-	fd_pipes[2 * cmds_num] = -1;
+	fd_pipes[(2 * cmds_num)] = -1;
 	fd_pipes[(2 * cmds_num) + 1] = fd_out;
 	i = 0;
 	while (fd_pipes && ++i < cmds_num)
