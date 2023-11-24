@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/24 16:59:18 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/24 13:52:53 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	close_fd(int *fd)
 	if (*fd <= 2)
 		return (EXIT_SUCCESS);
 	close(*fd);
-	*fd = -1;
+	// *fd = -1;
 	return (EXIT_SUCCESS);
 }
 
@@ -39,6 +39,31 @@ void	close_all_fd(int *fd_pipes)
 		return ;
 	while (fd_pipes[++i])
 		close_fd (&fd_pipes[i]);
+}
+
+/**
+ * @brief closes all file desrciptor in an array
+ * @param fd_pipes array with file descriptors
+*/
+void	close_unused_fd(int *fd_pipes, int x, int len)
+{
+	int	i;
+	int y = x + 3;
+
+	i = -1;
+	ft_putstr_fd("Closing:\n", 2);
+	while (++i < len)
+	{
+		if (i > 0 && i != x && i !=y)
+		{
+			ft_putchar_fd('X', 2);
+			close_fd (&fd_pipes[i]);
+		}
+		else
+			ft_putnbr_fd(fd_pipes[i], 2);
+		ft_putstr_fd(" ", 2);
+	}
+	ft_putstr_fd("\n", 2);
 }
 
 /**
@@ -118,12 +143,12 @@ void	execute_builtin(int *fd_in_out, t_commands *cmd, t_data *data)
 
 	original_fd[0] = dup(0);
 	original_fd[1] = dup(1);
-	// dup2(fd_in_out[0], 0);
-	// dup2(fd_in_out[3], 1);
-	close_fd(&fd_in_out[1]);
+	dup2(fd_in_out[0], 0);
+	dup2(fd_in_out[3], 1);
+	// close_fd(&fd_in_out[1]);
 	data->wstatus = launch_builtin(cmd, data);
-	// close_fd(&fd_in_out[0]);
-	// close_fd(&fd_in_out[3]);
+	close_fd(&fd_in_out[0]);
+	close_fd(&fd_in_out[3]);
 	dup2(original_fd[0], 0);
 	dup2(original_fd[1], 1);
 }
@@ -137,8 +162,10 @@ void	execute_builtin(int *fd_in_out, t_commands *cmd, t_data *data)
 */
 void	execute_env(int *fd_in_out, t_commands *cmd, t_data *data)
 {
-	exit (command_executer(cmd, data));
-	close_fd(fd_in_out);
+	exit (command_executer(cmd, data));dup2(fd_in_out[3], 1);
+	if (fd_in_out[0] > 0)
+		dup2(fd_in_out[0], 0);
+	
 }
 
 /**
@@ -154,21 +181,20 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	t_commands	*cmd;
 	pid_t		*wpid;
 	int			i;
-	int	original_fd[2];
 
 	if (!fd_pipes || !pid || !data)
 		return (EXIT_FAILURE);
 	i = 0;
-	// fd_printer(fd_pipes, 2 + (2 * cmd_count(data->commands)), 1); //DEBUGGING
+	fd_printer(fd_pipes, 2 + (2 * cmd_count(data->commands)), 1); //DEBUGGING
 	cmd = data->commands;
 	while (cmd)
 	{
 		// fd_printer(fd_pipes, 2 + (2 * cmd_count(data->commands)), 0);
-		original_fd[0] = dup(0);
-		original_fd[1] = dup(1);
-		close_fd(&fd_pipes[(i * 2) + 1]);
-		dup2(fd_pipes[(i * 2)], 0);
-		dup2(fd_pipes[(i * 2) + 3], 1);
+		// close_fd(&fd_pipes[(i * 2) + 1]);
+		// dup2(fd_pipes[(i * 2) + 3], 1);
+		// // if (fd_pipes[(i * 2)] > 0)
+		// dup2(fd_pipes[(i * 2)], 0);
+		// close_unused_fd(fd_pipes, i * 2, 2 + (2 * cmd_count(data->commands)));
 		if (cmd_is_a_builtin(cmd))
 		{
 			execute_builtin(&fd_pipes[i * 2], cmd, data);
@@ -180,15 +206,19 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 			if (pid[i] == -1)
 				return (EXIT_FAILURE);
 			if (pid[i] == 0)
+			{
+				dup2(fd_pipes[(i * 2) + 3], 1);
+				dup2(fd_pipes[(i * 2)], 0);
+				close_fd(&fd_pipes[(i * 2) + 2]);
+				// close_unused_fd(fd_pipes, i * 2, 2 + (2 * cmd_count(data->commands)));
 				execute_env(&fd_pipes[i * 2], cmd, data);
+			}
 		}
 		i++;
 		cmd = cmd->next;
-		dup2(original_fd[0], 0);
-		dup2(original_fd[1], 1);
 	}
 	wpid = (pid_t *) ft_calloc (i, sizeof(pid_t));
-	while (--i >= 0)
+/* 	while (--i >= 0)
 	{
 		if (pid[i] > 0)
 		{
@@ -198,9 +228,8 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 			if (wpid[i] == 0)
 			{
 				waitpid(pid[i], 0, 0);
-				close_fd (&fd_pipes[(2 * i) + 2]);
-				close_fd(&fd_pipes[(2 * i)]);
-				close_fd(&fd_pipes[(2 * i) + 3]);
+				close_fd (&fd_pipes[(2 * i)]);
+				close_fd (&fd_pipes[(2 * i) + 3]);
 				exit (EXIT_SUCCESS);
 			}
 		}
@@ -212,8 +241,18 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	{
 		if (wpid[i] > 0)
 		{
-			waitpid(wpid[i], 0, 0);
+			waitpid(pid[i], 0, 0);
 			fd_pipes[(2 * i) + 2] = -1;
+		}
+	} */
+	int j = -1;
+	while (++j < i)
+	{
+		if (pid[j] > 0)
+		{
+			waitpid(pid[j], 0, 0);
+			close_fd(&fd_pipes[(j * 2)]);
+			close_fd(&fd_pipes[(j * 2) + 3]);
 		}
 	}
 	free (wpid);

@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:47:13 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/23 12:20:14 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/24 16:52:45 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 
 	if (!cmds_num)
 		return (0);
-	fd_pipes = (int *) ft_calloc((2 * cmds_num) + 2, sizeof(int));
+	fd_pipes = (int *) ft_calloc((2 * cmds_num) + 3, sizeof(int));
 	if (!fd_pipes)
 	{
 		ft_putstr_fd("minishell: couldn't malloc pipes array\n", 2);
