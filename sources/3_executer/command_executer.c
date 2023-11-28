@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/22 18:12:39 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/28 12:07:22 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,12 @@ char	**env_extract_paths(char **env)
 	return (path_split_full);
 }
 
-/// @brief searches env for command and returns exact path if it is found
-/// @param cmd command to look for
-/// @param env environmental variable
-/// @return string of the path to exectuable/command, NULL if it does not exist
+/**
+ * @brief searches env for command and returns exact path if it is found
+ * @param cmd command to look for
+ * @param env environmental variable
+ * @return string of the path to exectuable/command, NULL if it does not exist
+ */
 char	*search_cmd_path(t_commands *cmd, char **env)
 {
 	char	**paths;
