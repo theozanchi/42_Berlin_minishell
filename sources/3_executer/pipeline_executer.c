@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/24 16:59:18 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/28 10:08:52 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,34 +42,42 @@ void	close_all_fd(int *fd_pipes)
 }
 
 /**
- * @brief redirects fds to given values and calls function that executes
- * @param fd_out desired filedescriptor for output
- * @param cmd command to execute incl. arguments and flags
- * @param fd_in desired filedescriptor for output
- * @param env environmental variable
- */
-/* void	fd2fd(int *fd_pipes, t_commands *cmd, t_data *data)
-{
-	return ;
-} */
-
-/**
- * @brief Waits for a given childprocess of pid, saves its exec-code to data
- * 			and closes pipes, used by child
- * @param fd_out fd of the output pipe
- * @param fd_in fd of input pipe
- * @param pid process id of child to wait to exit
- * @param data  main datastructure
+ * @brief closes all file desrciptor in an array
+ * @param fd_pipes array with file descriptors
 */
-/* void	parent(int *fd_pipes, pid_t pid, t_data *data, int i)
+void	close_unused_fd(int *fd_array, int fd_in, int fd_out, int len)
 {
-	return ;
-}
- */
+	int	i;
+	int	*fd_pipes;
 
-void	fd_printer(int *fds, int readlen, int index)
+	i = 1;
+	fd_pipes = fd_array;
+	// ft_putstr_fd("Closing:  ", 2);
+	// ft_putnbr_fd(fd_pipes[0], 2);
+	// ft_putnbr_fd(fd_pipes[1], 2);
+	// ft_putstr_fd(" ", 2);
+	while (++i < len)
+	{
+		if (i > 0 && i != fd_in && i != fd_out)
+		{
+			// ft_putchar_fd('X', 2);
+			close_fd (&fd_pipes[i]);
+		}
+		// else
+		// 	ft_putnbr_fd(fd_pipes[i], 2);
+	}
+	// ft_putstr_fd(" ", 2);
+	// ft_putnbr_fd(fd_pipes[i], 2);
+	// ft_putnbr_fd(fd_pipes[++i], 2);
+	// ft_putstr_fd("\n", 2);
+}
+
+void	fd_printer(int *fd_pipes, int readlen, int index)
 {
+	int	*fds;
 	int i = -1;
+
+	fds = fd_pipes;
 	if (index)
 		ft_putstr_fd("\ni: ", 2);
 	while (index && ++i < readlen)
@@ -112,20 +120,21 @@ void	fd_printer(int *fds, int readlen, int index)
  * @param cmd builtin command to execute
  * @param data main data structure
 */
-void	execute_builtin(int *fd_in_out, t_commands *cmd, t_data *data)
+int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 {
 	int	original_fd[2];
+	int	exit_code;
 
 	original_fd[0] = dup(0);
 	original_fd[1] = dup(1);
-	// dup2(fd_in_out[0], 0);
-	// dup2(fd_in_out[3], 1);
-	close_fd(&fd_in_out[1]);
-	data->wstatus = launch_builtin(cmd, data);
-	// close_fd(&fd_in_out[0]);
-	// close_fd(&fd_in_out[3]);
+	dup2(fd_pipes[pos], 0);
+	close_unused_fd(fd_pipes, pos + 3, pos + 3, (2 * cmd_count(data->commands)));
+	dup2(fd_pipes[pos + 3], 1);
+	exit_code = launch_builtin(cmd, data);
+	close_fd(&fd_pipes[pos + 3]);
 	dup2(original_fd[0], 0);
 	dup2(original_fd[1], 1);
+	return (exit_code);
 }
 
 /**
@@ -135,10 +144,26 @@ void	execute_builtin(int *fd_in_out, t_commands *cmd, t_data *data)
  * @param cmd builtin command to execute
  * @param data main data structure
 */
-void	execute_env(int *fd_in_out, t_commands *cmd, t_data *data)
+int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 {
-	exit (command_executer(cmd, data));
-	close_fd(fd_in_out);
+	pid_t	pid;
+	// int		original_fd[2];
+
+	// original_fd[0] = dup(0);
+	// original_fd[1] = dup(1);
+	// fd_printer(fd_pipes, 2 + (2 * cmd_count(data->commands)), 0);
+	pid = fork();
+	if (pid < 0)
+		return (EXIT_FAILURE);
+	if (pid == 0)
+	{
+		dup2(fd_pipes[pos], 0);
+		dup2(fd_pipes[pos + 3], 1);
+		close_unused_fd(fd_pipes, pos, pos + 3, (2 * cmd_count(data->commands)));
+		exit (command_executer(cmd, data));
+	}
+	// close_unused_fd(&fd_pipes[pos], 2, 2, 4);
+	return (EXIT_SUCCESS);
 }
 
 /**
@@ -154,7 +179,6 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	t_commands	*cmd;
 	pid_t		*wpid;
 	int			i;
-	int	original_fd[2];
 
 	if (!fd_pipes || !pid || !data)
 		return (EXIT_FAILURE);
@@ -164,31 +188,21 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	while (cmd)
 	{
 		// fd_printer(fd_pipes, 2 + (2 * cmd_count(data->commands)), 0);
-		original_fd[0] = dup(0);
-		original_fd[1] = dup(1);
-		close_fd(&fd_pipes[(i * 2) + 1]);
-		dup2(fd_pipes[(i * 2)], 0);
-		dup2(fd_pipes[(i * 2) + 3], 1);
 		if (cmd_is_a_builtin(cmd))
 		{
-			execute_builtin(&fd_pipes[i * 2], cmd, data);
-			pid[i] = 0;
+			execute_builtin (fd_pipes, i *2, cmd, data);
+			pid[i] = 1;
 		}
 		else
 		{
-			pid[i] = fork();
-			if (pid[i] == -1)
-				return (EXIT_FAILURE);
-			if (pid[i] == 0)
-				execute_env(&fd_pipes[i * 2], cmd, data);
+			execute_env (fd_pipes, i *2, cmd, data);
+			close_fd(&fd_pipes[(i * 2)]);
 		}
 		i++;
 		cmd = cmd->next;
-		dup2(original_fd[0], 0);
-		dup2(original_fd[1], 1);
 	}
 	wpid = (pid_t *) ft_calloc (i, sizeof(pid_t));
-	while (--i >= 0)
+/* 	while (--i >= 0)
 	{
 		if (pid[i] > 0)
 		{
@@ -198,9 +212,8 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 			if (wpid[i] == 0)
 			{
 				waitpid(pid[i], 0, 0);
-				close_fd (&fd_pipes[(2 * i) + 2]);
-				close_fd(&fd_pipes[(2 * i)]);
-				close_fd(&fd_pipes[(2 * i) + 3]);
+				close_fd (&fd_pipes[(2 * i)]);
+				close_fd (&fd_pipes[(2 * i) + 3]);
 				exit (EXIT_SUCCESS);
 			}
 		}
@@ -212,13 +225,26 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	{
 		if (wpid[i] > 0)
 		{
-			waitpid(wpid[i], 0, 0);
+			waitpid(pid[i], 0, 0);
 			fd_pipes[(2 * i) + 2] = -1;
+		}
+	} */
+	int j = -1;
+	while (++j < i)
+	{
+		// ft_putnbr_fd(j, 2);
+		// ft_putstr_fd(": ", 2);
+		// ft_putnbr_fd(pid[j], 2);
+		if (pid[j] == 0)
+		{
+			waitpid(pid[j], 0, 0);
+			close_fd(&fd_pipes[(j * 2)]);
+			close_fd(&fd_pipes[(j * 2) + 3]);
 		}
 	}
 	free (wpid);
 	// ft_putstr_fd("\n\n\nDONE\n", 2);
-	// ft_putstr_fd("\nFINAL FDS:\n", 2);
+	// ft_putstr_fd("\nFINAL FDS:", 2);
 	// fd_printer(fd_pipes, 2 + (2 * cmd_count(data->commands)), 1); //DEBUGGING
 	return (EXIT_SUCCESS);
 }
