@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 11:14:09 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/28 11:27:11 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/28 11:36:47 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 /**
  * @brief closes a given file descriptor, that is neither stdin, stdout or stderr
  * @param fd file descriptor
- * @return 
+ * @return 0 on success, 1 on failure
  */
 int	close_fd(int *fd)
 {
 	if (*fd <= 2)
-		return (EXIT_SUCCESS);
+		return (EXIT_FAILURE);
 	close(*fd);
 	*fd = -1;
 	return (EXIT_SUCCESS);

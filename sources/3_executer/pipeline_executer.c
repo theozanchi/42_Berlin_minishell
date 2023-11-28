@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/28 11:14:45 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/28 11:57:18 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 	int	original_fd[2];
 	int	exit_code;
 
-	original_fd[0] = dup(0);
-	original_fd[1] = dup(1);
-	dup2(fd_pipes[pos], 0);
-	close_unused_fd(fd_pipes, pos, FDX_OW, (2 * cmd_count(data->commands)));
-	dup2(fd_pipes[pos + 3], 1);
+	original_fd[0] = dup(STDIN_FILENO);
+	original_fd[1] = dup(STDOUT_FILENO);
+	dup2(fd_pipes[pos], STDIN_FILENO);
+	dup2(fd_pipes[pos + 3], STDOUT_FILENO);
+	close_unused_fd(fd_pipes, pos, FDX_OW, pos);
 	exit_code = launch_builtin(cmd, data);
 	close_fd(&fd_pipes[pos + 3]);
-	dup2(original_fd[0], 0);
-	dup2(original_fd[1], 1);
+	dup2(original_fd[0], STDIN_FILENO);
+	dup2(original_fd[1], STDOUT_FILENO);
 	return (exit_code);
 }
 
@@ -53,8 +53,8 @@ int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 		return (EXIT_FAILURE);
 	if (pid == 0)
 	{
-		dup2(fd_pipes[pos], 0);
-		dup2(fd_pipes[pos + 3], 1);
+		dup2(fd_pipes[pos], STDIN_FILENO);
+		dup2(fd_pipes[pos + 3], STDOUT_FILENO);
 		close_unused_fd(fd_pipes, pos, FDX_RW, (2 * cmd_count(data->commands)));
 		exit (command_executer(cmd, data));
 	}
@@ -62,12 +62,22 @@ int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief waits for childs of an array of process ids and saves the exit code
+ * @param pid array of process ids, where pid[i] signals that there is no child
+ * @param num length of pid
+ * @param data main data structure where exit codes are saved
+ * @param fd_pipes array of pipes, to close read/write ends
+ * @return 0 on success, 1 on error
+*/
 int	catch_child_execs(pid_t *pid, int num, t_data *data, int *fd_pipes)
 {
 	int	i;
 	int	exit_code;
 
 	i = -1;
+	if (!pid || !num || !data || !fd_pipes)
+		return (EXIT_FAILURE);
 	while (++i < num)
 	{
 		if (pid[i] == 0)
