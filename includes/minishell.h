@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/23 15:03:32 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/28 11:26:24 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@
 
 /*program parameters*/
 # define SUPPORTED_SYMBOLS "<|>"
+# define FDX_NONE -1
+# define FDX_OR 0
+# define FDX_OW 1
+# define FDX_RW 2
 
 /*data_structure*/
 typedef enum e_type
@@ -190,6 +194,10 @@ int			execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data);
 void		fd2fd(int *fd_pipes, t_commands *cmd, t_data *data);
 void		close_all_fd(int *fd_pipes);
 int			close_fd(int *fd);
+
+/*fd_manager.c*/
+int			close_fd(int *fd);
+int			close_unused_fd(int *fd_pipes, int pos, int keep, int len);
 
 /*command_executer.c*/
 int			command_executer(t_commands *cmd, t_data *data);

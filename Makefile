@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+         #
+#    By: jschott <jschott@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:48:22 by tzanchi           #+#    #+#              #
-#    Updated: 2023/11/21 21:54:38 by tzanchi          ###   ########.fr        #
+#    Updated: 2023/11/28 11:26:23 by jschott          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRC			=	0_utils/utils_1.c \
 				3_executer/executer_main.c \
 				3_executer/pipes_builder.c \
 				3_executer/pipeline_executer.c \
+				3_executer/fd_manager.c \
 				3_executer/command_executer.c \
 				4_builtins/builtins_utils.c \
 				4_builtins/echo.c \
