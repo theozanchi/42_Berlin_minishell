@@ -6,11 +6,27 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/29 13:02:21 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/29 17:04:17 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	new_line(int signum)
+{
+	(void)signum;
+	write(1, "\n", 1);
+	rl_on_new_line();
+}
+
+void	test_sa(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = new_line;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+}
 
 /**
  * @brief saves current stdin&stdout redirects to given file descriptors,  
@@ -48,19 +64,21 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 */
 int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 {
-	pid_t	pid;
+	pid_t				pid;
 
 	pid = fork();
 	if (pid < 0)
 		return (EXIT_FAILURE);
 	if (pid == 0)
 	{
+		// test_sa();
 		if (dup2(fd_pipes[pos], STDIN_FILENO) == -1 || \
 			dup2(fd_pipes[pos + 3], STDOUT_FILENO) == -1)
 			return (EXIT_FAILURE);
 		close_unused_fd(fd_pipes, pos, FDX_RW, (2 * cmd_count(data->commands)));
 		exit (command_executer(cmd, data));
 	}
+	ignore_sigint();
 	close_fd(&fd_pipes[pos]);
 	return (EXIT_SUCCESS);
 }

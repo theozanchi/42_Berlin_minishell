@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 12:37:12 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/29 12:53:33 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/29 16:36:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,11 @@
  */
 void	reset_line(int signum)
 {
-	if (signum == SIGINT)
-	{
-		ft_printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-		g_signal = SIGINT;
-	}
+	(void)signum;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	write(1, "\n", 1);
+	rl_redisplay();
 }
 
 /**
@@ -40,8 +37,24 @@ void	display_new_line(int signum)
 {
 	if (signum == SIGQUIT)
 		ft_printf("Quit (core dumped)");
-	ft_printf("\n");
+	write(1, "\n", 1);
 	rl_on_new_line();
+}
+
+void	ignore_sigint(void)
+{
+	struct sigaction	sa[2];
+
+	{
+		sa[0].sa_handler = SIG_IGN;
+		sigemptyset(&sa[0].sa_mask);
+		sigaction(SIGINT, &sa[0], NULL);
+	}
+	{
+		sa[1].sa_handler = display_new_line;
+		sigemptyset(&sa[1].sa_mask);
+		sigaction(SIGQUIT, &sa[1], NULL);
+	}
 }
 
 /**
