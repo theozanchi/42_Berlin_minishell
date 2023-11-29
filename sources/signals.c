@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 12:37:12 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/29 15:37:33 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/29 16:36:29 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 void	reset_line(int signum)
 {
 	(void)signum;
-	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
+	write(1, "\n", 1);
 	rl_redisplay();
 }
 
@@ -43,11 +43,18 @@ void	display_new_line(int signum)
 
 void	ignore_sigint(void)
 {
-	struct sigaction	sa;
+	struct sigaction	sa[2];
 
-	sa.sa_handler = SIG_IGN;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT, &sa, NULL);
+	{
+		sa[0].sa_handler = SIG_IGN;
+		sigemptyset(&sa[0].sa_mask);
+		sigaction(SIGINT, &sa[0], NULL);
+	}
+	{
+		sa[1].sa_handler = display_new_line;
+		sigemptyset(&sa[1].sa_mask);
+		sigaction(SIGQUIT, &sa[1], NULL);
+	}
 }
 
 /**
