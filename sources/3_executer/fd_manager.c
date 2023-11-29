@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 11:14:09 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/28 11:36:47 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:32:14 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,12 @@
 int	close_fd(int *fd)
 {
 	if (*fd <= 2)
+		return (EXIT_SUCCESS);
+	if (close(*fd) == -1)
+	{
+		ft_putendl_fd("minishell: error while closing fd", 2);
 		return (EXIT_FAILURE);
-	close(*fd);
+	}
 	*fd = -1;
 	return (EXIT_SUCCESS);
 }
@@ -55,7 +59,10 @@ int	close_unused_fd(int *fd_pipes, int pos, int keep, int len)
 	while (++i < len)
 	{
 		if (i > 0 && i != fd_in && i != fd_out)
-			close_fd (&ptr[i]);
+		{
+			if (close_fd (&ptr[i]) == EXIT_FAILURE)
+				return (EXIT_FAILURE);
+		}
 	}
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:47:13 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/28 11:28:40 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:28:36 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 	fd_pipes = (int *) ft_calloc((2 * cmds_num) + 3, sizeof(int));
 	if (!fd_pipes)
 	{
-		ft_putstr_fd("minishell: couldn't malloc pipes array\n", 2);
-		return (0);
+		ft_putendl_fd("minishell: couldn't malloc pipes array", 2);
+		return (NULL);
 	}
 	fd_pipes[0] = fd_in;
 	fd_pipes[1] = -1;
@@ -39,7 +39,7 @@ int	*build_pipes(int fd_out, int fd_in, int cmds_num)
 	{
 		if (pipe(&fd_pipes[i * 2]) < 0)
 		{
-			ft_putstr_fd("minishell: error while piping\n", 2);
+			ft_putendl_fd("minishell: error while piping", 2);
 			free (fd_pipes);
 		}
 	}
