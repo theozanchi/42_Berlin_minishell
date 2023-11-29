@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 12:37:12 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/15 17:36:48 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/29 12:53:33 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	reset_line(int signum)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		g_signal = SIGINT;
 	}
 }
 
