@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/28 11:57:18 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/29 09:28:32 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,15 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 
 	original_fd[0] = dup(STDIN_FILENO);
 	original_fd[1] = dup(STDOUT_FILENO);
-	dup2(fd_pipes[pos], STDIN_FILENO);
-	dup2(fd_pipes[pos + 3], STDOUT_FILENO);
+	if (dup2(fd_pipes[pos], STDIN_FILENO) == -1 || \
+		dup2(fd_pipes[pos + 3], STDOUT_FILENO) == -1)
+		return (EXIT_FAILURE);
 	close_unused_fd(fd_pipes, pos, FDX_OW, pos);
 	exit_code = launch_builtin(cmd, data);
 	close_fd(&fd_pipes[pos + 3]);
-	dup2(original_fd[0], STDIN_FILENO);
-	dup2(original_fd[1], STDOUT_FILENO);
+	if (dup2(original_fd[0], STDIN_FILENO) == -1 || \
+		dup2(original_fd[1], STDOUT_FILENO) == -1)
+		return (EXIT_FAILURE);
 	return (exit_code);
 }
 
@@ -53,8 +55,9 @@ int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 		return (EXIT_FAILURE);
 	if (pid == 0)
 	{
-		dup2(fd_pipes[pos], STDIN_FILENO);
-		dup2(fd_pipes[pos + 3], STDOUT_FILENO);
+		if (dup2(fd_pipes[pos], STDIN_FILENO) == -1 || \
+			dup2(fd_pipes[pos + 3], STDOUT_FILENO) == -1)
+			return (EXIT_FAILURE);
 		close_unused_fd(fd_pipes, pos, FDX_RW, (2 * cmd_count(data->commands)));
 		exit (command_executer(cmd, data));
 	}

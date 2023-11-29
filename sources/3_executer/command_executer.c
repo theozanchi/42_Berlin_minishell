@@ -6,13 +6,13 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/28 12:07:22 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:24:40 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define CEXEC_EXIT_ERR_PATH "minishell: PATH not found in env\n"
+#define CEXEC_EXIT_ERR_PATH "minishell: PATH not found in env"
 #define CEXEC_EXIT_ERR_CMND "minishell: command not found: "
 
 /**
@@ -33,10 +33,7 @@ char	**env_extract_paths(char **env)
 	while (env[i] && !ft_strnstr(env[i], "PATH", 4))
 		i++;
 	if (!env[i] || !(ft_strchr(env[i], '=') + 1))
-	{
-		ft_putstr_fd(CEXEC_EXIT_ERR_PATH, 2);
-		exit (EXIT_FAILURE);
-	}
+		return (NULL);
 	path_split = ft_split(ft_strchr(env[i], '=') + 1, ':');
 	i = 0;
 	while (path_split[i])
@@ -68,7 +65,7 @@ char	*search_cmd_path(t_commands *cmd, char **env)
 		return (0);
 	i = -1;
 	paths = env_extract_paths(env);
-	while (paths[++i])
+	while (paths && paths[++i])
 	{
 		exec_path = ft_strjoin(paths[i], cmd->command);
 		if (access(exec_path, X_OK | F_OK) == 0)
@@ -80,8 +77,7 @@ char	*search_cmd_path(t_commands *cmd, char **env)
 	}
 	free_char_array (paths);
 	ft_putstr_fd(CEXEC_EXIT_ERR_CMND, 2);
-	ft_putstr_fd(cmd->command, 2);
-	ft_putstr_fd("\n", 2);
+	ft_putendl_fd(cmd->command, 2);
 	exit (127);
 }
 
@@ -111,8 +107,9 @@ int	command_executer(t_commands *cmd, t_data *data)
 	else
 		exec_path = search_cmd_path(cmd, data->env);
 	if (!exec_path)
-		return (127);
-	data->wstatus = execve(exec_path, cmd->final, data->env);
+		data->wstatus = 127;
+	else
+		data->wstatus = execve(exec_path, cmd->final, data->env);
 	free (exec_path);
 	exit (data->wstatus);
 }
