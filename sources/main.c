@@ -6,13 +6,11 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/29 12:56:51 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:16:13 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	g_signal = 0;
 
 /**
  * @brief Initializes the data needed for the project and launches the program
