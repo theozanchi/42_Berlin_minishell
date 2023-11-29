@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/29 09:28:32 by jschott          ###   ########.fr       */
+/*   Updated: 2023/11/29 13:02:21 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 		i++;
 		cmd = cmd->next;
 	}
+	while (1)
+	kill (pid[0], SIGINT);
 	catch_child_execs(pid, i, data, fd_pipes);
 	return (EXIT_SUCCESS);
 }
