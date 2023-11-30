@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/30 16:54:42 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/30 17:00:24 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 
 	original_fd[0] = dup(STDIN_FILENO);
 	original_fd[1] = dup(STDOUT_FILENO);
+	if (original_fd[0] == -1 || original_fd[1] == -1)
+		return (EXIT_FAILURE);
 	if (dup2(fd_pipes[pos], STDIN_FILENO) == -1 || \
 		dup2(fd_pipes[pos + 3], STDOUT_FILENO) == -1)
 		return (EXIT_FAILURE);
@@ -62,7 +64,7 @@ int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 		exit (command_executer(cmd, data));
 	}
 	close_fd(&fd_pipes[pos]);
-	return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 /**
