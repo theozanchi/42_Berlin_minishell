@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/29 18:28:03 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/30 16:54:42 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 */
 int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 {
-	pid_t				pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid < 0)
@@ -61,7 +61,6 @@ int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 		close_unused_fd(fd_pipes, pos, FDX_RW, (2 * cmd_count(data->commands)));
 		exit (command_executer(cmd, data));
 	}
-	ignore_sigint();
 	close_fd(&fd_pipes[pos]);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/29 16:27:35 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/11/30 16:54:58 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,8 +250,7 @@ void		exit_minishell(t_data *data, int exit_code);
 /*signals.c*/
 void		reset_line(int signum);
 void		display_new_line(int signum);
-void		ignore_sigint(void);
-int			signals_interactive(void);
-int			signals_non_interactive(void);
+void		signals_interactive(void);
+void		signals_non_interactive(void);
 
 #endif
