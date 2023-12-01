@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/12/01 13:11:27 by jschott          ###   ########.fr       */
+/*   Updated: 2023/12/01 16:02:13 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,16 +96,6 @@ int	catch_child_execs(pid_t *pid, int num, t_data *data, int *fd_pipes)
 				data->wstatus = WTERMSIG(exit_code) + 128;
 			else if (i == num - 1)
 				data->wstatus = -1;
-			// ft_putnbr_fd(exit_code, 2);
-			// ft_putendl_fd(" <- exit code in parent", 2);
-			// ft_putnbr_fd(WIFEXITED(exit_code), 2);
-			// ft_putendl_fd(" <- WIFEXITED in parent", 2);
-			// ft_putnbr_fd(WIFSIGNALED(exit_code), 2);
-			// ft_putendl_fd(" <- WIFSIGNALED in parent", 2);
-			// ft_putnbr_fd(WEXITSTATUS(exit_code), 2);
-			// ft_putendl_fd(" <- WEXITSTATUS in parent", 2);
-			// ft_putnbr_fd(data->wstatus, 2);
-			// ft_putendl_fd(" <- wstatus in parent", 2);
 			close_fd(&fd_pipes[(i * 2)]);
 			close_fd(&fd_pipes[(i * 2) + 3]);
 		}
