@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_executer.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 15:46:03 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/29 16:04:06 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 10:37:30 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*search_cmd_path(t_commands *cmd, char **env)
 	free_char_array (paths);
 	ft_putstr_fd(CEXEC_EXIT_ERR_CMND, 2);
 	ft_putendl_fd(cmd->command, 2);
-	exit (127);
+	return (NULL);
 }
 
 /**
@@ -106,10 +106,10 @@ int	command_executer(t_commands *cmd, t_data *data)
 		data->wstatus = execve(cmd->command, cmd->final, data->env);
 	else
 		exec_path = search_cmd_path(cmd, data->env);
-	if (!exec_path)
-		data->wstatus = 127;
-	else
+	if (exec_path)
 		data->wstatus = execve(exec_path, cmd->final, data->env);
+	else
+		data->wstatus = 127;
 	free (exec_path);
 	exit (data->wstatus);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_executer.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/30 17:00:24 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 10:44:54 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,22 @@ int	catch_child_execs(pid_t *pid, int num, t_data *data, int *fd_pipes)
 		if (pid[i] == 0)
 		{
 			waitpid(pid[i], &exit_code, 0);
-			data->wstatus = WIFEXITED(exit_code);
+			if (WIFEXITED(exit_code))
+				data->wstatus = WEXITSTATUS(exit_code);
+			else if (WIFSIGNALED(exit_code))
+				data->wstatus = WTERMSIG(exit_code) + 128;
+			else
+				data->wstatus = -1;
+			// ft_putnbr_fd(exit_code, 2);
+			// ft_putendl_fd(" <- exit code in parent", 2);
+			// ft_putnbr_fd(WIFEXITED(exit_code), 2);
+			// ft_putendl_fd(" <- WIFEXITED in parent", 2);
+			// ft_putnbr_fd(WIFSIGNALED(exit_code), 2);
+			// ft_putendl_fd(" <- WIFSIGNALED in parent", 2);
+			// ft_putnbr_fd(WEXITSTATUS(exit_code), 2);
+			// ft_putendl_fd(" <- WEXITSTATUS in parent", 2);
+			// ft_putnbr_fd(data->wstatus, 2);
+			// ft_putendl_fd(" <- wstatus in parent", 2);
 			close_fd(&fd_pipes[(i * 2)]);
 			close_fd(&fd_pipes[(i * 2) + 3]);
 		}
