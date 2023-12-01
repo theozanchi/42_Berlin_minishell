@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   messages.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:36 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/12/01 12:37:59 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 17:36:19 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MESSAGES_H
 
 /*prompts*/
-# define ENTRY_PROMPT "\033[1;32mminishell\033[0m> "
+# define ENTRY_PROMPT "minishell$ "
 # define HERE_DOC_PROMPT "\033[0;35m> \033[0m"
 
 /*errors*/
