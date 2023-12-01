@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:17:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 22:18:49 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 15:31:21 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ static int	check_arg(t_commands *c)
  * @param data The main data structure
  * @return The path or NULL on error 
  */
-static char	*get_new_path(t_commands *c, t_data *data)
+static char	*get_new_path(t_commands *c)
 {
 	char	*path;
 
 	if (!c->arguments)
 	{
-		path = ft_getenv("HOME=", data);
+		path = getenv("HOME");
 		if (!path)
 		{
 			ft_printf(CD_ERR_HOME_NOT_FOUND);
@@ -68,12 +68,12 @@ static char	*get_new_path(t_commands *c, t_data *data)
  */
 static int	update_env(char *new_pwd, char *old_pwd, t_data *data)
 {
-	if (ft_getenv("PWD=", data))
+	if (getenv("PWD"))
 	{
 		if (overwrite_env_variable("PWD=", new_pwd, data))
 			return (EXIT_FAILURE);
 	}
-	if (ft_getenv("OLDPWD=", data))
+	if (getenv("OLDPWD"))
 	{
 		if (overwrite_env_variable("OLDPWD=", old_pwd, data))
 			return (EXIT_FAILURE);
@@ -99,7 +99,7 @@ int	builtin_cd(t_commands *c, t_data *data)
 		return (EXIT_FAILURE);
 	if (!getcwd(old_pwd, sizeof(old_pwd)))
 		return (perror_return_failure("getcwd() error"));
-	path = get_new_path(c, data);
+	path = get_new_path(c);
 	if (!path)
 		return (EXIT_FAILURE);
 	if (chdir(path))

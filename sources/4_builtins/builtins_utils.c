@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:33:25 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 22:08:37 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 15:41:18 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,29 +64,6 @@ int	launch_builtin(t_commands *node, t_data *data)
 }
 
 /**
- * @brief Loops through the env object to identify the line that begins by str
- * 
- * @param str The string to look for
- * @param data The main data structure
- * @return The string or NULL if the string is not found
- */
-char	*ft_getenv(char *str, t_data *data)
-{
-	size_t	i;
-	size_t	str_len;
-
-	i = 0;
-	str_len = ft_strlen(str);
-	while (data->env[i])
-	{
-		if (!ft_strncmp(str, data->env[i], str_len))
-			return (data->env[i]);
-		i++;
-	}
-	return (NULL);
-}
-
-/**
  * @brief If an environment variable is already in the env array, it is
  * overwritten by the new value
  * 
@@ -113,8 +90,8 @@ int	overwrite_env_variable(char *id, char *value, t_data *data)
 }
 
 /**
- * @brief Loops through the env array, if the variable is foundm it is
- * overwritten, if not it is added at the end o the array
+ * @brief Allocates memory for a bigger env array, and adds the new variable at
+ * the end of it
  * 
  * @param identifier The identifier of the variable
  * @param str The new value to store in env
@@ -141,9 +118,9 @@ int	add_variable_to_env(char *id, char *value, t_data *data)
 			return (reverse_free_char_array(new, i, EXIT_FAILURE));
 		i++;
 	}
-	new[length] = malloc((ft_strlen(id) + ft_strlen(value) + 1) * sizeof(char));
-	ft_strlcpy(new[length], id, ft_strlen(id) + 1);
-	ft_strlcpy(&new[length][ft_strlen(id)], value, ft_strlen(value) + 1);
+	new[length] = ft_concat(3, id, "=", value);
+	if (!new[length])
+		return (EXIT_FAILURE);
 	new[length + 1] = NULL;
 	free_char_array(data->env);
 	data->env = new;

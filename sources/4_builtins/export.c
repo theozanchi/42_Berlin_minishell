@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:11:38 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 21:59:42 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 15:36:17 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*extract_identifier(char *str)
 		ft_printf(EXPORT_INV_IDEN, str);
 		return (NULL);
 	}
-	identifier = ft_substr(str, 0, identifier_length + 1);
+	identifier = ft_substr(str, 0, identifier_length);
 	return (identifier);
 }
 
@@ -125,7 +125,7 @@ int	builtin_export(t_commands *c, t_data *data)
 			ptr = ptr->next;
 			continue ;
 		}
-		if (ft_getenv(identifier, data))
+		if (getenv(identifier))
 			overwrite_env_variable(identifier, value, data);
 		else
 			add_variable_to_env(identifier, value, data);
