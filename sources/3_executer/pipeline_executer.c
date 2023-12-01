@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/12/01 10:59:19 by jschott          ###   ########.fr       */
+/*   Updated: 2023/12/01 11:45:43 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 	if (dup2(original_fd[0], STDIN_FILENO) == -1 || \
 		dup2(original_fd[1], STDOUT_FILENO) == -1)
 		return (EXIT_FAILURE);
+	data->wstatus = exit_code;
 	return (exit_code);
 }
 
@@ -88,11 +89,11 @@ int	catch_child_execs(pid_t *pid, int num, t_data *data, int *fd_pipes)
 		if (pid[i] == 0)
 		{
 			waitpid(pid[i], &exit_code, 0);
-			if (WIFEXITED(exit_code))
+			if (i == num - 1 && WIFEXITED(exit_code))
 				data->wstatus = WEXITSTATUS(exit_code);
-			else if (WIFSIGNALED(exit_code))
+			else if (i == num - 1 && WIFSIGNALED(exit_code))
 				data->wstatus = WTERMSIG(exit_code) + 128;
-			else
+			else if (i == num - 1)
 				data->wstatus = -1;
 			// ft_putnbr_fd(exit_code, 2);
 			// ft_putendl_fd(" <- exit code in parent", 2);
