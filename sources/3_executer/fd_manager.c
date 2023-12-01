@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 11:14:09 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/29 10:32:14 by jschott          ###   ########.fr       */
+/*   Updated: 2023/12/01 12:55:47 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,9 @@ int	close_unused_fd(int *fd_pipes, int pos, int keep, int len)
 		fd_out = pos + 3;
 	while (++i < len)
 	{
-		if (i > 0 && i != fd_in && i != fd_out)
-		{
-			if (close_fd (&ptr[i]) == EXIT_FAILURE)
-				return (EXIT_FAILURE);
-		}
+		if (i != fd_in && i != fd_out \
+			&& close_fd (&ptr[i]) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }

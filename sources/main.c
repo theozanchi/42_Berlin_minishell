@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/12/01 13:11:58 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 15:01:43 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	launch_minishell(t_data *data)
 		if (!data->argv)
 			exit_minishell(data, EXIT_SUCCESS);
 		signals_non_interactive();
-		add_history(data->argv);
+		if (ft_strlen(data->argv))
+			add_history(data->argv);
 		if (lexer(data) || parser(data) || executer(data))
 		{
 			free_memory_between_commands(data);
