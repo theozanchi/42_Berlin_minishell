@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:26:43 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/30 16:54:08 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 14:57:54 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	launch_minishell(t_data *data)
 		if (!data->argv)
 			exit_minishell(data, EXIT_SUCCESS);
 		signals_non_interactive();
-		add_history(data->argv);
+		if (ft_strlen(data->argv))
+			add_history(data->argv);
 		if (lexer(data) || parser(data) || executer(data))
 		{
 			free_memory_between_commands(data);

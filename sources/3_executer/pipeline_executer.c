@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/12/01 12:41:12 by jschott          ###   ########.fr       */
+/*   Updated: 2023/12/01 13:11:27 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
 	if (dup2(fd_pipes[pos], STDIN_FILENO) == -1 || \
 		dup2(fd_pipes[pos + 3], STDOUT_FILENO) == -1)
 		return (EXIT_FAILURE);
-	close_unused_fd(fd_pipes, pos, FDX_RW, pos);
+	close_unused_fd(fd_pipes, pos, FDX_RW, pos + 1);
 	exit_code = launch_builtin(cmd, data);
 	close_fd(&fd_pipes[pos]);
 	close_fd(&fd_pipes[pos + 3]);
