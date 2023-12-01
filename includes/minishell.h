@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 12:47:46 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/12/01 15:26:12 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 18:02:17 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,8 +191,6 @@ int			*build_pipes(int fd_out, int fd_in, int cmds_num);
 
 /*pipeline_executer.c*/
 int			execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data);
-void		fd2fd(int *fd_pipes, t_commands *cmd, t_data *data);
-void		close_all_fd(int *fd_pipes);
 int			close_fd(int *fd);
 
 /*fd_manager.c*/
@@ -208,6 +206,7 @@ char		**env_extract_paths(char **env);
 /*builtins_utils.c*/
 int			cmd_is_a_builtin(t_commands *node);
 int			launch_builtin(t_commands *c, t_data *data);
+char		*ft_getenv(char *str, t_data *data);
 int			overwrite_env_variable(char *id, char *value, t_data *data);
 int			add_variable_to_env(char *id, char *value, t_data *data);
 

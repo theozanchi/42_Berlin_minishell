@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:22:51 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/12/01 15:42:08 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/01 18:05:33 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,13 @@ int	init_data(t_data *data, char **env)
 
 	if (init_env(data, env) || init_path(data))
 		return (EXIT_FAILURE);
-	if (getenv("HOME"))
+	if (ft_getenv("HOME=", data))
 	{
-		history_path = ft_concat(2, getenv("HOME"), "/.minishell_history");
+		history_path = ft_concat(2, ft_getenv("HOME=", data) + 5, \
+			"/.minishell_history");
 		if (history_path)
 		{
-			add_variable_to_env("HISTFILE", history_path, data);
+			add_variable_to_env("HISTFILE=", history_path, data);
 			read_history(history_path);
 			free_and_set_to_null(1, history_path);
 		}
