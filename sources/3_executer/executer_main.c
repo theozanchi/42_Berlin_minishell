@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:22:45 by jschott           #+#    #+#             */
-/*   Updated: 2023/11/29 10:33:21 by jschott          ###   ########.fr       */
+/*   Updated: 2023/12/04 11:52:43 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	executer(t_data *data)
 	pid_t		*pid;
 
 	cmds_num = cmd_count(data->commands);
-	pid = (pid_t *) ft_calloc (cmds_num + 1, sizeof(pid_t));
+	pid = (pid_t *) ft_calloc (cmds_num, sizeof(pid_t));
 	if (!pid)
 		return (EXIT_FAILURE);
 	fd_pipes = build_pipes(data->output.fd, data->input.fd, cmds_num);

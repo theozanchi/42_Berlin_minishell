@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/12/04 10:44:50 by jschott          ###   ########.fr       */
+/*   Updated: 2023/12/04 11:51:15 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,24 @@ int	execute_builtin(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
  * @param cmd builtin command to execute
  * @param data main data structure
 */
-int	execute_env(int *fd_pipes, int pos, t_commands *cmd, t_data *data)
+int	execute_env(int *fd_pipes, int pos, int *pid, t_data *data)
 {
-	pid_t	pid;
+	int			i;
+	t_commands	*cmd;
 
-	pid = fork();
-	if (pid < 0)
+	i = -1;
+	cmd = data->commands;
+	while (cmd && ++i * 2 < pos)
+		cmd = cmd->next;
+	*pid = fork();
+	if (*pid < 0)
 		return (EXIT_FAILURE);
-	if (pid == 0)
+	if (*pid == 0)
 	{
 		if (dup2(fd_pipes[pos], STDIN_FILENO) == -1 || \
 			dup2(fd_pipes[pos + 3], STDOUT_FILENO) == -1)
 			return (EXIT_FAILURE);
-		close_unused_fd(fd_pipes, pos, FDX_RW, (2 * cmd_count(data->commands)));
+		close_unused_fd(fd_pipes, pos, FDX_RW, 2 * cmd_count(data->commands));
 		exit (command_executer(cmd, data));
 	}
 	close_fd(&fd_pipes[pos]);
@@ -82,22 +87,22 @@ int	catch_child_execs(pid_t *pid, int num, t_data *data, int *fd_pipes)
 	int	i;
 	int	exit_code;
 
-	i = num -1;
+	i = -1;
 	if (!pid || !num || !data || !fd_pipes)
 		return (EXIT_FAILURE);
-	while (--num >= 0)
+	while (++i < num)
 	{
-		if (pid[num] >= 0)
+		if (pid[i] > 0)
 		{
-			waitpid(pid[num], &exit_code, 0);
-			if (i == num && WIFEXITED(exit_code))
+			waitpid(pid[i], &exit_code, 0);
+			if (i == num - 1 && WIFEXITED(exit_code))
 				data->wstatus = WEXITSTATUS(exit_code);
-			else if (i == num && WIFSIGNALED(exit_code))
+			else if (i == num - 1 && WIFSIGNALED(exit_code))
 				data->wstatus = WTERMSIG(exit_code) + 128;
-			else if (i == num)
+			else if (i == num - 1)
 				data->wstatus = -1;
-			close_fd(&fd_pipes[(num * 2)]);
-			close_fd(&fd_pipes[(num * 2) + 3]);
+			close_fd(&fd_pipes[(i * 2)]);
+			close_fd(&fd_pipes[(i * 2) + 3]);
 		}
 	}
 	return (EXIT_SUCCESS);
@@ -124,11 +129,11 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	{
 		if (cmd_is_a_builtin(cmd))
 		{
-			pid[i] = -1;
+			pid[i] = 0;
 			execute_builtin (fd_pipes, i * 2, cmd, data);
 		}
 		else
-			execute_env (fd_pipes, i * 2, cmd, data);
+			execute_env (fd_pipes, i * 2, &pid[i], data);
 		i++;
 		cmd = cmd->next;
 	}
