@@ -6,7 +6,7 @@
 /*   By: tzanchi <tzanchi@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:06:49 by tzanchi           #+#    #+#             */
-/*   Updated: 2023/11/21 16:28:23 by tzanchi          ###   ########.fr       */
+/*   Updated: 2023/12/04 14:55:34 by tzanchi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,11 @@ int	helper_export_builtin(t_commands *node, t_token *token)
 	if (!node->arguments || add_new_node)
 	{
 		add_new_list_node(&node->arguments, token);
-		add_new_node = 0;
+		equal_pos = get_equal_sign_pos(node);
+		if (equal_pos && (equal_pos + 1)
+			&& (*(equal_pos + 1) == '\'' || *(equal_pos + 1) == '\"')
+			&& equal_pos[ft_strlen(equal_pos) - 1] == *(equal_pos + 1))
+			add_new_node = 1;
 	}
 	else
 	{
