@@ -6,7 +6,7 @@
 /*   By: jschott <jschott@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:54:35 by jschott           #+#    #+#             */
-/*   Updated: 2023/12/04 11:51:15 by jschott          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:59:36 by jschott          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,10 +128,7 @@ int	execute_pipeline(int *fd_pipes, pid_t *pid, t_data *data)
 	while (cmd)
 	{
 		if (cmd_is_a_builtin(cmd))
-		{
-			pid[i] = 0;
 			execute_builtin (fd_pipes, i * 2, cmd, data);
-		}
 		else
 			execute_env (fd_pipes, i * 2, &pid[i], data);
 		i++;
